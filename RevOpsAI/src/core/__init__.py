@@ -8,6 +8,7 @@ from .config_loader import (
     ScoringConfig,
 )
 from .models import Prospect, ProspectState
+from .approval_store import ApprovalStore
 
 __all__ = [
     "load_sector_config",
@@ -17,5 +18,6 @@ __all__ = [
     "ScoringConfig",
     "Prospect",
     "ProspectState",
+    "ApprovalStore",
 ]
 
