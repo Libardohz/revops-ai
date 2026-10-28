@@ -1,9 +1,20 @@
 """Research Agent module for analyzing prospect web scrape content and extracting business signals."""
 
 import re
+import unicodedata
 from pydantic import BaseModel
 from RevOpsAI.src.core.models import Prospect, ProspectState
 from RevOpsAI.src.integrations.web_scraper import ScrapeResult
+
+
+def _normalize_text(text: str) -> str:
+    """Normalize text: strip accents and lower-case for robust keyword and pattern matching."""
+    return (
+        unicodedata.normalize("NFKD", text)
+        .encode("ascii", "ignore")
+        .decode("utf-8")
+        .lower()
+    )
 
 
 class ResearchSummary(BaseModel):
@@ -39,16 +50,16 @@ class ResearchAgent:
         Returns:
             ResearchSummary with detected operational signals and overview text.
         """
-        text_lower = scrape.clean_text.lower()
+        normalized_text = _normalize_text(scrape.clean_text)
 
         # Detección heurística de señales operativas
         has_online_booking = bool(
-            re.search(r"cita\s+online|reserva\s+online|agendar\s+cita", text_lower)
-            and not re.search(r"no\s+(disponemos|contamos)\s+de\s+cita\s+online", text_lower)
+            re.search(r"cita\s+online|reserva\s+online|agendar\s+cita", normalized_text)
+            and not re.search(r"no\s+(disponemos|contamos)\s+de\s+cita\s+online", normalized_text)
         )
-        has_whatsapp = bool(re.search(r"whatsapp|chat|escribenos", text_lower))
+        has_whatsapp = bool(re.search(r"whatsapp|chat|escribenos", normalized_text))
 
-        services = [kw for kw in self.SERVICES_KEYWORDS if kw in text_lower]
+        services = [kw for kw in self.SERVICES_KEYWORDS if kw in normalized_text]
 
         overview = f"Clínica con {len(services)} servicios clave detectados. "
         overview += "Dispone de WhatsApp. " if has_whatsapp else "Sin canal WhatsApp detectado. "

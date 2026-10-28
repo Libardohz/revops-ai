@@ -46,3 +46,23 @@ def test_research_agent_detects_online_booking_positive():
     assert "blanqueamiento" in summary.detected_services
     assert "Cuenta con cita online." in summary.overview
     assert "Sin canal WhatsApp detectado." in summary.overview
+
+
+def test_research_agent_detects_signals_with_spanish_diacritics():
+    lead = Prospect(tenant_id="t3", name="Clinica Dental Avanzada", url="https://avanzada.es")
+    scrape = ScrapeResult(
+        url="https://avanzada.es",
+        clean_text="Especialistas en estética dental y cirugía. ¡Escríbenos para agendar cita online!",
+        detected_injection=False,
+        pii_redacted=False,
+    )
+    agent = ResearchAgent()
+    summary = agent.analyze(lead, scrape)
+
+    assert lead.state == ProspectState.RESEARCHING
+    assert summary.has_online_booking is True
+    assert summary.has_whatsapp is True
+    assert "estetica" in summary.detected_services
+    assert "cirugia" in summary.detected_services
+    assert "Cuenta con cita online." in summary.overview
+    assert "Dispone de WhatsApp." in summary.overview

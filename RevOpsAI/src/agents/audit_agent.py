@@ -4,10 +4,17 @@ Analyzes commercial and operational digital gaps from research findings
 while strictly enforcing sector legal compliance boundaries (e.g. no medical diagnoses).
 """
 
+import unicodedata
 from pydantic import BaseModel, Field
 from RevOpsAI.src.core.models import Prospect, ProspectState
 from RevOpsAI.src.core.config_loader import SectorConfig
 from RevOpsAI.src.agents.research_agent import ResearchSummary
+
+
+def _normalize_text(text: str) -> str:
+    """Normalize text: strip accents, lower-case, and replace underscores with spaces."""
+    normalized = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode("utf-8")
+    return normalized.lower().replace("_", " ")
 
 
 class CommercialAuditResult(BaseModel):
@@ -66,9 +73,10 @@ class CommercialAuditAgent:
         # Strict compliance enforcement: verify no forbidden topic appears in gaps or opportunities
         all_findings = gaps + opportunities
         for finding in all_findings:
-            finding_lower = finding.lower()
+            normalized_finding = _normalize_text(finding)
             for forbidden in self.config.compliance.strictly_forbidden_topics:
-                if forbidden.lower() in finding_lower:
+                normalized_forbidden = _normalize_text(forbidden)
+                if normalized_forbidden in normalized_finding:
                     raise ValueError(f"Violación de compliance en auditoría: {forbidden}")
 
         # State transition to AUDITING

@@ -94,6 +94,23 @@ def test_audit_raises_value_error_on_compliance_violation():
         auditor.audit(lead, summary)
 
 
+def test_audit_raises_compliance_violation_for_snake_case_and_accents():
+    config = load_sector_config("RevOpsAI/config/sectors/clinicas.yaml")
+    lead = Prospect(tenant_id="t1", name="Clinica Test", url="https://test.es")
+    lead.state = ProspectState.RESEARCHING
+
+    summary = ResearchSummary(
+        has_online_booking=False,
+        has_whatsapp=True,
+        detected_services=["diagnósticos médicos específicos", "consulta general"],
+        overview="Overview"
+    )
+
+    auditor = CommercialAuditAgent(config)
+    with pytest.raises(ValueError, match="Violación de compliance en auditoría: diagnosticos_medicos_especificos"):
+        auditor.audit(lead, summary)
+
+
 def test_audit_fails_if_lead_not_in_researching_state():
     config = load_sector_config("RevOpsAI/config/sectors/clinicas.yaml")
     lead = Prospect(tenant_id="t1", name="Clinica Dental Norte", url="https://dentalnorte.es")

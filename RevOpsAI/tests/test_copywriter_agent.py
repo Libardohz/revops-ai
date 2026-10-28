@@ -77,3 +77,40 @@ def test_copywriter_invalid_initial_state_raises_error():
     agent = CopywriterAgent(config, store)
     with pytest.raises(ValueError):
         agent.generate_proposal(lead, audit)
+
+
+def test_copywriter_preserves_uppercase_acronyms_in_gap():
+    """Verify that uppercase acronyms after the first character are preserved."""
+    config = load_sector_config("RevOpsAI/config/sectors/clinicas.yaml")
+    store = ApprovalStore()
+    lead = Prospect(tenant_id="t1", name="Clinica CRM", url="https://clinicacrm.es")
+    lead.state = ProspectState.QUALIFIED
+
+    audit = CommercialAuditResult(
+        commercial_gaps=["Falta sincronización con CRM y ERP"],
+        growth_opportunities=[],
+        disclaimer=config.compliance.required_disclaimer,
+    )
+
+    agent = CopywriterAgent(config, store)
+    draft = agent.generate_proposal(lead, audit)
+
+    assert "falta sincronización con CRM y ERP" in draft
+
+
+def test_copywriter_raises_value_error_on_compliance_violation():
+    """Verify defense-in-depth check when draft contains a strictly forbidden topic."""
+    config = load_sector_config("RevOpsAI/config/sectors/clinicas.yaml")
+    store = ApprovalStore()
+    lead = Prospect(tenant_id="t1", name="Clinica Dental Norte", url="https://dentalnorte.es")
+    lead.state = ProspectState.QUALIFIED
+
+    audit = CommercialAuditResult(
+        commercial_gaps=["Diagnósticos médicos específicos para ortodoncia"],
+        growth_opportunities=[],
+        disclaimer=config.compliance.required_disclaimer,
+    )
+
+    agent = CopywriterAgent(config, store)
+    with pytest.raises(ValueError, match="Violación de compliance en propuesta: diagnosticos_medicos_especificos"):
+        agent.generate_proposal(lead, audit)

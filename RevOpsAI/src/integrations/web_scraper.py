@@ -1,4 +1,3 @@
-import re
 from html.parser import HTMLParser
 from pydantic import BaseModel
 from RevOpsAI.src.security.sanitizer import InputSanitizer
