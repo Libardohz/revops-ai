@@ -11,6 +11,9 @@ from RevOpsAI.src.agents.scoring_agent import ScoringAgent, ScoringResult
 from RevOpsAI.src.agents.copywriter_agent import CopywriterAgent
 
 
+__all__ = ["PipelineResult", "PipelineOrchestrator"]
+
+
 class PipelineResult(BaseModel):
     """Result object summarizing the execution of the pipeline for a prospect."""
 
@@ -22,15 +25,24 @@ class PipelineResult(BaseModel):
 class PipelineOrchestrator:
     """Central orchestrator sequencing scraper, research, audit, scoring, and copywriting agents."""
 
-    def __init__(self, config: SectorConfig, approval_store: ApprovalStore) -> None:
+    def __init__(
+        self,
+        config: SectorConfig,
+        approval_store: ApprovalStore,
+        scraper: SecureWebScraper | None = None,
+        research_agent: ResearchAgent | None = None,
+        audit_agent: CommercialAuditAgent | None = None,
+        scoring_agent: ScoringAgent | None = None,
+        copywriter_agent: CopywriterAgent | None = None,
+    ) -> None:
         """Initialize orchestrator with sector configuration and approval store."""
         self.config = config
         self.approval_store = approval_store
-        self.scraper = SecureWebScraper()
-        self.research_agent = ResearchAgent()
-        self.audit_agent = CommercialAuditAgent(config)
-        self.scoring_agent = ScoringAgent(config)
-        self.copywriter_agent = CopywriterAgent(config, approval_store)
+        self.scraper = scraper or SecureWebScraper()
+        self.research_agent = research_agent or ResearchAgent()
+        self.audit_agent = audit_agent or CommercialAuditAgent(config)
+        self.scoring_agent = scoring_agent or ScoringAgent(config)
+        self.copywriter_agent = copywriter_agent or CopywriterAgent(config, approval_store)
 
     def process_prospect(
         self,
@@ -41,7 +53,8 @@ class PipelineOrchestrator:
     ) -> PipelineResult:
         """Run the sequential agent pipeline on a prospect given its raw HTML website content."""
         if lead.is_blacklisted:
-            lead.transition_to(ProspectState.DISCARDED)
+            if lead.state not in (ProspectState.DISCARDED, ProspectState.OPT_OUT):
+                lead.transition_to(ProspectState.DISCARDED)
             return PipelineResult(prospect=lead)
 
         # 1. Zero-trust extraction and sanitization

@@ -26,3 +26,8 @@ testpaths = ["tests"]
 pythonpath = ["src", "."]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+filterwarnings = [
+    "ignore:.*httpx.*:DeprecationWarning",
+    "ignore:.*starlette.*",
+    "ignore::DeprecationWarning",
+]

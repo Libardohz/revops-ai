@@ -6,7 +6,7 @@ from RevOpsAI.src.api.routes import router
 app = FastAPI(
     title="RevOpsAI Control API",
     description="API de Control y Aprobación Humana Multi-Tenant",
-    version="1.0.0"
+    version="1.0.0",
 )
 
 app.include_router(router)

@@ -136,3 +136,26 @@ def test_handle_incoming_reply_unknown():
     assert intent == ReplyIntent.UNKNOWN
     assert lead.state == ProspectState.SENT
     assert lead.is_blacklisted is False
+
+
+def test_opt_out_compliance_variations_and_compound_phrases():
+    """Verify specific compliance opt-out variations and compound deferred phrases."""
+    agent = DispatchAgent()
+
+    # Opt-out variations
+    for msg in ["No estoy interesado", "No nos interesa", "no tenemos interes"]:
+        lead = Prospect(tenant_id="t1", name="Clinica Dental Norte", url="http://dentalnorte.es")
+        lead.state = ProspectState.SENT
+        intent = agent.handle_incoming_reply(lead, msg)
+        assert intent == ReplyIntent.OPT_OUT
+        assert lead.is_blacklisted is True
+        assert lead.state == ProspectState.OPT_OUT
+
+    # Compound phrases that must classify as DEFERRED rather than INTERESTED
+    for msg in ["Hablemos más adelante", "Me interesa el próximo mes"]:
+        lead = Prospect(tenant_id="t1", name="Clinica Dental Norte", url="http://dentalnorte.es")
+        lead.state = ProspectState.SENT
+        intent = agent.handle_incoming_reply(lead, msg)
+        assert intent == ReplyIntent.DEFERRED
+        assert lead.is_blacklisted is False
+        assert lead.state == ProspectState.SENT

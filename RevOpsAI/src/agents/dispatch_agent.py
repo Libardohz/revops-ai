@@ -19,10 +19,10 @@ class DispatchAgent:
     """Agent responsible for outbound message dispatch and inbound reply processing."""
 
     OPT_OUT_PATTERNS = [
+        r"no\s+(me\s+|nos\s+|estoy\s+|estamos\s+|tengo\s+|tenemos\s+)?interes[a-z]*",
         r"no\s+(me\s+)?contacten",
         r"baja",
         r"borren",
-        r"no\s+(me\s+)?interesa",
         r"spam",
         r"desuscribir",
     ]
@@ -88,14 +88,14 @@ class DispatchAgent:
                     lead.state = ProspectState.OPT_OUT
                 return ReplyIntent.OPT_OUT
 
-        # 2. Commercial Interest
-        for pattern in self.INTEREST_PATTERNS:
-            if re.search(pattern, cleaned_text):
-                return ReplyIntent.INTERESTED
-
-        # 3. Deferred Follow-up
+        # 2. Deferred Follow-up (Prioritized over Interest for compound expressions)
         for pattern in self.DEFERRED_PATTERNS:
             if re.search(pattern, cleaned_text):
                 return ReplyIntent.DEFERRED
+
+        # 3. Commercial Interest
+        for pattern in self.INTEREST_PATTERNS:
+            if re.search(pattern, cleaned_text):
+                return ReplyIntent.INTERESTED
 
         return ReplyIntent.UNKNOWN

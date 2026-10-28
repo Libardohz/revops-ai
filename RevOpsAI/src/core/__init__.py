@@ -9,7 +9,6 @@ from .config_loader import (
 )
 from .models import Prospect, ProspectState
 from .approval_store import ApprovalStore
-from .pipeline import PipelineOrchestrator, PipelineResult
 
 __all__ = [
     "load_sector_config",
@@ -20,7 +19,5 @@ __all__ = [
     "Prospect",
     "ProspectState",
     "ApprovalStore",
-    "PipelineOrchestrator",
-    "PipelineResult",
 ]
 

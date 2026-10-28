@@ -105,3 +105,31 @@ def test_api_invalid_action():
     }
     res_action = client.post("/api/v1/approval/action", json=action_payload)
     assert res_action.status_code == 400
+
+
+def test_api_disallowed_state_transition_returns_409():
+    """Verify that attempting an invalid state transition returns HTTP 409."""
+    payload = {
+        "tenant_id": "tenant_transition_error",
+        "name": "Clinica Estado",
+        "url": "https://clinicaestado.es",
+        "html_content": "<html><body><h1>Clinica Estado</h1><p>Implantes y ortodoncia. Whatsapp.</p></body></html>"
+    }
+    res = client.post("/api/v1/prospects/process", json=payload)
+    assert res.status_code == 200
+    lead_id = res.json()["prospect"]["id"]
+
+    # 1. Primera aprobación -> 200 OK (pasa a APPROVED)
+    action_payload = {
+        "tenant_id": "tenant_transition_error",
+        "lead_id": lead_id,
+        "action": "APPROVE"
+    }
+    res_action_1 = client.post("/api/v1/approval/action", json=action_payload)
+    assert res_action_1.status_code == 200
+    assert res_action_1.json()["state"] == "APPROVED"
+
+    # 2. Segunda aprobación -> 409 Conflict (transición no permitida)
+    res_action_2 = client.post("/api/v1/approval/action", json=action_payload)
+    assert res_action_2.status_code == 409
+    assert "Transición no permitida" in res_action_2.json()["detail"]
