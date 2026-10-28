@@ -7,7 +7,7 @@ class PIIResult(BaseModel):
 
 class PIIScrubber:
     MEDICAL_ID_REGEX = r"\bHC-\d{5,}\b"
-    PHONE_REGEX = r"\b(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{3,4}\b"
+    PHONE_REGEX = r"(?<!\w)(?:\+?\d{1,3}[-.\s]?)?(?:\(?\d{3}\)?[-.\s]?)?\d{3}[-.\s]?\d{3,4}\b"
 
     def mask_pii(self, text: str) -> PIIResult:
         redacted = []

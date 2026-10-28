@@ -25,10 +25,12 @@ def test_masks_phone_and_medical_ids():
     assert isinstance(result, PIIResult)
     assert "+34 612 345 678" not in result.scrubbed_text
     assert "[TELEFONO]" in result.scrubbed_text
+    assert "+[TELEFONO]" not in result.scrubbed_text
     assert "HC-987654" not in result.scrubbed_text
     assert "[ID_MEDICO]" in result.scrubbed_text
     assert "phone" in result.redacted_fields
     assert "medical_id" in result.redacted_fields
+    assert result.scrubbed_text == "Contacto Dr. Garcia al telefono [TELEFONO] o historial [ID_MEDICO]"
 
 def test_scrubber_without_pii():
     scrubber = PIIScrubber()
