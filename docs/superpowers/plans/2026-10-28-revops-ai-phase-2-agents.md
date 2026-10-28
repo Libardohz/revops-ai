@@ -554,3 +554,4 @@ git commit -m "feat(agents): implement CopywriterAgent with automated HITL regis
 - [x] **Spec Coverage:** Cubre Scraper seguro (Task 1), Agente Investigador (Task 2), Agente Auditor (Task 3), Agente Scoring (Task 4) y Agente Copywriter integrado con HITL (Task 5).
 - [x] **No Placeholders:** Todos los códigos de implementación y tests están completos y libres de ambigüedad.
 - [x] **Type Consistency:** Las transiciones de estados (`INGESTED` -> `RESEARCHING` -> `AUDITING` -> `SCORING` -> `QUALIFIED` -> `DRAFTING` -> `PENDING_APPROVAL`) son 100% compatibles con `Prospect.VALID_TRANSITIONS` definido en la Fase 1.
+
