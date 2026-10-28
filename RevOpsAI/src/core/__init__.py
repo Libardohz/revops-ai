@@ -7,6 +7,7 @@ from .config_loader import (
     ResearchConfig,
     ScoringConfig,
 )
+from .models import Prospect, ProspectState
 
 __all__ = [
     "load_sector_config",
@@ -14,4 +15,7 @@ __all__ = [
     "ComplianceConfig",
     "ResearchConfig",
     "ScoringConfig",
+    "Prospect",
+    "ProspectState",
 ]
+
