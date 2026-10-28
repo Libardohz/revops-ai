@@ -1,0 +1,18 @@
+sector_id: "clinicas_salud_v1"
+compliance:
+  strictly_forbidden_topics:
+    - "diagnosticos_medicos_especificos"
+    - "promesas_de_curacion"
+    - "referencias_a_patologias_de_pacientes"
+  required_disclaimer: "Comunicación de optimización operativa para dirección de clínica."
+
+research:
+  primary_sources: ["google_maps", "website_home"]
+  signals_to_detect: ["has_online_booking", "whatsapp_widget_present"]
+
+scoring:
+  weights:
+    digital_gap: 0.5
+    market_reputation: 0.3
+    estimated_size: 0.2
+  min_qualification_score: 65
