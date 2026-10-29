@@ -71,6 +71,40 @@ class IngestRequest(BaseModel):
     html_content: str
 
 
+class AuditUrlRequest(BaseModel):
+    """Payload for live website audit triggered by URL."""
+
+    tenant_id: str
+    name: str
+    url: str
+
+
+def fetch_remote_html(url: str, timeout: int = 15) -> str:
+    """Safely fetch HTML content from a remote clinic website with strict timeout and headers."""
+    import urllib.request
+    from urllib.parse import urlparse
+
+    parsed = urlparse(url)
+    if parsed.scheme not in ("http", "https") or not parsed.netloc:
+        raise ValueError("URL inválida: Debe comenzar con http:// o https://")
+
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    }
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            content_type = resp.headers.get("Content-Type", "")
+            raw = resp.read(2_000_000)  # Max 2MB limit
+            charset = "utf-8"
+            if "charset=" in content_type:
+                charset = content_type.split("charset=")[-1].split(";")[0].strip()
+            return raw.decode(charset, errors="ignore")
+    except Exception as exc:
+        raise RuntimeError(f"Fallo al conectar con el sitio web: {exc}")
+
+
 class ApprovalActionRequest(BaseModel):
     """Payload for Human-in-the-Loop approval or rejection."""
 
@@ -93,6 +127,37 @@ def process_prospect(
         with factory() as session:
             repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
             repo.save_prospect(result.prospect)
+    except Exception:
+        pass
+    return result
+
+
+@router.post("/prospects/audit-url", response_model=PipelineResult)
+def audit_prospect_url(
+    req: AuditUrlRequest,
+    orch: PipelineOrchestrator = Depends(get_orchestrator),
+) -> PipelineResult:
+    """Perform real-time remote fetch and end-to-end multi-agent pipeline audit."""
+    try:
+        html = fetch_remote_html(req.url)
+    except ValueError as val_err:
+        raise HTTPException(status_code=400, detail=str(val_err))
+    except Exception as net_err:
+        raise HTTPException(status_code=502, detail=f"No se pudo descargar el sitio web: {net_err}")
+
+    lead = Prospect(tenant_id=req.tenant_id, name=req.name, url=req.url)
+    result = orch.process_prospect(lead, html)
+    try:
+        factory = get_default_session_factory()
+        with factory() as session:
+            repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+            repo.save_prospect(result.prospect)
+            repo.log_audit(
+                lead_id=result.prospect.id,
+                actor="system_pipeline",
+                action="AUDIT_URL",
+                reason=f"Auditoría en vivo completada. Score: {result.prospect.score}/100",
+            )
     except Exception:
         pass
     return result
@@ -179,4 +244,14 @@ def get_dashboard_leads(
     """Retrieve prospects strictly isolated by tenant, optionally filtered by state."""
     leads = repo.list_prospects(state=state)
     return [lead.model_dump() for lead in leads]
+
+
+@router.get("/audit/logs", response_model=list[dict[str, Any]])
+def get_audit_logs(
+    tenant_id: str = Query(..., description="ID del tenant a filtrar"),
+    lead_id: str | None = Query(None, description="Filtro opcional por ID de prospecto"),
+    repo: TenantScopedRepository = Depends(get_repository),
+) -> list[dict[str, Any]]:
+    """Retrieve historical audit trails strictly scoped to the tenant."""
+    return repo.list_audit_logs(lead_id=lead_id)
 

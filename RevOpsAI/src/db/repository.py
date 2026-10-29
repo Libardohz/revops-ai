@@ -143,3 +143,22 @@ class TenantScopedRepository:
         )
         self.session.add(log_entry)
         self.session.commit()
+
+    def list_audit_logs(self, lead_id: str | None = None) -> list[dict[str, Any]]:
+        """Retrieve audit log entries scoped to this tenant."""
+        query = self.session.query(AuditLogORM).filter_by(tenant_id=self.tenant_id)
+        if lead_id:
+            query = query.filter_by(lead_id=lead_id)
+        records = query.order_by(AuditLogORM.timestamp.desc()).all()
+        return [
+            {
+                "id": r.id,
+                "tenant_id": r.tenant_id,
+                "lead_id": r.lead_id,
+                "actor": r.actor,
+                "action": r.action,
+                "reason": r.reason,
+                "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+            }
+            for r in records
+        ]
