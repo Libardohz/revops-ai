@@ -3,6 +3,8 @@
 from pathlib import Path
 from typing import Any, Generator
 from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from RevOpsAI.src.core.models import Prospect
@@ -20,6 +22,30 @@ router.include_router(webhook_router)
 _default_config_path = Path("RevOpsAI/config/sectors/clinicas.yaml")
 if not _default_config_path.is_file():
     _default_config_path = Path(__file__).resolve().parent.parent.parent / "config" / "sectors" / "clinicas.yaml"
+
+_template_path = Path("RevOpsAI/src/web/templates/dashboard.html")
+if not _template_path.is_file():
+    _template_path = Path(__file__).resolve().parent.parent / "web" / "templates" / "dashboard.html"
+
+_static_path = Path("RevOpsAI/src/web/static")
+if not _static_path.is_dir():
+    _static_path = Path(__file__).resolve().parent.parent / "web" / "static"
+
+web_router = APIRouter()
+if _static_path.is_dir():
+    router.mount("/static", StaticFiles(directory=str(_static_path)), name="static_api")
+    web_router.mount("/static", StaticFiles(directory=str(_static_path)), name="static_web")
+
+
+@web_router.get("/dashboard", response_class=HTMLResponse)
+@router.get("/dashboard", response_class=HTMLResponse)
+def serve_dashboard() -> HTMLResponse:
+    """Serve the Human-in-the-Loop Kanban dashboard frontend."""
+    if _template_path.is_file():
+        content = _template_path.read_text(encoding="utf-8")
+    else:
+        content = "<html><body><h1>RevOps AI Dashboard</h1></body></html>"
+    return HTMLResponse(content=content, status_code=200)
 
 config = load_sector_config(_default_config_path)
 shared_store = ApprovalStore()

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RevOps AI - Bandeja Human-in-the-Loop & Kanban</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Top App Navigation Bar -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo">R</div>
+      <div class="brand-title">
+        RevOps AI
+        <span class="version-badge">v2.0-kanban</span>
+      </div>
+    </div>
+
+    <div class="header-controls">
+      <div class="tenant-selector">
+        <label for="tenant-select">Tenant Activo:</label>
+        <select id="tenant-select" class="select-input">
+          <option value="tenant_clinicas_madrid" selected>Clínicas Madrid (tenant_clinicas_madrid)</option>
+          <option value="tenant_dental_bcn">Dental Barcelona (tenant_dental_bcn)</option>
+          <option value="tenant_default">Default System (tenant_default)</option>
+        </select>
+      </div>
+
+      <button id="refresh-btn" class="btn btn-ghost" title="Actualizar datos en vivo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+        Actualizar
+      </button>
+    </div>
+  </header>
+
+  <!-- Live KPI Metrics Bar -->
+  <section class="metrics-bar">
+    <div class="metric-card">
+      <span class="metric-label">Total Prospectos</span>
+      <span id="stat-total" class="metric-value">0</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Pendientes Aprobación</span>
+      <span id="stat-pending" class="metric-value">0</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Cualificados</span>
+      <span id="stat-qualified" class="metric-value">0</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Tasa Cualificación</span>
+      <span id="stat-rate" class="metric-value">0%</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Interesados</span>
+      <span id="stat-interested" class="metric-value">0</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-label">Descartados / Opt-Out</span>
+      <span id="stat-discarded" class="metric-value">0</span>
+    </div>
+  </section>
+
+  <!-- Main Kanban Board -->
+  <main class="kanban-container">
+    <!-- Col 1: Pendientes de Aprobación -->
+    <div class="kanban-column" id="col-pending-group">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="column-indicator indicator-pending"></span>
+          <span class="column-title">Pendientes de Aprobación</span>
+        </div>
+        <span id="count-pending" class="column-counter">0</span>
+      </div>
+      <div id="col-cards-pending" class="column-cards"></div>
+    </div>
+
+    <!-- Col 2: Enviados / Despachados -->
+    <div class="kanban-column" id="col-sent-group">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="column-indicator indicator-sent"></span>
+          <span class="column-title">Enviados</span>
+        </div>
+        <span id="count-sent" class="column-counter">0</span>
+      </div>
+      <div id="col-cards-sent" class="column-cards"></div>
+    </div>
+
+    <!-- Col 3: Interesados -->
+    <div class="kanban-column" id="col-interested-group">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="column-indicator indicator-interested"></span>
+          <span class="column-title">Interesados</span>
+        </div>
+        <span id="count-interested" class="column-counter">0</span>
+      </div>
+      <div id="col-cards-interested" class="column-cards"></div>
+    </div>
+
+    <!-- Col 4: Descartados / Opt-Out -->
+    <div class="kanban-column" id="col-discarded-group">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="column-indicator indicator-discarded"></span>
+          <span class="column-title">Descartados / Opt-Out</span>
+        </div>
+        <span id="count-discarded" class="column-counter">0</span>
+      </div>
+      <div id="col-cards-discarded" class="column-cards"></div>
+    </div>
+  </main>
+
+  <!-- Slide-Over Inspection Drawer -->
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
+  <aside id="slide-drawer" class="slide-drawer">
+    <div class="drawer-header">
+      <div class="drawer-title-area">
+        <h2 id="drawer-lead-name" class="drawer-title">Inspección de Prospecto</h2>
+        <span id="drawer-lead-score" class="card-score">0/100</span>
+      </div>
+      <button id="drawer-close" class="drawer-close" aria-label="Cerrar panel">&times;</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- Metadata -->
+      <section class="drawer-section">
+        <span class="section-label">Ficha del Prospecto</span>
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span class="meta-key">URL del Sitio</span>
+            <span class="meta-val"><a id="drawer-lead-url" href="#" target="_blank" rel="noopener noreferrer">-</a></span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Tenant</span>
+            <span id="drawer-lead-tenant" class="meta-val">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">Estado Actual</span>
+            <span id="drawer-lead-status" class="meta-val">-</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-key">SLA Revisión</span>
+            <span class="meta-val">Human-in-the-Loop</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Microdiagnosis Gaps Breakdown -->
+      <section class="drawer-section">
+        <span class="section-label">Microdiagnóstico y Fricciones Detectadas</span>
+        <div id="drawer-gaps-list" class="gaps-list"></div>
+      </section>
+
+      <!-- Proposal Copy Review / Editor -->
+      <section class="drawer-section">
+        <span class="section-label">Revisión de Copy y Mensaje Personalizado</span>
+        <div class="copy-editor-card">
+          <label class="input-label" for="drawer-copy-textarea">
+            Propuesta Generada
+            <span style="color: var(--text-muted); font-size: 10px;">Editable antes de aprobar</span>
+          </label>
+          <textarea id="drawer-copy-textarea" class="text-field textarea-field" placeholder="Cuerpo del mensaje de outreach..."></textarea>
+        </div>
+      </section>
+    </div>
+
+    <div class="drawer-footer">
+      <button id="btn-reject-lead" class="btn btn-crimson">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        Descartar
+      </button>
+      <button id="btn-approve-lead" class="btn btn-emerald">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        Aprobar y Despachar
+      </button>
+    </div>
+  </aside>
+
+  <!-- Modal Discard Reason -->
+  <div id="modal-discard" class="modal-backdrop">
+    <div class="modal-card">
+      <h3 class="modal-title">Motivo de Descarte</h3>
+      <p style="color: var(--text-secondary); font-size: 12px;">Indique la razón para registrar en auditoría y excluir al prospecto.</p>
+      <input type="text" id="modal-reason-input" class="text-field" placeholder="Ej: No encaja en ICP, competidor directo, etc.">
+      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
+        <button id="modal-cancel-btn" class="btn btn-ghost">Cancelar</button>
+        <button id="modal-confirm-btn" class="btn btn-crimson">Confirmar Descarte</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Dashboard Script -->
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>
