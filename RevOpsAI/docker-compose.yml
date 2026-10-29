@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # RevOps AI Control API & Kanban Dashboard
+  api:
+    build:
+      context: ..
+      dockerfile: RevOpsAI/Dockerfile
+    container_name: revops_api
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://revops_user:revops_secure_pass@db:5432/revops_db
+      - ENVIRONMENT=production
+      - META_WA_TOKEN=${META_WA_TOKEN:-EAABmockToken}
+      - META_WA_PHONE_ID=${META_WA_PHONE_ID:-10987654321}
+      - WHATSAPP_VERIFY_TOKEN=${WHATSAPP_VERIFY_TOKEN:-revops_meta_verify_token}
+      - WHATSAPP_APP_SECRET=${WHATSAPP_APP_SECRET:-revops_meta_secret_key}
+      - RESEND_API_KEY=${RESEND_API_KEY:-re_mock_api_key}
+      - HUBSPOT_API_KEY=${HUBSPOT_API_KEY:-pat-mock-token}
+      - GHL_API_KEY=${GHL_API_KEY:-ghl-mock-key}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # PostgreSQL Relational Persistence with Row-Level Security (RLS)
+  db:
+    image: postgres:16-alpine
+    container_name: revops_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: revops_user
+      POSTGRES_PASSWORD: revops_secure_pass
+      POSTGRES_DB: revops_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./src/db/schema_rls.sql:/docker-entrypoint-initdb.d/01_schema_rls.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U revops_user -d revops_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
