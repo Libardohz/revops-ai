@@ -45,7 +45,15 @@ def serve_dashboard() -> HTMLResponse:
         content = _template_path.read_text(encoding="utf-8")
     else:
         content = "<html><body><h1>RevOps AI Dashboard</h1></body></html>"
-    return HTMLResponse(content=content, status_code=200)
+    return HTMLResponse(
+        content=content,
+        status_code=200,
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 config = load_sector_config(_default_config_path)
 shared_store = ApprovalStore()
