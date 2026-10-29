@@ -33,13 +33,13 @@
 - Consumes: Contenido clonado en `c:\Users\JESUS\Desktop\Antigravity\rea\.agents\skills\reverse-engineer-anything/`
 - Produces: Skill de Antigravity accesible en el workspace para guiar al modelo en análisis de ingeniería inversa.
 
-- [ ] **Step 1: Crear directorio de destino y copiar archivos de la skill**
+- [x] **Step 1: Crear directorio de destino y copiar archivos de la skill**
 Copiar el directorio `.agents/skills/reverse-engineer-anything` desde el repositorio clonado `rea` hacia `.agents/skills/reverse-engineer-anything`.
 
-- [ ] **Step 2: Verificar la existencia e integridad de los archivos copiados**
+- [x] **Step 2: Verificar la existencia e integridad de los archivos copiados**
 Ejecutar verificación de que `SKILL.md` y los 7 archivos de referencia existen y tienen tamaño > 0 bytes.
 
-- [ ] **Step 3: Commit de la skill al repositorio**
+- [x] **Step 3: Commit de la skill al repositorio**
 ```bash
 git add .agents/skills/reverse-engineer-anything
 git commit -m "feat(skills): add reverse-engineer-anything skill and reference guides"
@@ -56,7 +56,7 @@ git commit -m "feat(skills): add reverse-engineer-anything skill and reference g
 - Consumes: Configuración del spec
 - Produces: Definición del servidor `rea` bajo `mcpServers` en `mcp_config.json`
 
-- [ ] **Step 1: Escribir la configuración de `mcpServers.rea` en `mcp_config.json`**
+- [x] **Step 1: Escribir la configuración de `mcpServers.rea` en `mcp_config.json`**
 ```json
 {
   "mcpServers": {
@@ -71,14 +71,14 @@ git commit -m "feat(skills): add reverse-engineer-anything skill and reference g
       ],
       "env": {
         "REA_MCP_INPUT_SCHEMA_PROFILE": "compact",
-        "REA_MCP_OUTPUT_SCHEMA_PROFILE": "compact"
+        "REA_MCP_OUTPUT_SCHEMA_PROFILE": "off"
       }
     }
   }
 }
 ```
 
-- [ ] **Step 2: Validar el formato JSON y la estructura de `mcp_config.json`**
+- [x] **Step 2: Validar el formato JSON y la estructura de `mcp_config.json`**
 Verificar con PowerShell / Node que el JSON es válido y contiene la clave `mcpServers.rea.command`.
 
 ---
@@ -92,15 +92,16 @@ Verificar con PowerShell / Node que el JSON es válido y contiene la clave `mcpS
 - Consumes: `mcp_config.json` y paquetes instalados
 - Produces: Confirmación de operatividad de REA en el sistema
 
-- [ ] **Step 1: Ejecutar verificación de diagnóstico `rea doctor --json`**
+- [x] **Step 1: Ejecutar verificación de diagnóstico `rea doctor --json`**
 Ejecutar:
 ```powershell
 cmd.exe /c npx.cmd -y rea-agents@latest doctor --json
 ```
 Verificar que la salida sea un JSON válido con el estado de preparación y herramientas disponibles.
 
-- [ ] **Step 2: Comprobar el arranque stdio del servidor MCP**
+- [x] **Step 2: Comprobar el arranque stdio del servidor MCP**
 Verificar que `cmd.exe /c npx.cmd -y rea-agents@latest --mcp` responde adecuadamente sobre stdio sin errores de inicio.
 
-- [ ] **Step 3: Actualizar la documentación y estado del repositorio**
+- [x] **Step 3: Actualizar la documentación y estado del repositorio**
 Realizar commit de los cambios finales si aplica y resumir la configuración al usuario.
+

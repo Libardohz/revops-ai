@@ -107,3 +107,4 @@ El archivo `C:\Users\JESUS\.gemini\config\mcp_config.json` contendrá la siguien
 ## 5. Consideraciones de Seguridad y Resiliencia
 - **Aislamiento de comandos**: Todo análisis de binarios u observaciones dinámicas se ejecutan localmente en el host.
 - **Tolerancia a fallos**: Si alguna dependencia externa (como Ghidra o IDA) no está presente, REA opera en modo estático para JavaScript, Electron, .NET, strings y PE headers sin abortar.
+
