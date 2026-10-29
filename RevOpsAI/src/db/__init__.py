@@ -1,6 +1,7 @@
 """Database package for RevOpsAI."""
 from RevOpsAI.src.db.models import Base, ProspectORM, AuditLogORM
 from RevOpsAI.src.db.session import get_engine, init_db, get_session_factory
+from RevOpsAI.src.db.repository import TenantScopedRepository
 
 __all__ = [
     "Base",
@@ -9,4 +10,5 @@ __all__ = [
     "get_engine",
     "init_db",
     "get_session_factory",
+    "TenantScopedRepository",
 ]
