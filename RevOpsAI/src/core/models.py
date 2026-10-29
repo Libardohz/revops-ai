@@ -45,7 +45,7 @@ class Prospect(BaseModel):
         ProspectState.DRAFTING: {ProspectState.PENDING_APPROVAL},
         ProspectState.PENDING_APPROVAL: {ProspectState.APPROVED, ProspectState.DISCARDED},
         ProspectState.APPROVED: {ProspectState.SENT},
-        ProspectState.SENT: {ProspectState.OPT_OUT, ProspectState.INTERESTED},
+        ProspectState.SENT: {ProspectState.OPT_OUT, ProspectState.INTERESTED, ProspectState.DISCARDED},
         ProspectState.INTERESTED: {ProspectState.OPT_OUT},
         ProspectState.DISCARDED: set(),
         ProspectState.OPT_OUT: set(),

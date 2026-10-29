@@ -5,6 +5,7 @@ from RevOpsAI.src.agents.audit_agent import CommercialAuditAgent, CommercialAudi
 from RevOpsAI.src.agents.scoring_agent import ScoringAgent, ScoringResult
 from RevOpsAI.src.agents.copywriter_agent import CopywriterAgent
 from RevOpsAI.src.agents.dispatch_agent import DispatchAgent, ReplyIntent
+from RevOpsAI.src.agents.followup_agent import FollowUpAgent, FollowUpResult
 
 __all__ = [
     "ResearchAgent",
@@ -16,4 +17,6 @@ __all__ = [
     "CopywriterAgent",
     "DispatchAgent",
     "ReplyIntent",
+    "FollowUpAgent",
+    "FollowUpResult",
 ]
