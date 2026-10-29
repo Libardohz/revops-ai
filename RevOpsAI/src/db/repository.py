@@ -149,7 +149,7 @@ class TenantScopedRepository:
         query = self.session.query(AuditLogORM).filter_by(tenant_id=self.tenant_id)
         if lead_id:
             query = query.filter_by(lead_id=lead_id)
-        records = query.order_by(AuditLogORM.timestamp.desc()).all()
+        records = query.order_by(AuditLogORM.created_at.desc()).all()
         return [
             {
                 "id": r.id,
@@ -158,7 +158,7 @@ class TenantScopedRepository:
                 "actor": r.actor,
                 "action": r.action,
                 "reason": r.reason,
-                "timestamp": r.timestamp.isoformat() if r.timestamp else None,
+                "timestamp": r.created_at.isoformat() if r.created_at else None,
             }
             for r in records
         ]

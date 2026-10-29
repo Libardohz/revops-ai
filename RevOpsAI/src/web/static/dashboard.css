@@ -14,6 +14,7 @@
   --bg-subtle: #1f1f23;
 
   /* Directional Hairline Borders */
+  --border-subtle: #27272a;
   --border-hairline: #27272a;
   --border-focus: #52525b;
   --border-highlight: rgba(255, 255, 255, 0.08);
@@ -397,7 +398,7 @@ html, body {
 }
 
 /* 4. Kanban Layout */
-.kanban-board {
+.kanban-board, .kanban-container {
   display: grid;
   grid-template-columns: repeat(4, minmax(280px, 1fr));
   gap: 16px;
@@ -599,7 +600,7 @@ html, body {
   pointer-events: auto;
 }
 
-.drawer-panel {
+.drawer-panel, .slide-drawer {
   position: fixed;
   top: 0;
   right: 0;

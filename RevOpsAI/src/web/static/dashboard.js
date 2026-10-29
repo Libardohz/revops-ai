@@ -126,6 +126,13 @@
   }
 
   /**
+   * Helper alias for complete data refresh
+   */
+  async function refreshAll() {
+    await Promise.all([fetchLeads(), fetchStats()]);
+  }
+
+  /**
    * Parse microdiagnosis gaps from summary
    */
   function parseGapsFromLead(lead) {
