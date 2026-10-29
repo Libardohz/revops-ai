@@ -3,203 +3,353 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RevOps AI - Bandeja Human-in-the-Loop & Kanban</title>
+  <title>RevOps AI - Consola de Control Multi-Agente & Human-in-the-Loop</title>
   <link rel="stylesheet" href="/static/dashboard.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f4f4f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>">
 </head>
 <body>
 
-  <!-- Top App Navigation Bar -->
+  <!-- Top Application Command Bar -->
   <header class="app-header">
-    <div class="brand-section">
-      <div class="brand-logo">R</div>
-      <div class="brand-title">
-        RevOps AI
-        <span class="version-badge">v2.0-kanban</span>
+    <div class="brand-group">
+      <div class="brand-symbol" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+          <polyline points="2 17 12 22 22 17"></polyline>
+          <polyline points="2 12 12 17 22 12"></polyline>
+        </svg>
+      </div>
+      <div class="brand-info">
+        <span class="brand-name">REVOPS AI</span>
+        <span class="brand-env">PROD · v2.2</span>
+      </div>
+      <div class="engine-badge" id="engine-status" title="Estado de conexión con el motor de agentes">
+        <span class="status-dot"></span>
+        <span class="status-text">MOTOR EN LÍNEA</span>
       </div>
     </div>
 
-    <div class="header-controls">
-      <div class="tenant-selector">
-        <label for="tenant-select">Tenant Activo:</label>
-        <select id="tenant-select" class="select-input">
+    <div class="header-actions">
+      <!-- Tenant Selector -->
+      <div class="control-box">
+        <label for="tenant-select" class="control-label">TENANT:</label>
+        <select id="tenant-select" class="select-field">
           <option value="tenant_clinicas_madrid" selected>Clínicas Madrid (tenant_clinicas_madrid)</option>
           <option value="tenant_dental_bcn">Dental Barcelona (tenant_dental_bcn)</option>
           <option value="tenant_default">Default System (tenant_default)</option>
         </select>
       </div>
 
-      <button id="refresh-btn" class="btn btn-ghost" title="Actualizar datos en vivo">
+      <!-- Action Buttons -->
+      <button id="btn-open-audit-modal" class="btn btn-primary" title="Auditar en vivo cualquier sitio web de clínica">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        Auditar Clínica
+      </button>
+
+      <button id="btn-export-csv" class="btn btn-secondary" title="Exportar prospectos visibles a formato CSV">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Exportar CSV
+      </button>
+
+      <button id="refresh-btn" class="btn btn-secondary" title="Actualizar datos del servidor">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21.5 2v6h-6"></path>
+          <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
         </svg>
         Actualizar
       </button>
     </div>
   </header>
 
-  <!-- Live KPI Metrics Bar -->
-  <section class="metrics-bar">
-    <div class="metric-card">
-      <span class="metric-label">Total Prospectos</span>
-      <span id="stat-total" class="metric-value">0</span>
+  <!-- Live KPI Metrics Strip -->
+  <section class="metrics-strip" aria-label="Métricas de Rendimiento del Pipeline">
+    <div class="metric-cell">
+      <span class="metric-caption">Total Prospectos</span>
+      <span id="stat-total" class="metric-number">0</span>
     </div>
-    <div class="metric-card">
-      <span class="metric-label">Pendientes Aprobación</span>
-      <span id="stat-pending" class="metric-value">0</span>
+    <div class="metric-cell">
+      <span class="metric-caption">Pendientes Aprobación</span>
+      <span id="stat-pending" class="metric-number text-amber">0</span>
     </div>
-    <div class="metric-card">
-      <span class="metric-label">Cualificados</span>
-      <span id="stat-qualified" class="metric-value">0</span>
+    <div class="metric-cell">
+      <span class="metric-caption">Cualificados</span>
+      <span id="stat-qualified" class="metric-number">0</span>
     </div>
-    <div class="metric-card">
-      <span class="metric-label">Tasa Cualificación</span>
-      <span id="stat-rate" class="metric-value">0%</span>
+    <div class="metric-cell">
+      <span class="metric-caption">Tasa Cualificación</span>
+      <span id="stat-rate" class="metric-number">0%</span>
     </div>
-    <div class="metric-card">
-      <span class="metric-label">Interesados</span>
-      <span id="stat-interested" class="metric-value">0</span>
+    <div class="metric-cell">
+      <span class="metric-caption">Interesados</span>
+      <span id="stat-interested" class="metric-number text-emerald">0</span>
     </div>
-    <div class="metric-card">
-      <span class="metric-label">Descartados / Opt-Out</span>
-      <span id="stat-discarded" class="metric-value">0</span>
+    <div class="metric-cell">
+      <span class="metric-caption">Descartados / Opt-Out</span>
+      <span id="stat-discarded" class="metric-number text-crimson">0</span>
+    </div>
+  </section>
+
+  <!-- Filtering and Search Toolbar -->
+  <section class="toolbar-section">
+    <div class="search-box">
+      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input type="text" id="filter-search-input" class="search-input" placeholder="Filtrar por nombre de clínica, URL o brechas detectadas...">
+      <button id="search-clear-btn" class="search-clear" title="Limpiar filtro" style="display: none;">&times;</button>
+    </div>
+
+    <div class="filter-chips" id="filter-chips-group">
+      <button class="chip-btn active" data-filter="all">Todos</button>
+      <button class="chip-btn" data-filter="high-score">Score &ge; 80</button>
+      <button class="chip-btn" data-filter="no-whatsapp">Sin WhatsApp</button>
+      <button class="chip-btn" data-filter="no-booking">Sin Cita Online</button>
+    </div>
+
+    <div class="toolbar-counter">
+      <span id="visible-leads-count">0</span> prospectos visibles
     </div>
   </section>
 
   <!-- Main Kanban Board -->
-  <main class="kanban-container">
-    <!-- Col 1: Pendientes de Aprobación -->
-    <div class="kanban-column" id="col-pending-group">
-      <div class="column-header">
-        <div class="column-title-group">
-          <span class="column-indicator indicator-pending"></span>
-          <span class="column-title">Pendientes de Aprobación</span>
+  <main class="kanban-board">
+    <!-- Columna 1: Pendientes de Aprobación -->
+    <div class="kanban-col" id="col-pending-group">
+      <div class="col-head">
+        <div class="col-title-wrap">
+          <span class="col-dot dot-amber"></span>
+          <span class="col-heading">Pendientes de Aprobación</span>
         </div>
-        <span id="count-pending" class="column-counter">0</span>
+        <span id="count-pending" class="col-badge">0</span>
       </div>
-      <div id="col-cards-pending" class="column-cards"></div>
+      <div id="col-cards-pending" class="col-body"></div>
     </div>
 
-    <!-- Col 2: Enviados / Despachados -->
-    <div class="kanban-column" id="col-sent-group">
-      <div class="column-header">
-        <div class="column-title-group">
-          <span class="column-indicator indicator-sent"></span>
-          <span class="column-title">Enviados</span>
+    <!-- Columna 2: Enviados -->
+    <div class="kanban-col" id="col-sent-group">
+      <div class="col-head">
+        <div class="col-title-wrap">
+          <span class="col-dot dot-zinc"></span>
+          <span class="col-heading">Enviados / En Secuencia</span>
         </div>
-        <span id="count-sent" class="column-counter">0</span>
+        <span id="count-sent" class="col-badge">0</span>
       </div>
-      <div id="col-cards-sent" class="column-cards"></div>
+      <div id="col-cards-sent" class="col-body"></div>
     </div>
 
-    <!-- Col 3: Interesados -->
-    <div class="kanban-column" id="col-interested-group">
-      <div class="column-header">
-        <div class="column-title-group">
-          <span class="column-indicator indicator-interested"></span>
-          <span class="column-title">Interesados</span>
+    <!-- Columna 3: Interesados -->
+    <div class="kanban-col" id="col-interested-group">
+      <div class="col-head">
+        <div class="col-title-wrap">
+          <span class="col-dot dot-emerald"></span>
+          <span class="col-heading">Interesados</span>
         </div>
-        <span id="count-interested" class="column-counter">0</span>
+        <span id="count-interested" class="col-badge">0</span>
       </div>
-      <div id="col-cards-interested" class="column-cards"></div>
+      <div id="col-cards-interested" class="col-body"></div>
     </div>
 
-    <!-- Col 4: Descartados / Opt-Out -->
-    <div class="kanban-column" id="col-discarded-group">
-      <div class="column-header">
-        <div class="column-title-group">
-          <span class="column-indicator indicator-discarded"></span>
-          <span class="column-title">Descartados / Opt-Out</span>
+    <!-- Columna 4: Descartados / Opt-Out -->
+    <div class="kanban-col" id="col-discarded-group">
+      <div class="col-head">
+        <div class="col-title-wrap">
+          <span class="col-dot dot-crimson"></span>
+          <span class="col-heading">Descartados / Opt-Out</span>
         </div>
-        <span id="count-discarded" class="column-counter">0</span>
+        <span id="count-discarded" class="col-badge">0</span>
       </div>
-      <div id="col-cards-discarded" class="column-cards"></div>
+      <div id="col-cards-discarded" class="col-body"></div>
     </div>
   </main>
 
   <!-- Slide-Over Inspection Drawer -->
-  <div id="drawer-backdrop" class="drawer-backdrop"></div>
-  <aside id="slide-drawer" class="slide-drawer">
-    <div class="drawer-header">
-      <div class="drawer-title-area">
-        <h2 id="drawer-lead-name" class="drawer-title">Inspección de Prospecto</h2>
-        <span id="drawer-lead-score" class="card-score">0/100</span>
+  <div id="drawer-backdrop" class="drawer-overlay" aria-hidden="true"></div>
+  <aside id="slide-drawer" class="drawer-panel" role="dialog" aria-labelledby="drawer-lead-name">
+    <div class="drawer-head">
+      <div class="drawer-title-box">
+        <h2 id="drawer-lead-name" class="drawer-h2">Inspección de Prospecto</h2>
+        <span id="drawer-lead-score" class="score-pill">0/100</span>
       </div>
-      <button id="drawer-close" class="drawer-close" aria-label="Cerrar panel">&times;</button>
+      <button id="drawer-close" class="icon-button" aria-label="Cerrar panel lateral">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
     </div>
 
-    <div class="drawer-body">
-      <!-- Metadata -->
-      <section class="drawer-section">
-        <span class="section-label">Ficha del Prospecto</span>
-        <div class="meta-grid">
-          <div class="meta-item">
-            <span class="meta-key">URL del Sitio</span>
-            <span class="meta-val"><a id="drawer-lead-url" href="#" target="_blank" rel="noopener noreferrer">-</a></span>
+    <!-- Multi-Tab Navigation -->
+    <nav class="drawer-tabs" role="tablist">
+      <button class="tab-link active" data-tab="tab-diagnosis" role="tab">01. Microdiagnóstico</button>
+      <button class="tab-link" data-tab="tab-outreach" role="tab">02. Copy & Canales</button>
+      <button class="tab-link" data-tab="tab-audit-logs" role="tab">03. Historial Auditoría</button>
+    </nav>
+
+    <div class="drawer-content">
+      <!-- TAB 1: Microdiagnóstico & Auditoría de Gaps -->
+      <section id="tab-diagnosis" class="tab-pane active" role="tabpanel">
+        <div class="spec-table">
+          <div class="spec-row">
+            <span class="spec-key">Sitio Web</span>
+            <span class="spec-val"><a id="drawer-lead-url" href="#" target="_blank" rel="noopener noreferrer" class="link-external">-</a></span>
           </div>
-          <div class="meta-item">
-            <span class="meta-key">Tenant</span>
-            <span id="drawer-lead-tenant" class="meta-val">-</span>
+          <div class="spec-row">
+            <span class="spec-key">Tenant</span>
+            <span id="drawer-lead-tenant" class="spec-val">-</span>
           </div>
-          <div class="meta-item">
-            <span class="meta-key">Estado Actual</span>
-            <span id="drawer-lead-status" class="meta-val">-</span>
+          <div class="spec-row">
+            <span class="spec-key">Estado de Ciclo</span>
+            <span id="drawer-lead-status" class="spec-val">-</span>
           </div>
-          <div class="meta-item">
-            <span class="meta-key">SLA Revisión</span>
-            <span class="meta-val">Human-in-the-Loop</span>
+          <div class="spec-row">
+            <span class="spec-key">Seguridad Legal</span>
+            <span class="spec-val text-emerald">Zero Medical Diagnosis · 100% RGPD</span>
+          </div>
+        </div>
+
+        <div class="pane-block">
+          <span class="block-title">Brechas Operativas Detectadas</span>
+          <div id="drawer-gaps-list" class="gaps-container"></div>
+        </div>
+
+        <div class="pane-block">
+          <span class="block-title">Resumen de Investigación Multi-Agente</span>
+          <p id="drawer-research-text" class="research-summary-text">-</p>
+        </div>
+      </section>
+
+      <!-- TAB 2: Copywriter & Multicanal Outreach -->
+      <section id="tab-outreach" class="tab-pane" role="tabpanel">
+        <div class="channel-selector">
+          <span class="control-label">Canal de Despacho:</span>
+          <div class="channel-options">
+            <label class="radio-chip">
+              <input type="radio" name="dispatch-channel" value="email" checked>
+              <span>Email (RFC 8058)</span>
+            </label>
+            <label class="radio-chip">
+              <input type="radio" name="dispatch-channel" value="whatsapp">
+              <span>WhatsApp Cloud (E.164)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="pane-block">
+          <div class="editor-header">
+            <label class="block-title" for="drawer-copy-textarea">Cuerpo de la Propuesta Consultiva</label>
+            <span id="copy-char-counter" class="char-count">0 caracteres</span>
+          </div>
+          <textarea id="drawer-copy-textarea" class="textarea-editor" rows="12" spellcheck="false" placeholder="Texto de la propuesta generado por CopywriterAgent..."></textarea>
+          <div class="editor-notice">
+            El texto anterior puede ser ajustado manualmente antes de autorizar el despacho. Se mantendrá el disclaimer legal al pie.
           </div>
         </div>
       </section>
 
-      <!-- Microdiagnosis Gaps Breakdown -->
-      <section class="drawer-section">
-        <span class="section-label">Microdiagnóstico y Fricciones Detectadas</span>
-        <div id="drawer-gaps-list" class="gaps-list"></div>
-      </section>
-
-      <!-- Proposal Copy Review / Editor -->
-      <section class="drawer-section">
-        <span class="section-label">Revisión de Copy y Mensaje Personalizado</span>
-        <div class="copy-editor-card">
-          <label class="input-label" for="drawer-copy-textarea">
-            Propuesta Generada
-            <span style="color: var(--text-muted); font-size: 10px;">Editable antes de aprobar</span>
-          </label>
-          <textarea id="drawer-copy-textarea" class="text-field textarea-field" placeholder="Cuerpo del mensaje de outreach..."></textarea>
+      <!-- TAB 3: Historial y Trazabilidad -->
+      <section id="tab-audit-logs" class="tab-pane" role="tabpanel">
+        <div class="pane-block">
+          <span class="block-title">Registro de Auditoría (RLS Tenant Scoped)</span>
+          <div id="drawer-logs-list" class="logs-container">
+            <div class="log-empty">Cargando registros de auditoría...</div>
+          </div>
         </div>
       </section>
     </div>
 
-    <div class="drawer-footer">
-      <button id="btn-reject-lead" class="btn btn-crimson">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    <!-- Drawer Sticky Action Footer -->
+    <div class="drawer-foot">
+      <button id="btn-reject-lead" class="btn btn-danger">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
         Descartar
       </button>
-      <button id="btn-approve-lead" class="btn btn-emerald">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <button id="btn-approve-lead" class="btn btn-success">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
         Aprobar y Despachar
       </button>
     </div>
   </aside>
 
-  <!-- Modal Discard Reason -->
-  <div id="modal-discard" class="modal-backdrop">
+  <!-- Modal: Live Clinic Audit -->
+  <div id="modal-audit" class="modal-overlay" aria-hidden="true">
     <div class="modal-card">
-      <h3 class="modal-title">Motivo de Descarte</h3>
-      <p style="color: var(--text-secondary); font-size: 12px;">Indique la razón para registrar en auditoría y excluir al prospecto.</p>
-      <input type="text" id="modal-reason-input" class="text-field" placeholder="Ej: No encaja en ICP, competidor directo, etc.">
-      <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px;">
-        <button id="modal-cancel-btn" class="btn btn-ghost">Cancelar</button>
-        <button id="modal-confirm-btn" class="btn btn-crimson">Confirmar Descarte</button>
+      <div class="modal-header">
+        <h3 class="modal-h3">Auditoría en Tiempo Real de Clínica</h3>
+        <button id="modal-audit-close" class="icon-button" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <p class="modal-desc">
+        Introduce los datos del centro odontológico o médico. El scraper seguro extraerá el contenido web y ejecutará la cadena multi-agente de forma autónoma.
+      </p>
+
+      <form id="form-live-audit" class="modal-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="audit-clinic-name" class="form-label">Nombre de la Clínica</label>
+          <input type="text" id="audit-clinic-name" class="input-text" placeholder="Ej: Clínica Dental Madrid Río" required>
+        </div>
+
+        <div class="form-group">
+          <label for="audit-clinic-url" class="form-label">URL del Sitio Web</label>
+          <input type="url" id="audit-clinic-url" class="input-text" placeholder="https://clinicadentalmadridrio.com/" required>
+        </div>
+
+        <div class="form-group">
+          <label for="audit-tenant-id" class="form-label">Tenant Asignado</label>
+          <select id="audit-tenant-id" class="select-field">
+            <option value="tenant_clinicas_madrid" selected>Clínicas Madrid (tenant_clinicas_madrid)</option>
+            <option value="tenant_dental_bcn">Dental Barcelona (tenant_dental_bcn)</option>
+            <option value="tenant_default">Default System (tenant_default)</option>
+          </select>
+        </div>
+
+        <!-- Progress Stepper (Visible during live audit) -->
+        <div id="audit-stepper" class="audit-stepper" style="display: none;">
+          <div class="stepper-bar"><div id="stepper-fill" class="stepper-fill"></div></div>
+          <span id="stepper-label" class="stepper-label">Iniciando inspección...</span>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="modal-audit-cancel" class="btn btn-secondary">Cancelar</button>
+          <button type="submit" id="modal-audit-submit" class="btn btn-primary">Iniciar Auditoría</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Discard Reason -->
+  <div id="modal-discard" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-h3">Motivo de Exclusión</h3>
+        <button id="modal-discard-close" class="icon-button" aria-label="Cerrar modal">&times;</button>
+      </div>
+      <p class="modal-desc">
+        Indique el motivo de descarte para registrar la trazabilidad en la auditoría inmutable de este tenant.
+      </p>
+      <input type="text" id="modal-reason-input" class="input-text" placeholder="Ej: No cumple perfil de cliente ideal (ICP), competidor, etc.">
+      <div class="modal-actions">
+        <button id="modal-cancel-btn" class="btn btn-secondary">Cancelar</button>
+        <button id="modal-confirm-btn" class="btn btn-danger">Confirmar Descarte</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Container -->
-  <div id="toast-container" class="toast-container"></div>
+  <!-- Toast Micro-Feedback Container -->
+  <div id="toast-container" class="toast-shelf" aria-live="polite"></div>
 
-  <!-- Dashboard Script -->
+  <!-- Dashboard Logic Module -->
   <script src="/static/dashboard.js"></script>
 </body>
 </html>
