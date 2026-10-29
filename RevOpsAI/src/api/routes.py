@@ -87,7 +87,15 @@ def process_prospect(
 ) -> PipelineResult:
     """Ingest and run the multi-agent enrichment pipeline for a prospect."""
     lead = Prospect(tenant_id=req.tenant_id, name=req.name, url=req.url)
-    return orch.process_prospect(lead, req.html_content)
+    result = orch.process_prospect(lead, req.html_content)
+    try:
+        factory = get_default_session_factory()
+        with factory() as session:
+            repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+            repo.save_prospect(result.prospect)
+    except Exception:
+        pass
+    return result
 
 
 @router.get("/approval/pending", response_model=list[Prospect])
@@ -108,11 +116,22 @@ def handle_action(
     try:
         action_upper = req.action.upper()
         if action_upper == "APPROVE":
-            return store.approve(lead_id=req.lead_id, tenant_id=req.tenant_id)
+            lead = store.approve(lead_id=req.lead_id, tenant_id=req.tenant_id)
         elif action_upper == "REJECT":
-            return store.reject(lead_id=req.lead_id, tenant_id=req.tenant_id, reason=req.reason)
+            lead = store.reject(lead_id=req.lead_id, tenant_id=req.tenant_id, reason=req.reason)
         else:
             raise HTTPException(status_code=400, detail="Acción inválida. Use APPROVE o REJECT")
+
+        try:
+            factory = get_default_session_factory()
+            with factory() as session:
+                repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+                repo.save_prospect(lead)
+                repo.log_audit(lead_id=lead.id, actor="human_operator", action=action_upper, reason=req.reason)
+        except Exception:
+            pass
+
+        return lead
     except KeyError:
         raise HTTPException(status_code=404, detail="Prospecto no encontrado para este tenant")
     except ValueError as exc:
