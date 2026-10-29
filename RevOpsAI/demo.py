@@ -13,6 +13,88 @@ from RevOpsAI.src.core.config_loader import load_sector_config
 from RevOpsAI.src.core.approval_store import ApprovalStore
 from RevOpsAI.src.core.pipeline import PipelineOrchestrator
 from RevOpsAI.src.agents.dispatch_agent import DispatchAgent, ReplyIntent
+from RevOpsAI.src.db.session import get_engine, init_db, get_session_factory
+from RevOpsAI.src.db.repository import TenantScopedRepository
+
+
+def seed_dashboard_database(db_url: str = "sqlite:///RevOpsAI/data/revops.db") -> list[Prospect]:
+    """Poblar la base de datos relacional con prospectos de ejemplo para el dashboard Kanban."""
+    engine = get_engine(db_url)
+    init_db(engine)
+    session_factory = get_session_factory(engine)
+
+    tenant_id = "tenant_clinicas_madrid"
+    sample_prospects = [
+        Prospect(
+            id="lead_madrid_pending_01",
+            tenant_id=tenant_id,
+            name="Clínica Dental Chamberí Especialistas",
+            url="https://dentalchamberi.madrid",
+            score=88,
+            research_summary="Sin WhatsApp visible ni cita online. Alto volumen de implantes dentales y ortodoncia invisible.",
+            draft_message="Estimado Dr. Gómez, notamos que su clínica en Chamberí no cuenta con canal directo de WhatsApp para pacientes de implantes...",
+            state=ProspectState.PENDING_APPROVAL,
+        ),
+        Prospect(
+            id="lead_madrid_pending_02",
+            tenant_id=tenant_id,
+            name="Instituto Odontológico Retiro",
+            url="https://odontoretiro.es",
+            score=79,
+            research_summary="Formulario web antiguo con baja conversión. Foco en estética dental avanzada.",
+            draft_message="Estimado equipo de Retiro, identificamos una brecha clave en la retención de presupuestos estéticos...",
+            state=ProspectState.PENDING_APPROVAL,
+        ),
+        Prospect(
+            id="lead_madrid_sent_01",
+            tenant_id=tenant_id,
+            name="Centro Odontológico Castellana Norte",
+            url="https://castellananorte-dental.com",
+            score=92,
+            research_summary="Excelente encaje comercial. Mensaje inicial despachado por email comercial.",
+            draft_message="Propuesta comercial enviada para automatización de seguimiento de presupuestos de alto ticket.",
+            state=ProspectState.SENT,
+        ),
+        Prospect(
+            id="lead_madrid_interested_01",
+            tenant_id=tenant_id,
+            name="Policlínica Dental Salamanca",
+            url="https://dentalsalamanca-salud.es",
+            score=95,
+            research_summary="Respuesta positiva recibida del Director Médico solicitando demostración en vivo de la plataforma.",
+            draft_message="Reunión de demo agendada para este jueves a las 11:00h.",
+            state=ProspectState.INTERESTED,
+        ),
+        Prospect(
+            id="lead_madrid_discarded_01",
+            tenant_id=tenant_id,
+            name="Consultorio Dental San Blas",
+            url="https://dentalsanblas.local",
+            score=42,
+            research_summary="Puntuación insuficiente (42/100). Consulta unipersonal sin tratamientos de alto ticket.",
+            draft_message="",
+            state=ProspectState.DISCARDED,
+        ),
+    ]
+
+    with session_factory() as session:
+        repo = TenantScopedRepository(session=session, tenant_id=tenant_id)
+        for p in sample_prospects:
+            repo.save_prospect(p)
+
+    print("\n" + "=" * 70)
+    print(" POBLADO DE BASE DE DATOS PARA DASHBOARD KANBAN ".center(70, "="))
+    print("=" * 70)
+    print(f"[OK] Base de datos poblada exitosamente en: {db_url}")
+    print(f"[OK] Tenant: '{tenant_id}' ({len(sample_prospects)} prospectos en 4 estados Kanban)")
+    print("\nPara iniciar el servidor y explorar el Kanban visual interactivo:")
+    print("  uvicorn RevOpsAI.src.api.main:app --port 8000")
+    print("\nAbra en su navegador:")
+    print("  http://localhost:8000/dashboard")
+    print("  (o con parámetro de tenant: http://localhost:8000/dashboard?tenant=tenant_clinicas_madrid)")
+    print("=" * 70)
+
+    return sample_prospects
 
 
 def separator(title: str = ""):
@@ -148,6 +230,11 @@ def main():
     print(f"-> Bloqueo en Lista Negra (Blacklisted): {approved_lead.is_blacklisted}")
     print(f"-> Estado final del prospecto: {approved_lead.state.value}")
     print("[CUMPLIMIENTO LEGAL 100%]: El prospecto queda marcado como OPT_OUT y nunca volvera a ser contactado.")
+
+    # -------------------------------------------------------------
+    # CASO 6: Inicialización del Dashboard Kanban Interactivo
+    # -------------------------------------------------------------
+    seed_dashboard_database()
 
     separator("DEMOSTRACION FINALIZADA CON EXITO")
 
