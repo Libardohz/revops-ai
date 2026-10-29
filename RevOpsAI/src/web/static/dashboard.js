@@ -1,31 +1,49 @@
 /**
- * RevOps AI - Human-in-the-Loop Web Dashboard Frontend
- * Bespoke Vanilla JS with Tactile UI, Fast Kanban, & Slide-Over Drawer
+ * RevOps AI - Command Center Web Dashboard Module
+ * Strictly Anti-AI · Tactile UI · Zero Layout Shift · High-Density Architecture
  */
 
 (() => {
   'use strict';
 
-  // Global State
+  // 1. Application Reactive State
   const state = {
-    tenantId: 'tenant_clinicas_madrid',
+    tenantId: localStorage.getItem('revops_tenant') || 'tenant_clinicas_madrid',
     leads: [],
+    filteredLeads: [],
     stats: {},
     selectedLead: null,
+    activeFilter: 'all',
+    searchQuery: '',
+    activeTab: 'tab-diagnosis',
+    activeChannel: 'email',
+    discardTargetLeadId: null,
     isLoading: false,
   };
 
-  // DOM Elements
-  const elements = {
+  // 2. DOM Elements Cache
+  const el = {
+    // Header & Tenant
     tenantSelect: document.getElementById('tenant-select'),
+    btnOpenAuditModal: document.getElementById('btn-open-audit-modal'),
+    btnExportCsv: document.getElementById('btn-export-csv'),
     refreshBtn: document.getElementById('refresh-btn'),
-    // KPI Badges
+    engineStatus: document.getElementById('engine-status'),
+
+    // KPI Counters
     metricTotal: document.getElementById('stat-total'),
     metricPending: document.getElementById('stat-pending'),
     metricQualified: document.getElementById('stat-qualified'),
     metricRate: document.getElementById('stat-rate'),
     metricInterested: document.getElementById('stat-interested'),
     metricDiscarded: document.getElementById('stat-discarded'),
+
+    // Search & Filter Toolbar
+    filterSearchInput: document.getElementById('filter-search-input'),
+    searchClearBtn: document.getElementById('search-clear-btn'),
+    filterChipsGroup: document.getElementById('filter-chips-group'),
+    visibleLeadsCount: document.getElementById('visible-leads-count'),
+
     // Kanban Columns
     colPending: document.getElementById('col-cards-pending'),
     colSent: document.getElementById('col-cards-sent'),
@@ -35,7 +53,8 @@
     countSent: document.getElementById('count-sent'),
     countInterested: document.getElementById('count-interested'),
     countDiscarded: document.getElementById('count-discarded'),
-    // Drawer
+
+    // Slide-Over Drawer
     drawerBackdrop: document.getElementById('drawer-backdrop'),
     slideDrawer: document.getElementById('slide-drawer'),
     drawerClose: document.getElementById('drawer-close'),
@@ -45,57 +64,97 @@
     drawerTenant: document.getElementById('drawer-lead-tenant'),
     drawerStatus: document.getElementById('drawer-lead-status'),
     drawerGaps: document.getElementById('drawer-gaps-list'),
+    drawerResearchText: document.getElementById('drawer-research-text'),
     drawerCopy: document.getElementById('drawer-copy-textarea'),
-    btnApprove: document.getElementById('btn-approve-lead'),
-    btnReject: document.getElementById('btn-reject-lead'),
-    // Modal Discard Reason
-    modalBackdrop: document.getElementById('modal-discard'),
+    copyCharCounter: document.getElementById('copy-char-counter'),
+    drawerLogsList: document.getElementById('drawer-logs-list'),
+    btnDrawerApprove: document.getElementById('btn-approve-lead'),
+    btnDrawerReject: document.getElementById('btn-reject-lead'),
+    tabLinks: document.querySelectorAll('.tab-link'),
+    tabPanes: document.querySelectorAll('.tab-pane'),
+    channelRadios: document.querySelectorAll('input[name="dispatch-channel"]'),
+
+    // Live Audit Modal
+    modalAudit: document.getElementById('modal-audit'),
+    modalAuditClose: document.getElementById('modal-audit-close'),
+    modalAuditCancel: document.getElementById('modal-audit-cancel'),
+    formLiveAudit: document.getElementById('form-live-audit'),
+    auditClinicName: document.getElementById('audit-clinic-name'),
+    auditClinicUrl: document.getElementById('audit-clinic-url'),
+    auditTenantId: document.getElementById('audit-tenant-id'),
+    auditStepper: document.getElementById('audit-stepper'),
+    stepperFill: document.getElementById('stepper-fill'),
+    stepperLabel: document.getElementById('stepper-label'),
+    modalAuditSubmit: document.getElementById('modal-audit-submit'),
+
+    // Discard Modal
+    modalDiscard: document.getElementById('modal-discard'),
+    modalDiscardClose: document.getElementById('modal-discard-close'),
     modalReasonInput: document.getElementById('modal-reason-input'),
     modalCancelBtn: document.getElementById('modal-cancel-btn'),
     modalConfirmBtn: document.getElementById('modal-confirm-btn'),
-    // Toast Container
+
+    // Toast Shelf
     toastContainer: document.getElementById('toast-container'),
   };
 
   /**
-   * Helper: Show Toast Notification
+   * Toast notification helper
    */
   function showToast(message, type = 'success') {
-    if (!elements.toastContainer) return;
+    if (!el.toastContainer) return;
     const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
+    toast.className = `toast toast-${type}`;
     toast.textContent = message;
-    elements.toastContainer.appendChild(toast);
+    el.toastContainer.appendChild(toast);
 
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(10px)';
-      toast.style.transition = 'all 150ms ease';
-      setTimeout(() => toast.remove(), 160);
+      toast.style.transform = 'translateY(6px)';
+      toast.style.transition = 'all 120ms ease';
+      setTimeout(() => toast.remove(), 130);
     }, 3200);
   }
 
   /**
-   * Extract microdiagnosis gaps from lead summary
+   * Determine score styling class
    */
-  function parseMicrodiagnosisGaps(summary) {
-    if (!summary || typeof summary !== 'string') {
-      return ['Auditoría general completada'];
-    }
-    const lines = summary.split('\n').map(s => s.trim()).filter(Boolean);
-    if (lines.length > 0) {
-      return lines;
-    }
-    return [summary];
+  function getScoreClass(score) {
+    if (score >= 80) return 'score-high';
+    if (score >= 65) return 'score-mid';
+    return 'score-low';
   }
 
   /**
-   * Determine score class (anti-ai semantic color scale)
+   * Parse microdiagnosis gaps from summary
    */
-  function getScoreClass(score) {
-    if (score >= 75) return 'high';
-    if (score >= 50) return 'medium';
-    return 'low';
+  function parseGapsFromLead(lead) {
+    const gaps = [];
+    const summary = lead.research_summary || '';
+
+    if (summary.includes('Sin canal WhatsApp')) {
+      gaps.push({
+        category: 'CONVERSIÓN INMEDIATA',
+        description: 'Ausencia de botón directo de WhatsApp para triaje rápido de citas.',
+        impact: 'Alta pérdida de pacientes en tráfico móvil (estimado 25-35%).',
+      });
+    }
+    if (summary.includes('Carece de sistema de cita')) {
+      gaps.push({
+        category: 'AUTOMATIZACIÓN DE AGENDA',
+        description: 'Sin motor de reserva de citas en línea interactivo.',
+        impact: 'Fricción en horarios fuera de atención telefónica de recepción.',
+      });
+    }
+
+    if (gaps.length === 0) {
+      gaps.push({
+        category: 'OPTIMIZACIÓN DIGITAL',
+        description: 'Infraestructura base detectada; oportunidad en secuencias de reactivación de presupuestos.',
+        impact: 'Recuperación de pacientes no confirmados.',
+      });
+    }
+    return gaps;
   }
 
   /**
@@ -104,33 +163,32 @@
   async function fetchStats() {
     try {
       const res = await fetch(`/api/v1/dashboard/stats?tenant_id=${encodeURIComponent(state.tenantId)}`);
-      if (!res.ok) throw new Error('Error al cargar métricas');
+      if (!res.ok) throw new Error('Error al consultar estadísticas');
       const data = await res.json();
       state.stats = data;
 
-      if (elements.metricTotal) elements.metricTotal.textContent = data.total_leads ?? 0;
-      if (elements.metricPending) elements.metricPending.textContent = data.pending_approval_count ?? 0;
-      if (elements.metricQualified) elements.metricQualified.textContent = data.qualified_count ?? 0;
-      if (elements.metricRate) elements.metricRate.textContent = `${data.qualification_rate ?? 0}%`;
-      if (elements.metricInterested) elements.metricInterested.textContent = data.interested_count ?? 0;
-      if (elements.metricDiscarded) elements.metricDiscarded.textContent = data.discarded_count ?? 0;
+      if (el.metricTotal) el.metricTotal.textContent = data.total_leads ?? 0;
+      if (el.metricPending) el.metricPending.textContent = data.pending_approval_count ?? 0;
+      if (el.metricQualified) el.metricQualified.textContent = data.qualified_count ?? 0;
+      if (el.metricRate) el.metricRate.textContent = `${data.qualification_rate ?? 0}%`;
+      if (el.metricInterested) el.metricInterested.textContent = data.interested_count ?? 0;
+      if (el.metricDiscarded) el.metricDiscarded.textContent = data.discarded_count ?? 0;
     } catch (err) {
-      console.warn('Stats fetch notice:', err.message);
+      console.warn('Stats sync warning:', err.message);
     }
   }
 
   /**
-   * Fetch leads from API (combines DB leads and approval store pending leads)
+   * Fetch leads from both database repository and approval store
    */
   async function fetchLeads() {
+    state.isLoading = true;
     try {
-      // 1. Fetch from repository dashboard/leads
       const [leadsRes, pendingRes] = await Promise.allSettled([
         fetch(`/api/v1/dashboard/leads?tenant_id=${encodeURIComponent(state.tenantId)}`),
         fetch(`/api/v1/approval/pending?tenant_id=${encodeURIComponent(state.tenantId)}`),
       ]);
 
-      let allLeads = [];
       const leadMap = new Map();
 
       if (leadsRes.status === 'fulfilled' && leadsRes.value.ok) {
@@ -144,15 +202,52 @@
       }
 
       state.leads = Array.from(leadMap.values());
-      renderKanban();
+      applyFilters();
     } catch (err) {
       console.error('Error fetching leads:', err);
-      showToast('Error al conectar con la API de leads', 'error');
+      showToast('Error de comunicación con la API de leads', 'error');
+    } finally {
+      state.isLoading = false;
     }
   }
 
   /**
-   * Render Kanban Board
+   * Apply search query and chip filters
+   */
+  function applyFilters() {
+    const q = state.searchQuery.trim().toLowerCase();
+    const filter = state.activeFilter;
+
+    state.filteredLeads = state.leads.filter(lead => {
+      // 1. Text Search Filter
+      if (q) {
+        const nameMatch = (lead.name || '').toLowerCase().includes(q);
+        const urlMatch = (lead.url || '').toLowerCase().includes(q);
+        const summaryMatch = (lead.research_summary || '').toLowerCase().includes(q);
+        if (!nameMatch && !urlMatch && !summaryMatch) return false;
+      }
+
+      // 2. Chip Filter
+      if (filter === 'high-score') {
+        if ((lead.score || 0) < 80) return false;
+      } else if (filter === 'no-whatsapp') {
+        if (!(lead.research_summary || '').includes('Sin canal WhatsApp')) return false;
+      } else if (filter === 'no-booking') {
+        if (!(lead.research_summary || '').includes('Carece de sistema de cita')) return false;
+      }
+
+      return true;
+    });
+
+    if (el.visibleLeadsCount) {
+      el.visibleLeadsCount.textContent = state.filteredLeads.length;
+    }
+
+    renderKanban();
+  }
+
+  /**
+   * Render Kanban Columns
    */
   function renderKanban() {
     const buckets = {
@@ -162,209 +257,322 @@
       discarded: [],
     };
 
-    state.leads.forEach(lead => {
-      const s = (lead.state || '').toUpperCase();
-      if (s === 'PENDING_APPROVAL' || s === 'DRAFTING' || s === 'QUALIFIED') {
+    state.filteredLeads.forEach(lead => {
+      const s = lead.state;
+      if (s === 'PENDING_APPROVAL' || s === 'QUALIFIED' || s === 'DRAFTING' || s === 'INGESTED') {
         buckets.pending.push(lead);
       } else if (s === 'SENT' || s === 'APPROVED') {
         buckets.sent.push(lead);
       } else if (s === 'INTERESTED') {
         buckets.interested.push(lead);
-      } else if (s === 'DISCARDED' || s === 'OPT_OUT') {
-        buckets.discarded.push(lead);
       } else {
-        buckets.pending.push(lead);
+        buckets.discarded.push(lead);
       }
     });
 
-    // Update Counter Badges
-    if (elements.countPending) elements.countPending.textContent = buckets.pending.length;
-    if (elements.countSent) elements.countSent.textContent = buckets.sent.length;
-    if (elements.countInterested) elements.countInterested.textContent = buckets.interested.length;
-    if (elements.countDiscarded) elements.countDiscarded.textContent = buckets.discarded.length;
+    // Update Counters
+    if (el.countPending) el.countPending.textContent = buckets.pending.length;
+    if (el.countSent) el.countSent.textContent = buckets.sent.length;
+    if (el.countInterested) el.countInterested.textContent = buckets.interested.length;
+    if (el.countDiscarded) el.countDiscarded.textContent = buckets.discarded.length;
 
-    renderColumn(elements.colPending, buckets.pending, 'Sin prospectos pendientes');
-    renderColumn(elements.colSent, buckets.sent, 'Sin despachos registrados');
-    renderColumn(elements.colInterested, buckets.interested, 'Sin respuestas interesadas');
-    renderColumn(elements.colDiscarded, buckets.discarded, 'Sin descartes registrados');
+    // Render Cards in Each Column
+    renderColumn(el.colPending, buckets.pending, true);
+    renderColumn(el.colSent, buckets.sent, false);
+    renderColumn(el.colInterested, buckets.interested, false);
+    renderColumn(el.colDiscarded, buckets.discarded, false);
   }
 
   /**
-   * Render cards inside a specific Kanban column
+   * Helper: Render single Kanban column cards
    */
-  function renderColumn(colElement, list, emptyText) {
-    if (!colElement) return;
-    colElement.innerHTML = '';
+  function renderColumn(container, leads, isPendingCol) {
+    if (!container) return;
+    container.innerHTML = '';
 
-    if (list.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-state';
-      empty.textContent = emptyText;
-      colElement.appendChild(empty);
+    if (leads.length === 0) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.className = 'log-meta';
+      emptyDiv.style.textAlign = 'center';
+      emptyDiv.style.padding = '24px 0';
+      emptyDiv.textContent = 'Sin prospectos en esta sección';
+      container.appendChild(emptyDiv);
       return;
     }
 
-    list.forEach(lead => {
-      const card = document.createElement('div');
+    leads.forEach(lead => {
+      const card = document.createElement('article');
       card.className = 'prospect-card';
-      card.dataset.leadId = lead.id;
+      card.dataset.id = lead.id;
 
       const scoreClass = getScoreClass(lead.score || 0);
-      const gaps = parseMicrodiagnosisGaps(lead.research_summary);
-      const cleanUrl = (lead.url || '').replace(/^https?:\/\//, '').replace(/\/$/, '');
 
-      let statusBadgeClass = 'status-badge-pending';
-      const s = (lead.state || '').toUpperCase();
-      if (s === 'APPROVED' || s === 'SENT') statusBadgeClass = 'status-badge-sent';
-      else if (s === 'INTERESTED') statusBadgeClass = 'status-badge-interested';
-      else if (s === 'DISCARDED' || s === 'OPT_OUT') statusBadgeClass = 'status-badge-discarded';
+      // Extract Micro Tags
+      let tagPills = '';
+      const summary = lead.research_summary || '';
+      const matchServices = summary.match(/(\d+)\s+servicios/i);
+      if (matchServices) {
+        tagPills += `<span class="tag-pill">${matchServices[0]}</span>`;
+      }
+      if (summary.includes('Sin canal WhatsApp')) {
+        tagPills += `<span class="tag-pill tag-warn">Sin WhatsApp</span>`;
+      }
+      if (summary.includes('Carece de sistema de cita')) {
+        tagPills += `<span class="tag-pill tag-warn">Sin Cita Online</span>`;
+      }
+      if (!tagPills) {
+        tagPills = `<span class="tag-pill">Lead Scored</span>`;
+      }
+
+      // Quick Actions for Pending Column
+      let quickActionsHtml = '';
+      if (isPendingCol) {
+        quickActionsHtml = `
+          <div class="card-actions">
+            <button class="btn btn-card btn-danger quick-reject" data-id="${lead.id}">Descartar</button>
+            <button class="btn btn-card btn-success quick-approve" data-id="${lead.id}">Aprobar</button>
+          </div>
+        `;
+      }
 
       card.innerHTML = `
         <div class="card-top">
-          <div class="card-title">${escapeHtml(lead.name || 'Prospecto sin nombre')}</div>
-          <span class="card-score ${scoreClass}">${lead.score || 0} pts</span>
+          <h4 class="card-title">${escapeHtml(lead.name)}</h4>
+          <span class="score-badge ${scoreClass}">${lead.score || 0}</span>
         </div>
-        <div class="card-domain">${escapeHtml(cleanUrl)}</div>
+        <a class="card-url" href="${escapeHtml(lead.url)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation();">
+          ${escapeHtml(lead.url)}
+        </a>
         <div class="card-tags">
-          ${gaps.slice(0, 2).map(g => `<span class="card-tag gap">${escapeHtml(g.substring(0, 36))}</span>`).join('')}
+          ${tagPills}
         </div>
-        <div class="card-footer">
-          <span class="card-status-badge ${statusBadgeClass}">${s || 'PENDIENTE'}</span>
-          <span>ID: ${lead.id.substring(0, 8)}</span>
-        </div>
+        ${quickActionsHtml}
       `;
 
-      card.addEventListener('click', () => openInspectionDrawer(lead));
-      colElement.appendChild(card);
+      // Card click opens inspection drawer
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('button') || e.target.closest('a')) return;
+        openDrawer(lead);
+      });
+
+      // Quick Actions Handlers
+      if (isPendingCol) {
+        const btnApprove = card.querySelector('.quick-approve');
+        const btnReject = card.querySelector('.quick-reject');
+        if (btnApprove) {
+          btnApprove.addEventListener('click', (e) => {
+            e.stopPropagation();
+            approveLead(lead.id);
+          });
+        }
+        if (btnReject) {
+          btnReject.addEventListener('click', (e) => {
+            e.stopPropagation();
+            openDiscardModal(lead.id);
+          });
+        }
+      }
+
+      container.appendChild(card);
     });
   }
 
   /**
-   * Open Slide-Over Drawer for Inspection & Proposal Copy Review
+   * Open Slide-Over Drawer
    */
-  function openInspectionDrawer(lead) {
+  function openDrawer(lead) {
     state.selectedLead = lead;
-    if (!elements.slideDrawer || !elements.drawerBackdrop) return;
 
-    elements.drawerTitle.textContent = lead.name || 'Prospecto';
-    elements.drawerScore.textContent = `${lead.score || 0}/100`;
-    elements.drawerScore.className = `card-score ${getScoreClass(lead.score || 0)}`;
+    if (el.drawerTitle) el.drawerTitle.textContent = lead.name;
+    if (el.drawerScore) {
+      el.drawerScore.textContent = `${lead.score || 0}/100`;
+      el.drawerScore.className = `score-pill ${getScoreClass(lead.score || 0)}`;
+    }
+    if (el.drawerUrl) {
+      el.drawerUrl.textContent = lead.url;
+      el.drawerUrl.href = lead.url;
+    }
+    if (el.drawerTenant) el.drawerTenant.textContent = lead.tenant_id;
+    if (el.drawerStatus) el.drawerStatus.textContent = lead.state;
+    if (el.drawerResearchText) {
+      el.drawerResearchText.textContent = lead.research_summary || 'Investigación preliminar en curso...';
+    }
 
-    elements.drawerUrl.textContent = lead.url || '-';
-    elements.drawerUrl.href = lead.url && lead.url.startsWith('http') ? lead.url : `https://${lead.url}`;
-    elements.drawerTenant.textContent = lead.tenant_id || state.tenantId;
-    elements.drawerStatus.textContent = lead.state || 'PENDING_APPROVAL';
+    // Render Gaps List
+    if (el.drawerGaps) {
+      el.drawerGaps.innerHTML = '';
+      const gaps = parseGapsFromLead(lead);
+      gaps.forEach(g => {
+        const gapItem = document.createElement('div');
+        gapItem.className = 'gap-item';
+        gapItem.innerHTML = `
+          <span class="gap-desc"><strong>[${escapeHtml(g.category)}]</strong> ${escapeHtml(g.description)}</span>
+          <span class="gap-impact">${escapeHtml(g.impact)}</span>
+        `;
+        el.drawerGaps.appendChild(gapItem);
+      });
+    }
 
-    // Microdiagnosis gaps
-    elements.drawerGaps.innerHTML = '';
-    const gaps = parseMicrodiagnosisGaps(lead.research_summary);
-    gaps.forEach((gap, idx) => {
-      const gapCard = document.createElement('div');
-      gapCard.className = `gap-card ${idx === 0 ? 'critical' : 'warning'}`;
-      gapCard.innerHTML = `
-        <span class="gap-name">${escapeHtml(gap)}</span>
-        <span class="gap-badge">Hallazgo ${idx + 1}</span>
-      `;
-      elements.drawerGaps.appendChild(gapCard);
-    });
+    // Render Copywriter Text
+    if (el.drawerCopy) {
+      el.drawerCopy.value = lead.draft_message || '';
+      updateCharCounter();
+    }
 
-    // Proposal copy
-    elements.drawerCopy.value = lead.draft_message || '';
+    // Reset to tab 1
+    switchTab('tab-diagnosis');
 
-    // Action button states: enable approval if pending
-    const isPending = (lead.state || '').toUpperCase() === 'PENDING_APPROVAL' || (lead.state || '').toUpperCase() === 'QUALIFIED';
-    if (elements.btnApprove) elements.btnApprove.style.display = isPending ? 'inline-flex' : 'none';
-    if (elements.btnReject) elements.btnReject.style.display = isPending ? 'inline-flex' : 'none';
-
-    elements.drawerBackdrop.classList.add('open');
-    elements.slideDrawer.classList.add('open');
+    // Drawer visibility
+    if (el.drawerBackdrop) el.drawerBackdrop.classList.add('active');
+    if (el.slideDrawer) el.slideDrawer.classList.add('open');
   }
 
   /**
-   * Close Slide-Over Drawer
+   * Close Drawer
    */
   function closeDrawer() {
-    if (!elements.slideDrawer || !elements.drawerBackdrop) return;
-    elements.drawerBackdrop.classList.remove('open');
-    elements.slideDrawer.classList.remove('open');
     state.selectedLead = null;
+    if (el.drawerBackdrop) el.drawerBackdrop.classList.remove('active');
+    if (el.slideDrawer) el.slideDrawer.classList.remove('open');
   }
 
   /**
-   * Approve and Dispatch Selected Prospect
+   * Switch Drawer Tabs
    */
-  async function handleApprove() {
-    if (!state.selectedLead) return;
-    const leadId = state.selectedLead.id;
+  function switchTab(targetTabId) {
+    state.activeTab = targetTabId;
+
+    el.tabLinks.forEach(link => {
+      if (link.dataset.tab === targetTabId) {
+        link.classList.add('active');
+      } else {
+        link.classList.remove('active');
+      }
+    });
+
+    el.tabPanes.forEach(pane => {
+      if (pane.id === targetTabId) {
+        pane.classList.add('active');
+      } else {
+        pane.classList.remove('active');
+      }
+    });
+
+    if (targetTabId === 'tab-audit-logs' && state.selectedLead) {
+      fetchAuditLogs(state.selectedLead.id);
+    }
+  }
+
+  /**
+   * Fetch Audit Logs for the Lead
+   */
+  async function fetchAuditLogs(leadId) {
+    if (!el.drawerLogsList) return;
+    el.drawerLogsList.innerHTML = '<div class="log-meta">Consultando registros inmutables...</div>';
 
     try {
-      if (elements.btnApprove) elements.btnApprove.disabled = true;
+      const res = await fetch(`/api/v1/audit/logs?tenant_id=${encodeURIComponent(state.tenantId)}&lead_id=${encodeURIComponent(leadId)}`);
+      if (!res.ok) throw new Error('No se pudieron recuperar los registros');
+      const logs = await res.json();
 
-      const payload = {
-        tenant_id: state.tenantId,
-        lead_id: leadId,
-        action: 'APPROVE',
-        reason: '',
-      };
+      el.drawerLogsList.innerHTML = '';
+      if (logs.length === 0) {
+        el.drawerLogsList.innerHTML = '<div class="log-meta">Sin eventos de auditoría previos registrados.</div>';
+        return;
+      }
 
+      logs.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'log-entry';
+        const dateStr = item.timestamp ? new Date(item.timestamp).toLocaleString() : 'Reciente';
+        row.innerHTML = `
+          <div class="log-meta">
+            <span class="log-action">${escapeHtml(item.action)}</span>
+            <span>${escapeHtml(dateStr)} · Actor: ${escapeHtml(item.actor)}</span>
+          </div>
+          <div class="log-text">${escapeHtml(item.reason || 'Acción de ciclo ejecutada.')}</div>
+        `;
+        el.drawerLogsList.appendChild(row);
+      });
+    } catch (err) {
+      el.drawerLogsList.innerHTML = `<div class="log-meta text-crimson">Error: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  /**
+   * Update character counter in copy editor
+   */
+  function updateCharCounter() {
+    if (!el.drawerCopy || !el.copyCharCounter) return;
+    const len = el.drawerCopy.value.length;
+    el.copyCharCounter.textContent = `${len.toLocaleString()} caracteres`;
+  }
+
+  /**
+   * Approve Lead Action
+   */
+  async function approveLead(leadId) {
+    try {
       const res = await fetch('/api/v1/approval/action', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          tenant_id: state.tenantId,
+          lead_id: leadId,
+          action: 'APPROVE',
+        }),
       });
 
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.detail || 'Error al aprobar prospecto');
+        throw new Error(errData.detail || 'Fallo en la aprobación');
       }
 
-      showToast(`Prospecto "${state.selectedLead.name}" aprobado y despachado con éxito`, 'success');
+      showToast('Prospecto aprobado y programado para despacho');
       closeDrawer();
-      await refreshAll();
+      await fetchLeads();
+      await fetchStats();
     } catch (err) {
-      showToast(err.message, 'error');
-    } finally {
-      if (elements.btnApprove) elements.btnApprove.disabled = false;
+      showToast(`Error al aprobar: ${err.message}`, 'error');
     }
   }
 
   /**
-   * Prompt discard modal
+   * Open Discard Modal
    */
-  function openDiscardModal() {
-    if (!state.selectedLead) return;
-    if (elements.modalBackdrop) {
-      elements.modalReasonInput.value = '';
-      elements.modalBackdrop.classList.add('open');
-      elements.modalReasonInput.focus();
-    }
+  function openDiscardModal(leadId) {
+    state.discardTargetLeadId = leadId;
+    if (el.modalReasonInput) el.modalReasonInput.value = '';
+    if (el.modalDiscard) el.modalDiscard.classList.add('active');
   }
 
+  /**
+   * Close Discard Modal
+   */
   function closeDiscardModal() {
-    if (elements.modalBackdrop) {
-      elements.modalBackdrop.classList.remove('open');
-    }
+    state.discardTargetLeadId = null;
+    if (el.modalDiscard) el.modalDiscard.classList.remove('active');
   }
 
   /**
    * Confirm Discard Action
    */
-  async function handleConfirmDiscard() {
-    if (!state.selectedLead) return;
-    const reason = elements.modalReasonInput.value.trim() || 'Descartado manualmente por operador';
+  async function confirmDiscardLead() {
+    const leadId = state.discardTargetLeadId;
+    if (!leadId) return;
+
+    const reason = el.modalReasonInput ? el.modalReasonInput.value.trim() : '';
 
     try {
-      const payload = {
-        tenant_id: state.tenantId,
-        lead_id: state.selectedLead.id,
-        action: 'REJECT',
-        reason: reason,
-      };
-
       const res = await fetch('/api/v1/approval/action', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          tenant_id: state.tenantId,
+          lead_id: leadId,
+          action: 'REJECT',
+          reason: reason || 'Descartado por operador en revisión manual.',
+        }),
       });
 
       if (!res.ok) {
@@ -372,91 +580,283 @@
         throw new Error(errData.detail || 'Error al descartar prospecto');
       }
 
-      showToast(`Prospecto descartado: ${reason}`, 'success');
+      showToast('Prospecto descartado y registrado en auditoría');
       closeDiscardModal();
       closeDrawer();
-      await refreshAll();
+      await fetchLeads();
+      await fetchStats();
     } catch (err) {
-      showToast(err.message, 'error');
+      showToast(`Error al descartar: ${err.message}`, 'error');
     }
   }
 
   /**
-   * Refresh all components
+   * Live Audit Submission & Stepper Progress
    */
-  async function refreshAll() {
-    await Promise.all([fetchStats(), fetchLeads()]);
+  async function handleLiveAudit(e) {
+    e.preventDefault();
+    const name = el.auditClinicName.value.trim();
+    const url = el.auditClinicUrl.value.trim();
+    const tenant = el.auditTenantId.value;
+
+    if (!name || !url) {
+      showToast('Por favor complete el nombre y URL de la clínica', 'error');
+      return;
+    }
+
+    // Prepare Stepper UI
+    if (el.auditStepper) el.auditStepper.style.display = 'flex';
+    if (el.modalAuditSubmit) el.modalAuditSubmit.disabled = true;
+
+    const updateStep = (pct, label) => {
+      if (el.stepperFill) el.stepperFill.style.width = `${pct}%`;
+      if (el.stepperLabel) el.stepperLabel.textContent = label;
+    };
+
+    updateStep(15, '1/5. Validando URL y conectando con el servidor remoto...');
+
+    try {
+      const timer1 = setTimeout(() => updateStep(40, '2/5. Scraper seguro extrayendo DOM y sanitizando PII...'), 800);
+      const timer2 = setTimeout(() => updateStep(65, '3/5. ResearchAgent analizando servicios y canales...'), 1600);
+      const timer3 = setTimeout(() => updateStep(85, '4/5. CommercialAudit y Scoring calculando brechas...'), 2400);
+
+      const res = await fetch('/api/v1/prospects/audit-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_id: tenant,
+          name: name,
+          url: url,
+        }),
+      });
+
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || `Error HTTP ${res.status}`);
+      }
+
+      const data = await res.json();
+      updateStep(100, '5/5. Auditoría completada. Guardando en repositorio...');
+
+      setTimeout(async () => {
+        closeAuditModal();
+        showToast(`Auditoría completada para "${name}". Score: ${data.prospect.score}/100`);
+
+        // If target tenant is current, refresh; else switch to that tenant
+        if (state.tenantId !== tenant) {
+          state.tenantId = tenant;
+          if (el.tenantSelect) el.tenantSelect.value = tenant;
+          localStorage.setItem('revops_tenant', tenant);
+        }
+
+        await fetchLeads();
+        await fetchStats();
+
+        // Highlight/Open lead immediately
+        if (data.prospect) {
+          openDrawer(data.prospect);
+        }
+      }, 500);
+
+    } catch (err) {
+      updateStep(0, `Fallo en auditoría: ${err.message}`);
+      showToast(`Error en auditoría en vivo: ${err.message}`, 'error');
+      if (el.modalAuditSubmit) el.modalAuditSubmit.disabled = false;
+    }
+  }
+
+  function openAuditModal() {
+    if (el.modalAudit) el.modalAudit.classList.add('active');
+    if (el.auditStepper) el.auditStepper.style.display = 'none';
+    if (el.modalAuditSubmit) el.modalAuditSubmit.disabled = false;
+    if (el.auditTenantId) el.auditTenantId.value = state.tenantId;
+    if (el.auditClinicName) el.auditClinicName.focus();
+  }
+
+  function closeAuditModal() {
+    if (el.modalAudit) el.modalAudit.classList.remove('active');
   }
 
   /**
-   * Escape HTML utility
+   * Export Visible Pipeline to CSV
    */
-  function escapeHtml(text) {
-    if (!text) return '';
-    return String(text)
+  function exportPipelineCsv() {
+    if (state.filteredLeads.length === 0) {
+      showToast('No hay prospectos para exportar con los filtros actuales', 'error');
+      return;
+    }
+
+    const headers = ['ID', 'Nombre', 'URL', 'Tenant', 'Estado', 'Score', 'Resumen_Investigacion', 'Propuesta_Outreach'];
+    const rows = state.filteredLeads.map(l => [
+      l.id,
+      `"${(l.name || '').replace(/"/g, '""')}"`,
+      `"${(l.url || '').replace(/"/g, '""')}"`,
+      l.tenant_id,
+      l.state,
+      l.score || 0,
+      `"${(l.research_summary || '').replace(/"/g, '""')}"`,
+      `"${(l.draft_message || '').replace(/"/g, '""')}"`,
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `revops_pipeline_${state.tenantId}_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast(`Exportados ${state.filteredLeads.length} prospectos a CSV`);
+  }
+
+  /**
+   * Utility to escape HTML entities
+   */
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+      .replace(/'/g, '&#39;');
   }
 
   /**
-   * Event Listeners Setup
+   * Bind DOM Events
    */
-  function initEventListeners() {
+  function bindEvents() {
     // Tenant Selector
-    if (elements.tenantSelect) {
-      elements.tenantSelect.addEventListener('change', (e) => {
+    if (el.tenantSelect) {
+      el.tenantSelect.value = state.tenantId;
+      el.tenantSelect.addEventListener('change', async (e) => {
         state.tenantId = e.target.value;
-        refreshAll();
+        localStorage.setItem('revops_tenant', state.tenantId);
+        showToast(`Tenant cambiado a: ${state.tenantId}`);
+        await fetchLeads();
+        await fetchStats();
       });
     }
 
     // Refresh Button
-    if (elements.refreshBtn) {
-      elements.refreshBtn.addEventListener('click', () => refreshAll());
+    if (el.refreshBtn) {
+      el.refreshBtn.addEventListener('click', async () => {
+        el.refreshBtn.disabled = true;
+        await Promise.all([fetchLeads(), fetchStats()]);
+        el.refreshBtn.disabled = false;
+        showToast('Datos actualizados');
+      });
     }
 
-    // Drawer Close
-    if (elements.drawerClose) {
-      elements.drawerClose.addEventListener('click', closeDrawer);
-    }
-    if (elements.drawerBackdrop) {
-      elements.drawerBackdrop.addEventListener('click', closeDrawer);
-    }
-
-    // Drawer Actions
-    if (elements.btnApprove) {
-      elements.btnApprove.addEventListener('click', handleApprove);
-    }
-    if (elements.btnReject) {
-      elements.btnReject.addEventListener('click', openDiscardModal);
-    }
-
-    // Modal Actions
-    if (elements.modalCancelBtn) {
-      elements.modalCancelBtn.addEventListener('click', closeDiscardModal);
-    }
-    if (elements.modalConfirmBtn) {
-      elements.modalConfirmBtn.addEventListener('click', handleConfirmDiscard);
-    }
-
-    // Keyboard Shortcuts (ESC to close drawer/modal)
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (elements.modalBackdrop && elements.modalBackdrop.classList.contains('open')) {
-          closeDiscardModal();
-        } else if (elements.slideDrawer && elements.slideDrawer.classList.contains('open')) {
-          closeDrawer();
+    // Search and Filter Toolbar
+    if (el.filterSearchInput) {
+      el.filterSearchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        if (el.searchClearBtn) {
+          el.searchClearBtn.style.display = state.searchQuery ? 'block' : 'none';
         }
+        applyFilters();
+      });
+    }
+
+    if (el.searchClearBtn) {
+      el.searchClearBtn.addEventListener('click', () => {
+        state.searchQuery = '';
+        if (el.filterSearchInput) el.filterSearchInput.value = '';
+        el.searchClearBtn.style.display = 'none';
+        applyFilters();
+      });
+    }
+
+    if (el.filterChipsGroup) {
+      el.filterChipsGroup.addEventListener('click', (e) => {
+        const btn = e.target.closest('.chip-btn');
+        if (!btn) return;
+        el.filterChipsGroup.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeFilter = btn.dataset.filter;
+        applyFilters();
+      });
+    }
+
+    // Live Audit Modal Controls
+    if (el.btnOpenAuditModal) el.btnOpenAuditModal.addEventListener('click', openAuditModal);
+    if (el.modalAuditClose) el.modalAuditClose.addEventListener('click', closeAuditModal);
+    if (el.modalAuditCancel) el.modalAuditCancel.addEventListener('click', closeAuditModal);
+    if (el.formLiveAudit) el.formLiveAudit.addEventListener('submit', handleLiveAudit);
+
+    // Export CSV
+    if (el.btnExportCsv) el.btnExportCsv.addEventListener('click', exportPipelineCsv);
+
+    // Slide-Over Drawer Controls
+    if (el.drawerClose) el.drawerClose.addEventListener('click', closeDrawer);
+    if (el.drawerBackdrop) el.drawerBackdrop.addEventListener('click', closeDrawer);
+
+    el.tabLinks.forEach(link => {
+      link.addEventListener('click', () => switchTab(link.dataset.tab));
+    });
+
+    if (el.drawerCopy) {
+      el.drawerCopy.addEventListener('input', () => {
+        updateCharCounter();
+        if (state.selectedLead) {
+          state.selectedLead.draft_message = el.drawerCopy.value;
+        }
+      });
+    }
+
+    el.channelRadios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        state.activeChannel = e.target.value;
+        showToast(`Canal de despacho fijado a: ${state.activeChannel.toUpperCase()}`);
+      });
+    });
+
+    if (el.btnDrawerApprove) {
+      el.btnDrawerApprove.addEventListener('click', () => {
+        if (state.selectedLead) approveLead(state.selectedLead.id);
+      });
+    }
+
+    if (el.btnDrawerReject) {
+      el.btnDrawerReject.addEventListener('click', () => {
+        if (state.selectedLead) openDiscardModal(state.selectedLead.id);
+      });
+    }
+
+    // Discard Modal Controls
+    if (el.modalDiscardClose) el.modalDiscardClose.addEventListener('click', closeDiscardModal);
+    if (el.modalCancelBtn) el.modalCancelBtn.addEventListener('click', closeDiscardModal);
+    if (el.modalConfirmBtn) el.modalConfirmBtn.addEventListener('click', confirmDiscardLead);
+
+    // Keyboard Shortcuts (Esc closes panels)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeDrawer();
+        closeAuditModal();
+        closeDiscardModal();
       }
     });
   }
 
-  // Initialization
-  document.addEventListener('DOMContentLoaded', () => {
-    initEventListeners();
-    refreshAll();
-  });
+  /**
+   * Application Bootstrapping
+   */
+  async function init() {
+    bindEvents();
+    await Promise.all([fetchLeads(), fetchStats()]);
+  }
+
+  // Run on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+
 })();
