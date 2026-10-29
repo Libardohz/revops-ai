@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 from RevOpsAI.src.api.routes import router
+from RevOpsAI.src.api.webhooks import webhook_router
 
 app = FastAPI(
     title="RevOpsAI Control API",
@@ -10,3 +11,4 @@ app = FastAPI(
 )
 
 app.include_router(router)
+app.include_router(webhook_router)

@@ -20,6 +20,7 @@ class ProspectState(str, Enum):
     APPROVED = "APPROVED"
     SENT = "SENT"
     OPT_OUT = "OPT_OUT"
+    INTERESTED = "INTERESTED"
 
 
 class Prospect(BaseModel):
@@ -44,7 +45,8 @@ class Prospect(BaseModel):
         ProspectState.DRAFTING: {ProspectState.PENDING_APPROVAL},
         ProspectState.PENDING_APPROVAL: {ProspectState.APPROVED, ProspectState.DISCARDED},
         ProspectState.APPROVED: {ProspectState.SENT},
-        ProspectState.SENT: {ProspectState.OPT_OUT},
+        ProspectState.SENT: {ProspectState.OPT_OUT, ProspectState.INTERESTED},
+        ProspectState.INTERESTED: {ProspectState.OPT_OUT},
         ProspectState.DISCARDED: set(),
         ProspectState.OPT_OUT: set(),
     }

@@ -8,8 +8,10 @@ from RevOpsAI.src.core.models import Prospect
 from RevOpsAI.src.core.config_loader import load_sector_config
 from RevOpsAI.src.core.approval_store import ApprovalStore
 from RevOpsAI.src.core.pipeline import PipelineOrchestrator, PipelineResult
+from RevOpsAI.src.api.webhooks import webhook_router
 
 router = APIRouter(prefix="/api/v1")
+router.include_router(webhook_router)
 
 # Dependencias singleton en memoria para el runtime de la API
 _default_config_path = Path("RevOpsAI/config/sectors/clinicas.yaml")
