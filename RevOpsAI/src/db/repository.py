@@ -1,8 +1,19 @@
 """Tenant-scoped repository enforcing multi-tenant isolation boundaries."""
 import uuid
+from typing import Any
 from sqlalchemy.orm import Session
 from RevOpsAI.src.db.models import ProspectORM, AuditLogORM
 from RevOpsAI.src.core.models import Prospect, ProspectState
+
+QUALIFIED_STATES = {
+    ProspectState.QUALIFIED.value,
+    ProspectState.DRAFTING.value,
+    ProspectState.PENDING_APPROVAL.value,
+    ProspectState.APPROVED.value,
+    ProspectState.SENT.value,
+    ProspectState.INTERESTED.value,
+    ProspectState.OPT_OUT.value,
+}
 
 
 class TenantScopedRepository:
@@ -66,14 +77,15 @@ class TenantScopedRepository:
 
     def list_pending_approval(self) -> list[Prospect]:
         """List all prospects in PENDING_APPROVAL state for this tenant."""
-        records = (
-            self.session.query(ProspectORM)
-            .filter_by(
-                tenant_id=self.tenant_id,
-                state=ProspectState.PENDING_APPROVAL.value,
-            )
-            .all()
-        )
+        return self.list_prospects(state=ProspectState.PENDING_APPROVAL.value)
+
+    def list_prospects(self, state: str | ProspectState | None = None) -> list[Prospect]:
+        """List prospects for this tenant, optionally filtered by state."""
+        query = self.session.query(ProspectORM).filter_by(tenant_id=self.tenant_id)
+        if state is not None:
+            state_val = state.value if hasattr(state, "value") else str(state)
+            query = query.filter_by(state=state_val)
+        records = query.all()
         return [
             Prospect(
                 id=r.id,
@@ -88,6 +100,36 @@ class TenantScopedRepository:
             )
             for r in records
         ]
+
+    def get_stats(self) -> dict[str, Any]:
+        """Compute KPI summary statistics strictly scoped to this tenant."""
+        records = (
+            self.session.query(ProspectORM)
+            .filter_by(tenant_id=self.tenant_id)
+            .all()
+        )
+        total_leads = len(records)
+        pending_approval_count = sum(1 for r in records if r.state == ProspectState.PENDING_APPROVAL.value)
+        sent_count = sum(1 for r in records if r.state == ProspectState.SENT.value)
+        interested_count = sum(1 for r in records if r.state == ProspectState.INTERESTED.value)
+        discarded_count = sum(1 for r in records if r.state == ProspectState.DISCARDED.value)
+        opt_out_count = sum(1 for r in records if r.state == ProspectState.OPT_OUT.value)
+        qualified_count = sum(1 for r in records if r.state in QUALIFIED_STATES)
+        qualification_rate = (
+            round((qualified_count / total_leads) * 100, 1) if total_leads > 0 else 0.0
+        )
+
+        return {
+            "total_leads": total_leads,
+            "qualified_count": qualified_count,
+            "pending_approval_count": pending_approval_count,
+            "sent_count": sent_count,
+            "interested_count": interested_count,
+            "discarded_count": discarded_count,
+            "opt_out_count": opt_out_count,
+            "qualification_rate": qualification_rate,
+        }
+
 
     def log_audit(self, lead_id: str, actor: str, action: str, reason: str = "") -> None:
         """Create an audit log entry scoped to this tenant."""
