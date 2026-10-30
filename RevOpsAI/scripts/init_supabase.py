@@ -95,3 +95,4 @@ def setup_supabase(db_url: str | None = None, apply_rls: bool = True) -> None:
 if __name__ == "__main__":
     url_arg = sys.argv[1] if len(sys.argv) > 1 else None
     setup_supabase(url_arg)
+

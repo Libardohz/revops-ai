@@ -7,3 +7,5 @@ __pycache__/
 
 RevOpsAI/data/
 *.db
+.env
+*.env

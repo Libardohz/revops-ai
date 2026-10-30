@@ -23,6 +23,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     uvicorn[standard] \
     sqlalchemy \
     psycopg2-binary \
+    python-dotenv \
     pydantic \
     pyyaml \
     beautifulsoup4 \

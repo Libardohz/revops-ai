@@ -1,6 +1,15 @@
 """Main FastAPI application entrypoint for RevOpsAI Control API."""
 
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load production or local .env before configuring engines
+_env_path = Path("RevOpsAI/.env")
+if not _env_path.is_file():
+    _env_path = Path(__file__).resolve().parent.parent.parent / ".env"
+if _env_path.is_file():
+    load_dotenv(_env_path)
+
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from RevOpsAI.src.api.routes import router, web_router
