@@ -120,20 +120,43 @@ Abre en tu navegador:
 ### 3. Ejecutar la Suite de Pruebas Automatizadas
 ```bash
 python -m pytest RevOpsAI/tests/ -v
-# 109 tests pasando al 100%
+# 120 tests pasando al 100%
 ```
 
 ---
 
-## 6. Despliegue en Producción (Docker Compose)
+## 6. Despliegue en la Nube y Producción
 
-El repositorio incluye un contenedor optimizado multi-stage y un entorno orquestado con PostgreSQL 16 y Row-Level Security:
+### Opción A: Despliegue en Render (Recomendado para Beta Pública)
+
+El repositorio incluye soporte nativo para **Render** con infraestructura declarativa (`render.yaml`) y contenedor Docker optimizado con puerto dinámico:
+
+1. **Subir cambios a GitHub**:
+   ```bash
+   git remote add origin https://github.com/TU_USUARIO/TU_REPOSITORIO.git
+   git push -u origin master
+   ```
+2. **Crear Web Service en Render**:
+   - Conecta tu cuenta de GitHub en [dashboard.render.com](https://dashboard.render.com).
+   - Crea un **Web Service** apuntando al repositorio con Runtime **Docker** y `Dockerfile Path`: `RevOpsAI/Dockerfile`.
+3. **Variables de Entorno en Render**:
+   - `DATABASE_URL`: URI de conexión Session Pooler de Supabase PostgreSQL (puerto 5432).
+   - `ENVIRONMENT`: `production`
+   - `DASHBOARD_AUTH_ENABLED`: `true`
+   - `DASHBOARD_USERNAME`: `admin`
+   - `DASHBOARD_PASSWORD`: *(tu clave segura)*
+   - `CRON_SECRET_TOKEN`: *(tu token secreto para tareas cron)*
+4. **Verificación**: Render monitorea el endpoint `/health` y genera automáticamente una URL con certificado SSL gratuito (`https://...onrender.com/dashboard`).
+
+### Opción B: Despliegue Local con Docker Compose
+
+Para entornos locales o servidores dedicados (VPS/On-Premise):
 
 ```bash
 # 1. Configurar variables de entorno
 cp RevOpsAI/.env.example RevOpsAI/.env
 
-# 2. Levantar API, Dashboard y PostgreSQL
+# 2. Levantar API, Dashboard y PostgreSQL con RLS
 cd RevOpsAI
 docker compose up -d --build
 ```
