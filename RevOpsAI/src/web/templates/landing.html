@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hzSaaS — Ingeniería de Software & Sistemas de Ingresos</title>
+    <meta name="description" content="Infraestructura de software, auditoría de captación y sistemas verticales para empresas de alto valor. Creadores de RevOps AI y GymSaaS.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --surface: #121215;
+            --surface-hover: #18181b;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text-primary: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #22c55e;
+            --accent-dim: rgba(34, 197, 94, 0.12);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Layout Container */
+        .container {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Top Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            background: rgba(9, 9, 11, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 50;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 68px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.25rem;
+            letter-spacing: -0.04em;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .brand-logo .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .nav-status {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: #18181b;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-status span {
+            color: var(--accent);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 9px 16px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ghost {
+            color: var(--text-secondary);
+            border: 1px solid transparent;
+        }
+
+        .btn-ghost:hover {
+            color: var(--text-primary);
+            border-color: var(--border);
+            background: var(--surface);
+        }
+
+        .btn-primary {
+            background-color: #fafafa;
+            color: #09090b;
+            font-weight: 600;
+            border: 1px solid #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: #e4e4e7;
+        }
+
+        .btn-wa {
+            background: #15803d;
+            color: #ffffff;
+            border: 1px solid #16a34a;
+        }
+
+        .btn-wa:hover {
+            background: #166534;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 96px 0 64px 0;
+            text-align: center;
+        }
+
+        .badge-hero {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 700;
+            letter-spacing: -0.035em;
+            line-height: 1.15;
+            margin-bottom: 24px;
+            color: #ffffff;
+            max-width: 860px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero p {
+            font-size: clamp(1.05rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto 36px auto;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .hero-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 48px;
+        }
+
+        /* Live URL Audit Tool in Hero */
+        .audit-box-wrapper {
+            max-width: 640px;
+            margin: 0 auto 72px auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .audit-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            padding: 10px 14px;
+        }
+
+        .audit-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Products Grid */
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 1.9rem;
+            letter-spacing: -0.03em;
+            margin-bottom: 40px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .product-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .product-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .card-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 3px 8px;
+            border-radius: 4px;
+            background: #09090b;
+        }
+
+        .card-status {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .product-card h3 {
+            font-size: 1.45rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+            color: #ffffff;
+        }
+
+        .product-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.55;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .features-list li {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-list li::before {
+            content: "•";
+            color: var(--accent);
+            font-size: 1.2rem;
+            line-height: 0;
+        }
+
+        .card-footer {
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .tech-pill {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Sectors Supported */
+        .sectors-section {
+            background: #0e0e11;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 72px 0;
+            margin-bottom: 80px;
+        }
+
+        .sectors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .sector-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .sector-item h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .sector-item p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Enterprise Standards */
+        .standards-bar {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 64px;
+        }
+
+        .standard-item {
+            font-family: var(--font-mono);
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .standard-item span {
+            color: var(--text-primary);
+        }
+
+        /* Contact Box */
+        .contact-box {
+            background: #141418;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 48px;
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .contact-box h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .contact-box p {
+            color: var(--text-secondary);
+            max-width: 540px;
+            margin: 0 auto 32px auto;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 40px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-status { display: none; }
+            .audit-box-wrapper { flex-direction: column; }
+            .hero { padding: 64px 0 40px 0; }
+            .contact-box { padding: 28px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="container nav-inner">
+            <div class="brand">
+                <a href="/" class="brand-logo">
+                    <span class="dot"></span>
+                    hzSaaS
+                </a>
+                <div class="nav-status">
+                    <span>●</span> Infraestructura Operativa Activa
+                </div>
+            </div>
+            <div class="nav-actions">
+                <a href="/dashboard" class="btn btn-ghost">Portal Clientes</a>
+                <a href="https://wa.me/573135108101?text=Hola%20hzSaaS,%20deseo%20solicitar%20un%20diagn%C3%B3stico%20t%C3%A9cnico" target="_blank" class="btn btn-wa">
+                    WhatsApp Directo
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="badge-hero">hzSaaS Studio · Revenue & Vertical Software</div>
+            <h1>Sistemas de Software e Infraestructura de Ingresos para Empresas de Alto Valor</h1>
+            <p>Desarrollamos tecnología B2B que audita fugas de captación comercial, automatiza operaciones críticas y recupera prospectos de alto ticket en sectores regulados.</p>
+            
+            <div class="hero-cta">
+                <a href="https://wa.me/573135108101?text=Hola%20hzSaaS,%20quisiera%20agendar%20una%20sesi%C3%B3n%20técnica" target="_blank" class="btn btn-primary" style="padding: 12px 24px; font-size: 1rem;">
+                    Hablar con un Ingeniero
+                </a>
+                <a href="#productos" class="btn btn-ghost" style="padding: 12px 24px; font-size: 1rem;">
+                    Explorar Software ↓
+                </a>
+            </div>
+
+            <!-- Instant Audit Link Generator -->
+            <div class="audit-box-wrapper">
+                <input type="url" id="auditInput" class="audit-input" placeholder="https://tu-empresa-o-clinica.com" value="">
+                <button type="button" class="btn btn-primary" onclick="launchAuditLead()">
+                    Solicitar Auditoría Web
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Standards Bar -->
+    <div class="container">
+        <div class="standards-bar">
+            <div class="standard-item"><span>Database:</span> PostgreSQL 17 + RLS</div>
+            <div class="standard-item"><span>Compliance:</span> Habeas Data / RGPD</div>
+            <div class="standard-item"><span>Despacho:</span> WhatsApp Cloud API v21</div>
+            <div class="standard-item"><span>Ubicación:</span> Medellín & Bogotá, Colombia</div>
+        </div>
+    </div>
+
+    <!-- Products Showcase -->
+    <section id="productos" class="container" style="padding-top: 20px;">
+        <div class="section-label">Portafolio de Soluciones Verticales</div>
+        <h2 class="section-title">Ingeniería Aplicada a Modelos de Negocio Recurrentes</h2>
+
+        <div class="products-grid">
+            
+            <!-- Product 1: RevOps AI -->
+            <div class="product-card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-tag">Revenue Operations</span>
+                        <span class="card-status">● Live v2.2</span>
+                    </div>
+                    <h3>RevOps AI</h3>
+                    <p>Departamento de Ingresos Digital y pipeline multi-agente con perímetro Zero-Trust. Audita la web de prospectos, detecta fricciones comerciales y automatiza el seguimiento por WhatsApp y correo.</p>
+                    
+                    <ul class="features-list">
+                        <li>Auditoría técnica y scoring de conversión en 30s.</li>
+                        <li>Cadencia de seguimiento automático a 3 y 7 días.</li>
+                        <li>Gobernanza Human-in-the-Loop (Bandeja Kanban).</li>
+                        <li>Sincronización nativa con HubSpot, GoHighLevel y CRMs.</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <span class="tech-pill">Python · FastAPI · Supabase</span>
+                    <a href="https://wa.me/573135108101?text=Hola,%20deseo%20conocer%20m%C3%A1s%20sobre%20RevOps%20AI" target="_blank" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;">
+                        Solicitar Demo →
+                    </a>
+                </div>
+            </div>
+
+            <!-- Product 2: GymSaaS Enterprise -->
+            <div class="product-card">
+                <div>
+                    <div class="card-header">
+                        <span class="card-tag">Cloud ERP / Vertical Fitness</span>
+                        <span class="card-status">● Enterprise Ready</span>
+                    </div>
+                    <h3>GymSaaS Enterprise</h3>
+                    <p>Plataforma modular multi-tenant para la administración centralizada de cadenas de gimnasios y centros deportivos. Control de suscripciones, torniquetes y estados de membresía en tiempo real.</p>
+                    
+                    <ul class="features-list">
+                        <li>Aislamiento estricto de datos por tenant (gym_id).</li>
+                        <li>Control de roles jerárquicos (Platform Owner / Gym Admin).</li>
+                        <li>Bloqueo global por impago (HTTP 423 Locked).</li>
+                        <li>Auditoría inmutable de estados y concurrencia optimista.</li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <span class="tech-pill">Java 21 · Spring Boot · ArchUnit</span>
+                    <a href="https://wa.me/573135108101?text=Hola,%20deseo%20conocer%20m%C3%A1s%20sobre%20GymSaaS" target="_blank" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.8rem;">
+                        Ver Arquitectura →
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Sectors Section -->
+    <section class="sectors-section">
+        <div class="container">
+            <div class="section-label">Sectores Especializados de Alto Ticket</div>
+            <h2 class="section-title">Arquitectura Calibrada para Mercados Complejos</h2>
+
+            <div class="sectors-grid">
+                <div class="sector-item">
+                    <h4>Salud y Odontología</h4>
+                    <p>Captación de implantes, diseño de sonrisa y ortodoncia con estricto guardarraíl: cero diagnósticos médicos por IA.</p>
+                </div>
+                <div class="sector-item">
+                    <h4>Inmobiliarias y Constructoras</h4>
+                    <p>Triaje inmediato para proyectos sobre planos y propiedades de alto valor en El Poblado, Envigado y Chicó.</p>
+                </div>
+                <div class="sector-item">
+                    <h4>Firmas Legales y Abogados</h4>
+                    <p>Captación de litigios corporativos, derecho laboral y tributario sin vulnerar la ética profesional jurídica.</p>
+                </div>
+                <div class="sector-item">
+                    <h4>Fitness & Centros Deportivos</h4>
+                    <p>Control de aforo, cobranza recurrente y retención de usuarios para gimnasios bajo arquitectura multi-sede.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Box -->
+    <section class="container">
+        <div class="contact-box">
+            <h2>¿Listo para optimizar la infraestructura digital de tu empresa?</h2>
+            <p>Agenda una sesión de consultoría técnica de 15 minutos directamente con nuestro equipo de ingeniería en Colombia.</p>
+            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+                <a href="https://wa.me/573135108101?text=Hola%20hzSaaS,%20deseo%20agendar%20una%20reuni%C3%B3n%20t%C3%A9cnica" target="_blank" class="btn btn-wa" style="padding: 12px 28px; font-size: 1rem;">
+                    Escribir al WhatsApp: +57 313 510 8101
+                </a>
+                <a href="/dashboard" class="btn btn-ghost" style="padding: 12px 20px;">
+                    Acceder al Centro de Control
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-inner">
+            <div>
+                <strong>hzSaaS Studio</strong> · Sistemas de Software e Ingeniería de Ingresos
+            </div>
+            <div>
+                Línea Comercial: +57 313 510 8101 · Colombia
+            </div>
+            <div>
+                © 2026 hzSaaS. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function launchAuditLead() {
+            var urlVal = document.getElementById('auditInput').value.trim();
+            var textMsg = "Hola hzSaaS, me gustaría solicitar una auditoría técnica para mi sitio web.";
+            if (urlVal) {
+                textMsg = "Hola hzSaaS, me gustaría solicitar una auditoría técnica para mi sitio web: " + encodeURIComponent(urlVal);
+            }
+            window.open("https://wa.me/573135108101?text=" + encodeURIComponent(textMsg), "_blank");
+        }
+    </script>
+</body>
+</html>

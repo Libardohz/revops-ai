@@ -79,8 +79,8 @@ def test_cron_followups_processing():
     assert report["results"][0]["should_send"] is True
 
 
-def test_health_check_and_root_redirect():
-    """Verify /health returns 200 OK and root / redirects to /dashboard."""
+def test_health_check_and_landing_page():
+    """Verify /health returns 200 OK and root / serves the hzSaaS landing page."""
     from fastapi.testclient import TestClient
     from RevOpsAI.src.api.main import app
 
@@ -90,17 +90,18 @@ def test_health_check_and_root_redirect():
     health_res = client.get("/health")
     assert health_res.status_code == 200
     assert health_res.json()["status"] == "healthy"
-    assert health_res.json()["service"] == "RevOpsAI"
 
     # Test /api/v1/health
     v1_health_res = client.get("/api/v1/health")
     assert v1_health_res.status_code == 200
     assert v1_health_res.json()["status"] == "healthy"
 
-    # Test root / redirect
-    root_res = client.get("/", follow_redirects=False)
-    assert root_res.status_code in (301, 302, 307)
-    assert root_res.headers["location"] == "/dashboard"
+    # Test root / landing page
+    root_res = client.get("/")
+    assert root_res.status_code == 200
+    assert "hzSaaS" in root_res.text
+    assert "3135108101" in root_res.text
+    assert "GymSaaS" in root_res.text
 
 
 def test_list_sectors_endpoint():

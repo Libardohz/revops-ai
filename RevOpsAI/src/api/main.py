@@ -11,31 +11,47 @@ if _env_path.is_file():
     load_dotenv(_env_path)
 
 from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from RevOpsAI.src.api.routes import router, web_router
 from RevOpsAI.src.api.webhooks import webhook_router
 
 app = FastAPI(
-    title="RevOpsAI Control API",
+    title="hzSaaS Enterprise API",
     description="API de Control y Aprobación Humana Multi-Tenant",
     version="1.0.0",
 )
+
+_landing_template = Path("RevOpsAI/src/web/templates/landing.html")
+if not _landing_template.is_file():
+    _landing_template = Path(__file__).resolve().parent.parent / "web" / "templates" / "landing.html"
 
 @app.get("/health", tags=["Monitoring"])
 def health_check() -> dict[str, str]:
     """Liveness probe for Render, cloud monitors, and container orchestrators."""
     return {
         "status": "healthy",
-        "service": "RevOpsAI",
+        "service": "hzSaaS-RevOpsAI",
         "version": "2.2-pro",
         "environment": "production",
     }
 
-@app.get("/", include_in_schema=False)
-def root_redirect() -> RedirectResponse:
-    """Redirect root requests to the Human-in-the-Loop Kanban dashboard."""
-    return RedirectResponse(url="/dashboard", status_code=307)
+@app.get("/", response_class=HTMLResponse, include_in_schema=False)
+def root_landing() -> HTMLResponse:
+    """Serve the official hzSaaS enterprise landing page."""
+    if _landing_template.is_file():
+        content = _landing_template.read_text(encoding="utf-8")
+    else:
+        content = "<html><body><h1>hzSaaS Studio</h1></body></html>"
+    return HTMLResponse(
+        content=content,
+        status_code=200,
+        headers={
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 app.include_router(router)
 app.include_router(webhook_router)
