@@ -1,22 +1,56 @@
 """REST API routes for RevOpsAI prospect processing and Human-in-the-Loop review."""
 
+import os
+import secrets
 from pathlib import Path
 from typing import Any, Generator
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import HTMLResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from RevOpsAI.src.core.models import Prospect
+from RevOpsAI.src.core.models import Prospect, ProspectState
 from RevOpsAI.src.core.config_loader import load_sector_config
 from RevOpsAI.src.core.approval_store import ApprovalStore
 from RevOpsAI.src.core.pipeline import PipelineOrchestrator, PipelineResult
+from RevOpsAI.src.agents.followup_agent import FollowUpAgent
 from RevOpsAI.src.api.webhooks import webhook_router
 from RevOpsAI.src.db.repository import TenantScopedRepository
 from RevOpsAI.src.db.session import get_engine, init_db, get_session_factory
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(webhook_router)
+
+security = HTTPBasic(auto_error=False)
+
+
+def verify_auth(credentials: HTTPBasicCredentials | None = Depends(security)) -> bool:
+    """Validate credentials when DASHBOARD_AUTH_ENABLED is true."""
+    auth_enabled = os.getenv("DASHBOARD_AUTH_ENABLED", "false").lower() in ("true", "1", "yes")
+    if not auth_enabled:
+        return True
+
+    if not credentials:
+        raise HTTPException(
+            status_code=401,
+            detail="Autenticación requerida para acceder al centro de control",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    expected_user = os.getenv("DASHBOARD_USERNAME", "admin")
+    expected_pass = os.getenv("DASHBOARD_PASSWORD", "admin123")
+
+    user_ok = secrets.compare_digest(credentials.username, expected_user)
+    pass_ok = secrets.compare_digest(credentials.password, expected_pass)
+
+    if not (user_ok and pass_ok):
+        raise HTTPException(
+            status_code=401,
+            detail="Credenciales inválidas",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+    return True
 
 # Dependencias singleton en memoria para el runtime de la API
 _default_config_path = Path("RevOpsAI/config/sectors/clinicas.yaml")
@@ -39,7 +73,7 @@ if _static_path.is_dir():
 
 @web_router.get("/dashboard", response_class=HTMLResponse)
 @router.get("/dashboard", response_class=HTMLResponse)
-def serve_dashboard() -> HTMLResponse:
+def serve_dashboard(_: bool = Depends(verify_auth)) -> HTMLResponse:
     """Serve the Human-in-the-Loop Kanban dashboard frontend."""
     if _template_path.is_file():
         content = _template_path.read_text(encoding="utf-8")
@@ -262,4 +296,57 @@ def get_audit_logs(
 ) -> list[dict[str, Any]]:
     """Retrieve historical audit trails strictly scoped to the tenant."""
     return repo.list_audit_logs(lead_id=lead_id)
+
+
+@router.post("/cron/followups", response_model=dict[str, Any])
+def process_cron_followups(
+    tenant_id: str = Query(..., description="ID del tenant a evaluar"),
+    days_elapsed: int = Query(3, description="Días transcurridos desde el último contacto"),
+    cron_token: str | None = Query(None, description="Token secreto para ejecución de cron"),
+    repo: TenantScopedRepository = Depends(get_repository),
+) -> dict[str, Any]:
+    """Execute scheduled daily follow-up evaluation and bump generation across sent prospects."""
+    expected_token = os.getenv("CRON_SECRET_TOKEN")
+    if expected_token and (not cron_token or not secrets.compare_digest(cron_token, expected_token)):
+        raise HTTPException(status_code=403, detail="Token de cron inválido o ausente")
+
+    agent = FollowUpAgent()
+    sent_leads = repo.list_prospects(state=ProspectState.SENT)
+
+    results = []
+    for lead in sent_leads:
+        current_attempt = 1  # Base attempt
+        res = agent.evaluate_and_generate(lead, days_since_last_contact=days_elapsed, current_attempt=current_attempt)
+        if res.should_send:
+            lead.draft_message = res.message
+            repo.save_prospect(lead)
+            repo.log_audit(
+                lead_id=lead.id,
+                actor="followup_agent",
+                action="FOLLOWUP_DRAFTED",
+                reason=f"Generado seguimiento #{res.attempt_number} tras {days_elapsed} días",
+            )
+        elif res.is_exhausted:
+            repo.save_prospect(lead)
+            repo.log_audit(
+                lead_id=lead.id,
+                actor="followup_agent",
+                action="FOLLOWUP_EXHAUSTED",
+                reason="Límite máximo de 2 intentos alcanzado. Prospecto descartado.",
+            )
+
+        results.append({
+            "lead_id": lead.id,
+            "name": lead.name,
+            "should_send": res.should_send,
+            "is_exhausted": res.is_exhausted,
+            "reason": res.reason,
+            "message_snippet": res.message[:60] if res.message else "",
+        })
+
+    return {
+        "tenant_id": tenant_id,
+        "processed_count": len(sent_leads),
+        "results": results,
+    }
 

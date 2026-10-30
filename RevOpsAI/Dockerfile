@@ -22,6 +22,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     fastapi \
     uvicorn[standard] \
     sqlalchemy \
+    psycopg2-binary \
     pydantic \
     pyyaml \
     beautifulsoup4 \
@@ -35,3 +36,4 @@ EXPOSE 8000
 
 # Run Uvicorn ASGI server
 CMD ["uvicorn", "RevOpsAI.src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
