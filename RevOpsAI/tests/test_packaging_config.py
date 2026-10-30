@@ -25,3 +25,4 @@ def test_dockerfile_and_compose_content():
     assert "postgres:16" in compose
     assert "DATABASE_URL" in compose
     assert "META_WA_TOKEN" in env_example
+

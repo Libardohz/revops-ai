@@ -301,3 +301,4 @@ git commit -m "feat(deploy): add production Dockerfile, docker-compose with Post
 - [x] **Spec Coverage:** Cubre el Agente 7 (Follow-up), Agente 8 (CRM sync) y el empaquetado de despliegue Docker y manual comercial.
 - [x] **No Placeholders:** Todos los códigos y configuraciones están especificados.
 - [x] **Zero-Trust & Compliance:** Se respetan límites de intentos de seguimiento y privacidad de datos.
+

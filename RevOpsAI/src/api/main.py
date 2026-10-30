@@ -11,6 +11,7 @@ if _env_path.is_file():
     load_dotenv(_env_path)
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from RevOpsAI.src.api.routes import router, web_router
 from RevOpsAI.src.api.webhooks import webhook_router
@@ -20,6 +21,21 @@ app = FastAPI(
     description="API de Control y Aprobación Humana Multi-Tenant",
     version="1.0.0",
 )
+
+@app.get("/health", tags=["Monitoring"])
+def health_check() -> dict[str, str]:
+    """Liveness probe for Render, cloud monitors, and container orchestrators."""
+    return {
+        "status": "healthy",
+        "service": "RevOpsAI",
+        "version": "2.2-pro",
+        "environment": "production",
+    }
+
+@app.get("/", include_in_schema=False)
+def root_redirect() -> RedirectResponse:
+    """Redirect root requests to the Human-in-the-Loop Kanban dashboard."""
+    return RedirectResponse(url="/dashboard", status_code=307)
 
 app.include_router(router)
 app.include_router(webhook_router)

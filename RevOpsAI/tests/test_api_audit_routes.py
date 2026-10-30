@@ -72,3 +72,4 @@ def test_get_audit_logs_tenant_scoped():
     assert len(logs) == 1
     assert logs[0]["action"] == "APPROVE"
     mock_repo.list_audit_logs.assert_called_once_with(lead_id=None)
+

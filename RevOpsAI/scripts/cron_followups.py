@@ -63,3 +63,4 @@ def run_daily_followups(days_elapsed: int = 3, tenants: list[str] | None = None)
 if __name__ == "__main__":
     days = int(sys.argv[1]) if len(sys.argv) > 1 else 3
     run_daily_followups(days_elapsed=days)
+

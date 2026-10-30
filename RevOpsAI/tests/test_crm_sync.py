@@ -76,3 +76,4 @@ def test_crm_sync_handles_api_failure():
     result = connector.sync_prospect(lead)
     assert result.success is False
     assert "500" in result.error
+

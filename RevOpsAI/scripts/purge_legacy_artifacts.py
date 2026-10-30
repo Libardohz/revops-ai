@@ -42,3 +42,4 @@ with engine.begin() as conn:
 print("\n==================================================================")
 print("     PURGA FINALIZADA: CERO FUNCIONES NI BUCKETS DEL GESTOR       ")
 print("==================================================================")
+

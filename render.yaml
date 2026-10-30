@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: revops-ai
+    runtime: docker
+    dockerfilePath: RevOpsAI/Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DASHBOARD_AUTH_ENABLED
+        value: "true"
+      - key: DASHBOARD_USERNAME
+        value: admin
+      - key: DASHBOARD_PASSWORD
+        generateValue: true
+      - key: CRON_SECRET_TOKEN
+        generateValue: true
+      - key: DATABASE_URL
+        sync: false

@@ -63,3 +63,4 @@ def test_followup_agent_blocks_blacklisted_or_opt_out():
     result = agent.evaluate_and_generate(lead, days_since_last_contact=10, current_attempt=0)
     assert result.should_send is False
     assert result.reason == "blacklisted_or_opt_out"
+

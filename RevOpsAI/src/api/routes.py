@@ -22,6 +22,16 @@ from RevOpsAI.src.db.session import get_engine, init_db, get_session_factory
 router = APIRouter(prefix="/api/v1")
 router.include_router(webhook_router)
 
+@router.get("/health", tags=["Monitoring"])
+def api_health_check() -> dict[str, str]:
+    """API v1 Health check endpoint."""
+    return {
+        "status": "healthy",
+        "service": "RevOpsAI",
+        "version": "2.2-pro",
+        "environment": "production",
+    }
+
 security = HTTPBasic(auto_error=False)
 
 

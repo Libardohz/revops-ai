@@ -94,3 +94,4 @@ class CRMSyncConnector:
             return CRMSyncResult(success=True, remote_id=remote_id)
         except Exception as exc:
             return CRMSyncResult(success=False, error=str(exc))
+
