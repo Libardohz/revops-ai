@@ -66,12 +66,13 @@ def test_cron_followups_processing():
     )
     mock_repo.list_prospects.return_value = [lead_sent]
 
-    report = process_cron_followups(
-        tenant_id="tenant_clinicas_madrid",
-        days_elapsed=4,
-        cron_token="test_token",
-        repo=mock_repo,
-    )
+    with patch.dict(os.environ, {"CRON_SECRET_TOKEN": "test_token"}):
+        report = process_cron_followups(
+            tenant_id="tenant_clinicas_madrid",
+            days_elapsed=4,
+            cron_token="test_token",
+            repo=mock_repo,
+        )
 
     assert report["processed_count"] == 1
     assert len(report["results"]) == 1
