@@ -1,0 +1,18 @@
+sector_id: "inmobiliarias_constructoras_v1"
+compliance:
+  strictly_forbidden_topics:
+    - "tasaciones_oficiales_sin_visita"
+    - "garantias_de_rentabilidad_financiera"
+    - "asesoramiento_hipotecario_vinculante"
+  required_disclaimer: "Comunicación de optimización operativa para gerencia comercial inmobiliaria."
+
+research:
+  primary_sources: ["metrocuadrado", "fincaraiz", "website_home"]
+  signals_to_detect: ["has_online_booking", "whatsapp_widget_present", "has_property_filter"]
+
+scoring:
+  weights:
+    digital_gap: 0.5
+    market_reputation: 0.3
+    estimated_size: 0.2
+  min_qualification_score: 65

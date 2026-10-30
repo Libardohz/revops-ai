@@ -101,3 +101,19 @@ def test_health_check_and_root_redirect():
     root_res = client.get("/", follow_redirects=False)
     assert root_res.status_code in (301, 302, 307)
     assert root_res.headers["location"] == "/dashboard"
+
+
+def test_list_sectors_endpoint():
+    """Verify GET /api/v1/sectors returns all 4 configured business verticals."""
+    from fastapi.testclient import TestClient
+    from RevOpsAI.src.api.main import app
+
+    client = TestClient(app)
+    res = client.get("/api/v1/sectors")
+    assert res.status_code == 200
+    sectors = res.json()
+    sector_ids = [s["id"] for s in sectors]
+    assert "clinicas" in sector_ids
+    assert "inmobiliarias" in sector_ids
+    assert "abogados" in sector_ids
+    assert "turismo_medico" in sector_ids

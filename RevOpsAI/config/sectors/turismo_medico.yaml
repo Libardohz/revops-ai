@@ -1,0 +1,18 @@
+sector_id: "turismo_medico_estetica_v1"
+compliance:
+  strictly_forbidden_topics:
+    - "diagnosticos_quirurgicos_a_distancia"
+    - "garantias_de_resultado_estetico"
+    - "prescripciones_farmacologicas"
+  required_disclaimer: "Comunicación de optimización de canal de pacientes internacionales para dirección médica."
+
+research:
+  primary_sources: ["google_maps", "instagram", "website_home"]
+  signals_to_detect: ["has_online_booking", "whatsapp_widget_present", "has_english_version"]
+
+scoring:
+  weights:
+    digital_gap: 0.5
+    market_reputation: 0.3
+    estimated_size: 0.2
+  min_qualification_score: 65

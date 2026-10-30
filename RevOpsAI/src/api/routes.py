@@ -103,6 +103,30 @@ config = load_sector_config(_default_config_path)
 shared_store = ApprovalStore()
 orchestrator = PipelineOrchestrator(config=config, approval_store=shared_store)
 
+_sector_orchestrators: dict[str, PipelineOrchestrator] = {"clinicas": orchestrator}
+
+
+def get_orchestrator_for_sector(sector: str | None = None) -> PipelineOrchestrator:
+    """Resolve or dynamically load a sector-specific PipelineOrchestrator."""
+    if not sector:
+        sector = "clinicas"
+    sector_clean = sector.lower().strip()
+    if sector_clean in _sector_orchestrators:
+        return _sector_orchestrators[sector_clean]
+
+    candidates = [
+        Path(f"RevOpsAI/config/sectors/{sector_clean}.yaml"),
+        Path(__file__).resolve().parent.parent.parent / "config" / "sectors" / f"{sector_clean}.yaml",
+    ]
+    for p in candidates:
+        if p.is_file():
+            cfg = load_sector_config(p)
+            orch = PipelineOrchestrator(config=cfg, approval_store=shared_store)
+            _sector_orchestrators[sector_clean] = orch
+            return orch
+
+    return orchestrator
+
 
 def get_approval_store() -> ApprovalStore:
     """Dependency provider for ApprovalStore."""
@@ -121,6 +145,7 @@ class IngestRequest(BaseModel):
     name: str
     url: str
     html_content: str
+    sector: str | None = "clinicas"
 
 
 class AuditUrlRequest(BaseModel):
@@ -129,6 +154,7 @@ class AuditUrlRequest(BaseModel):
     tenant_id: str
     name: str
     url: str
+    sector: str | None = "clinicas"
 
 
 def fetch_remote_html(url: str, timeout: int = 15) -> str:
@@ -166,14 +192,38 @@ class ApprovalActionRequest(BaseModel):
     reason: str = ""
 
 
+@router.get("/sectors", response_model=list[dict[str, Any]])
+def list_available_sectors() -> list[dict[str, Any]]:
+    """List all configured business sectors for multi-vertical audit."""
+    sectors_dir = Path("RevOpsAI/config/sectors")
+    if not sectors_dir.is_dir():
+        sectors_dir = Path(__file__).resolve().parent.parent.parent / "config" / "sectors"
+
+    results = []
+    if sectors_dir.is_dir():
+        for yaml_file in sorted(sectors_dir.glob("*.yaml")):
+            try:
+                cfg = load_sector_config(yaml_file)
+                results.append({
+                    "id": yaml_file.stem,
+                    "sector_id": cfg.sector_id,
+                    "disclaimer": cfg.compliance.required_disclaimer,
+                    "min_qualification_score": cfg.scoring.min_qualification_score,
+                })
+            except Exception:
+                continue
+    return results
+
+
 @router.post("/prospects/process", response_model=PipelineResult)
 def process_prospect(
     req: IngestRequest,
     orch: PipelineOrchestrator = Depends(get_orchestrator),
 ) -> PipelineResult:
     """Ingest and run the multi-agent enrichment pipeline for a prospect."""
+    active_orch = get_orchestrator_for_sector(req.sector) if (req.sector and orch is orchestrator) else orch
     lead = Prospect(tenant_id=req.tenant_id, name=req.name, url=req.url)
-    result = orch.process_prospect(lead, req.html_content)
+    result = active_orch.process_prospect(lead, req.html_content)
     try:
         factory = get_default_session_factory()
         with factory() as session:
@@ -197,8 +247,9 @@ def audit_prospect_url(
     except Exception as net_err:
         raise HTTPException(status_code=502, detail=f"No se pudo descargar el sitio web: {net_err}")
 
+    active_orch = get_orchestrator_for_sector(req.sector) if (req.sector and orch is orchestrator) else orch
     lead = Prospect(tenant_id=req.tenant_id, name=req.name, url=req.url)
-    result = orch.process_prospect(lead, html)
+    result = active_orch.process_prospect(lead, html)
     try:
         factory = get_default_session_factory()
         with factory() as session:

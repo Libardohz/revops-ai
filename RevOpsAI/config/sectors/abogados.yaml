@@ -1,0 +1,18 @@
+sector_id: "abogados_firmas_v1"
+compliance:
+  strictly_forbidden_topics:
+    - "asesoramiento_juridico_vinculante"
+    - "promesa_de_ganar_juicio"
+    - "litigios_penales_especificos"
+  required_disclaimer: "Comunicación de optimización operativa para socios directores de firma legal."
+
+research:
+  primary_sources: ["google_maps", "website_home", "legal_directories"]
+  signals_to_detect: ["has_online_booking", "whatsapp_widget_present", "has_case_form"]
+
+scoring:
+  weights:
+    digital_gap: 0.5
+    market_reputation: 0.3
+    estimated_size: 0.2
+  min_qualification_score: 65
