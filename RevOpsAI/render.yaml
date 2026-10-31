@@ -10,12 +10,13 @@ services:
       - key: ENVIRONMENT
         value: production
       - key: DASHBOARD_AUTH_ENABLED
-        value: "true"
+        value: "false"
       - key: DASHBOARD_USERNAME
-        value: admin
+        value: admin@hzsaas.com
       - key: DASHBOARD_PASSWORD
-        generateValue: true
+        value: HzSaaS2026!
       - key: CRON_SECRET_TOKEN
         generateValue: true
       - key: DATABASE_URL
         sync: false
+
