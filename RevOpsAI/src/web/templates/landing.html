@@ -6,2812 +6,1196 @@
   <link rel="icon" type="image/jpeg" href="/static/hzsaas-shield-logo.jpg?v=3" />
   <link rel="shortcut icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
   <link rel="apple-touch-icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
-  <title>hzSaaS — Empresa de Ingeniería de Software, Sistemas de IA &amp; Productos SaaS</title>
-  <meta name="description" content="Conoce hzSaaS: desarrollamos productos SaaS propios (GymSaaS Enterprise y RevOps AI), sistemas autónomos de inteligencia artificial, integraciones biométricas, pasarelas de pago y software empresarial a medida en Colombia y Latinoamérica." />
+  <title>hzSaaS — Ingeniería de software, sistemas de IA y productos SaaS</title>
+  <meta name="description" content="hzSaaS es una firma colombiana de ingeniería de software. Operamos productos SaaS propios (GymSaaS Enterprise y RevOps AI) y construimos plataformas, agentes de IA e integraciones de pagos y hardware a medida." />
+  <meta name="theme-color" content="#0f1110" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/tokens.css?v=3.0.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/tokens.css?v=4.0.0" />
   <style>
-    /* Hallmark · pre-emit critique:
-     *   - Structured hzsaas.com as a comprehensive Corporate Technology & Software Studio Portal (no generic top-nav login button).
-     *   - Clearly communicates what hzSaaS does, our proprietary SaaS products (GymSaaS & RevOps AI), engineering services, and technology stack.
-     *   - Enforced OKLCH color tokens, official Shield Logo (/static/hzsaas-shield-logo.jpg), and zero internal data exposure in DevTools.
-     * · genre: modern-minimal · macrostructure: Bento Grid + Split Studio + Spec Matrix · palette: carbon-slate & emerald-signal */
+    /* Hallmark · pre-emit critique: P5 H5 E4 S5 R5 V5
+     * · genre: modern-minimal · theme: custom "hzSaaS Shield" (carbon + bone + brand green)
+     * · macrostructure: Alternating Bands (carbon ↔ bone) · nav: N9 edge-aligned · footer: Ft5 statement
+     * · signature: the green diagonal of the shield used as section marker and hero cut
+     * · type: Archivo (expanded display, roman) + IBM Plex Sans (body) + IBM Plex Mono (data)
+     * · audience: owners/directors of Colombian SMEs & B2B firms · use: understand what hzSaaS builds → talk on WhatsApp
+     * · tone: technical, sober, engineered */
 
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root {
+      --font-display: 'Archivo', 'Arial Narrow', system-ui, sans-serif;
+      --font-body: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+      --fs-micro: 0.8125rem;
+      --fs-small: 0.9375rem;
+      --fs-body: 1.0625rem;
+      --fs-lead: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+      --fs-h3: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+      --fs-h2: clamp(2rem, 1.45rem + 2.4vw, 3.5rem);
+      --fs-hero: clamp(2.6rem, 1.6rem + 4.6vw, 5.75rem);
+      --fs-stat: clamp(2.25rem, 1.7rem + 2.2vw, 3.5rem);
+
+      --section-y: clamp(5rem, 3.5rem + 6vw, 9rem);
+      --gutter: clamp(1.25rem, 0.8rem + 2vw, 2.5rem);
+      --measure: 62ch;
+
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    html, body {
-      overflow-x: clip;
-      background-color: var(--color-paper);
-      color: var(--color-ink);
-      font-family: var(--font-body);
-      font-size: 16px;
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      scroll-behavior: smooth;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { overflow-x: clip; }
+    html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 
     body {
-      position: relative;
-    }
-
-    .bg-arch-grid {
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(to right, oklch(96% 0 0 / 0.022) 1px, transparent 1px),
-        linear-gradient(to bottom, oklch(96% 0 0 / 0.022) 1px, transparent 1px);
-      background-size: 48px 48px;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button, input, select {
-      font-family: inherit;
-    }
-
-    .tabular {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 0 var(--space-5);
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ==========================================================================
-       1. TOP EXECUTIVE BAR & STICKY CORPORATE NAVIGATION (N1b)
-       ========================================================================== */
-    .telemetry-strip {
-      background-color: var(--color-paper-2);
-      border-bottom: 1px solid var(--color-rule);
-      padding: 0.45rem 0;
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--color-muted);
-      position: relative;
-      z-index: 95;
-    }
-
-    .telemetry-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      flex-wrap: wrap;
-    }
-
-    .telemetry-items {
-      display: flex;
-      align-items: center;
-      gap: var(--space-5);
-      flex-wrap: wrap;
-    }
-
-    .telemetry-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      letter-spacing: 0.03em;
-    }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: var(--color-accent);
-      box-shadow: 0 0 8px var(--color-accent);
-    }
-
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background-color: oklch(9.5% 0.008 255 / 0.88);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--color-rule);
-    }
-
-    .nav-bar {
-      height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-    }
-
-    .brand-cluster {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .brand-shield-img {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      object-fit: cover;
-      border: 1px solid oklch(96% 0 0 / 0.16);
-      box-shadow: 0 4px 14px oklch(0% 0 0 / 0.55);
-      flex-shrink: 0;
-    }
-
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-
-    .brand-name-row {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-
-    .brand-name {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 1.15rem;
-      letter-spacing: -0.03em;
+      background: var(--color-paper);
       color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: var(--fs-body);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
 
-    .brand-pill {
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      font-weight: 700;
-      padding: 0.12rem 0.4rem;
-      border-radius: 4px;
-      background-color: var(--color-accent-soft);
-      color: var(--color-accent);
-      border: 1px solid var(--color-accent-border);
-      letter-spacing: 0.04em;
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font: inherit; color: inherit; }
+    strong { font-weight: 600; }
+
+    :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 2px; }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; }
     }
 
-    .brand-sub {
-      font-family: var(--font-mono);
-      font-size: 0.64rem;
-      color: var(--color-muted);
-      letter-spacing: 0.03em;
-    }
+    .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 var(--gutter); }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 1.45rem;
+    /* ---------- Bands: section-scoped tokens (carbon ↔ bone) ---------- */
+    .band-dark, .band-deep {
+      --b-bg: var(--color-paper);
+      --b-raise: var(--color-paper-2);
+      --b-raise-2: var(--color-paper-3);
+      --b-ink: var(--color-ink);
+      --b-ink-2: var(--color-neutral);
+      --b-ink-3: var(--color-muted);
+      --b-line: var(--color-rule);
+      --b-line-2: var(--color-rule-strong);
+      --b-accent: var(--color-accent);
     }
-
-    .nav-link {
-      font-size: 0.84rem;
-      font-weight: 500;
-      color: var(--color-neutral);
-      transition: color var(--dur-fast) var(--ease-out);
-      white-space: nowrap;
+    .band-deep { --b-bg: var(--color-paper-2); --b-raise: var(--color-paper-3); --b-raise-2: var(--color-paper-hover); }
+    .band-bone {
+      --b-bg: var(--color-bone);
+      --b-raise: var(--color-bone-2);
+      --b-raise-2: var(--color-bone-rule);
+      --b-ink: var(--color-graphite);
+      --b-ink-2: var(--color-graphite-2);
+      --b-ink-3: var(--color-graphite-3);
+      --b-line: var(--color-bone-rule);
+      --b-line-2: var(--color-graphite-3);
+      --b-accent: var(--color-accent-deep);
     }
+    .band-dark, .band-deep, .band-bone { background: var(--b-bg); color: var(--b-ink); }
+    .section { padding: var(--section-y) 0; position: relative; }
 
-    .nav-link:hover {
-      color: var(--color-ink);
+    /* ---------- Section head with brand diagonal ---------- */
+    .kicker {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      font-family: var(--font-mono); font-size: var(--fs-micro); font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase; color: var(--b-ink-2);
+      margin-bottom: 1.5rem;
     }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
+    .kicker::before {
+      content: ""; width: 0.6rem; height: 1.15rem; background: var(--color-accent);
+      transform: skewX(-32deg); flex-shrink: 0;
     }
+    .kicker b { color: var(--b-accent); font-weight: 500; }
 
+    .section-head {
+      display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: clamp(1.5rem, 4vw, 5rem); align-items: end; margin-bottom: clamp(3rem, 5vw, 4.5rem);
+    }
+    .h2 {
+      font-family: var(--font-display); font-stretch: 112%; font-weight: 700;
+      font-size: var(--fs-h2); line-height: 1.04; letter-spacing: -0.025em;
+      color: var(--b-ink); overflow-wrap: anywhere; min-width: 0; text-wrap: balance;
+    }
+    .h2 .hl { color: var(--b-accent); }
+    .section-lead { font-size: var(--fs-lead); color: var(--b-ink-2); max-width: 46ch; line-height: 1.6; }
+
+    /* ---------- Buttons ---------- */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      padding: 0.56rem 1.08rem;
-      border-radius: 7px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      line-height: 1.2;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: transform var(--dur-fast) var(--ease-out),
-                  background-color var(--dur-fast) var(--ease-out),
-                  border-color var(--dur-fast) var(--ease-out),
-                  color var(--dur-fast) var(--ease-out);
-      white-space: nowrap;
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+      min-height: 3rem; padding: 0.8rem 1.4rem; border-radius: 2px;
+      font-family: var(--font-body); font-size: var(--fs-small); font-weight: 600; line-height: 1;
+      white-space: nowrap; cursor: pointer; border: 1px solid transparent;
+      transition: background-color 140ms var(--ease-spring), border-color 140ms var(--ease-spring),
+                  color 140ms var(--ease-spring), transform 120ms var(--ease-spring);
     }
+    .btn:active { transform: translateY(1px) scale(0.99); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn .arr { transition: transform 160ms var(--ease-spring); }
+    .btn:hover .arr { transform: translateX(3px); }
 
-    .btn:active {
-      transform: translateY(1px);
+    .btn-primary { background: var(--color-accent); color: var(--color-accent-ink); border-color: var(--color-accent); }
+    .btn-primary:hover { background: var(--color-ink); border-color: var(--color-ink); color: var(--color-paper); }
+    .band-bone .btn-primary:hover { background: var(--color-graphite); border-color: var(--color-graphite); color: var(--color-bone); }
+
+    .btn-line { background: transparent; color: var(--b-ink); border-color: var(--b-line-2); }
+    .btn-line:hover { border-color: var(--b-ink); }
+
+    .btn-text {
+      min-height: auto; padding: 0.25rem 0; border: 0; border-bottom: 1px solid var(--b-line-2);
+      border-radius: 0; color: var(--b-ink);
     }
+    .btn-text:hover { border-color: var(--color-accent); }
 
-    .btn-primary {
-      background-color: var(--color-accent);
-      color: var(--color-accent-ink);
-      border-color: var(--color-accent);
-      font-weight: 700;
-    }
-
-    .btn-primary:hover {
-      filter: brightness(1.08);
-    }
-
-    .btn-secondary {
-      background-color: oklch(96% 0 0 / 0.04);
-      color: var(--color-ink);
-      border-color: oklch(96% 0 0 / 0.12);
-    }
-
-    .btn-secondary:hover {
-      background-color: oklch(96% 0 0 / 0.09);
-      border-color: oklch(96% 0 0 / 0.22);
-    }
-
-    .btn-accent-outline {
-      background-color: var(--color-accent-soft);
-      color: var(--color-accent);
-      border-color: var(--color-accent-border);
-    }
-
-    .btn-accent-outline:hover {
-      background-color: var(--color-accent);
-      color: var(--color-accent-ink);
-    }
-
-    /* ==========================================================================
-       2. SPLIT STUDIO HERO (H2) — QUE HACE NUESTRA EMPRESA
-       ========================================================================== */
-    .hero-section {
-      padding: var(--space-8) 0 var(--space-8);
+    /* ---------- Header (N9 edge-aligned) ---------- */
+    .site-header {
+      position: sticky; top: 0; z-index: 50;
+      background: oklch(from var(--color-paper) l c h / 0.9);
+      backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px);
       border-bottom: 1px solid var(--color-rule);
-      position: relative;
-      background-image:
-        radial-gradient(circle at 18% 20%, oklch(20% 0.045 162 / 0.25), transparent 55%),
-        radial-gradient(circle at 85% 30%, oklch(16% 0.025 245 / 0.22), transparent 55%);
     }
+    @supports not (color: oklch(from red l c h)) { .site-header { background: var(--color-paper); } }
+    .nav { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 2rem; }
+    .brand { display: inline-flex; align-items: center; gap: 0.8rem; flex-shrink: 0; }
+    .brand img { width: 40px; height: 40px; border-radius: 3px; object-fit: cover; }
+    .brand-word { font-family: var(--font-display); font-stretch: 115%; font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; line-height: 1; }
+    .brand-word span { color: var(--color-accent); }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
-      gap: var(--space-7);
-      align-items: start;
+    .nav-links { display: flex; align-items: center; gap: clamp(1.25rem, 2.2vw, 2.25rem); }
+    .nav-links a {
+      font-size: var(--fs-small); color: var(--color-neutral); white-space: nowrap; padding: 0.4rem 0;
+      border-bottom: 1px solid transparent; transition: color 140ms var(--ease-spring), border-color 140ms var(--ease-spring);
     }
+    .nav-links a:hover { color: var(--color-ink); border-color: var(--color-accent); }
 
-    .eyebrow-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.35rem 0.9rem;
-      border-radius: 999px;
-      background-color: var(--color-accent-soft);
-      border: 1px solid var(--color-accent-border);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--color-accent);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: var(--space-4);
+    .nav-menu { display: none; position: relative; }
+    .nav-menu summary {
+      list-style: none; cursor: pointer; font-family: var(--font-mono); font-size: var(--fs-micro);
+      text-transform: uppercase; letter-spacing: 0.06em; padding: 0.7rem 1rem; border: 1px solid var(--color-rule-strong); border-radius: 2px;
     }
+    .nav-menu summary::-webkit-details-marker { display: none; }
+    .nav-menu[open] summary { border-color: var(--color-accent); }
+    .nav-menu-panel {
+      position: absolute; right: 0; top: calc(100% + 0.6rem); min-width: 240px;
+      background: var(--color-paper-2); border: 1px solid var(--color-rule-strong); padding: 0.5rem; display: grid;
+    }
+    .nav-menu-panel a { padding: 0.8rem 0.9rem; font-size: var(--fs-small); color: var(--color-neutral); white-space: nowrap; }
+    .nav-menu-panel a:hover { color: var(--color-ink); background: var(--color-paper-3); }
 
+    /* ---------- Hero ---------- */
+    .hero { position: relative; overflow: hidden; padding: clamp(4.5rem, 3rem + 6vw, 8.5rem) 0 0; }
+    .hero::after {
+      /* the shield diagonal, cut through the hero */
+      content: ""; position: absolute; top: -10%; right: clamp(-12rem, -8vw, -4rem);
+      width: clamp(4rem, 7vw, 7.5rem); height: 130%;
+      background: var(--color-accent); transform: skewX(-34deg); opacity: 0.9; pointer-events: none;
+    }
+    .hero-grid { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.62fr); gap: clamp(2rem, 5vw, 6rem); align-items: end; }
     .hero-title {
-      font-family: var(--font-display);
-      font-size: var(--text-display);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.038em;
-      color: var(--color-ink);
-      margin-bottom: var(--space-5);
-      max-width: 19ch;
+      font-family: var(--font-display); font-stretch: 115%; font-weight: 800;
+      font-size: var(--fs-hero); line-height: 0.98; letter-spacing: -0.035em;
+      overflow-wrap: anywhere; min-width: 0; text-wrap: balance; margin-bottom: 2rem;
     }
+    .hero-title .hl { color: var(--color-accent); }
+    .hero-lead { font-size: var(--fs-lead); color: var(--color-neutral); max-width: 54ch; line-height: 1.6; margin-bottom: 2.5rem; }
+    .hero-lead strong { color: var(--color-ink); }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center; }
 
-    .hero-lead {
-      font-size: var(--text-lg);
-      color: var(--color-neutral);
-      line-height: 1.62;
-      max-width: 58ch;
-      margin-bottom: var(--space-6);
+    .hero-divisions { border-top: 1px solid var(--color-rule-strong); background: oklch(from var(--color-paper) l c h / 0.85); }
+    .division { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); gap: 1rem; padding: 1.5rem 0; border-bottom: 1px solid var(--color-rule); }
+    .division-num { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--color-accent); padding-top: 0.3rem; }
+    .division h3 { font-family: var(--font-display); font-stretch: 108%; font-weight: 600; font-size: 1.2rem; line-height: 1.25; margin-bottom: 0.35rem; }
+    .division p { font-size: var(--fs-small); color: var(--color-muted); line-height: 1.55; }
+
+    .facts { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: clamp(4rem, 7vw, 6.5rem); border-top: 1px solid var(--color-rule-strong); }
+    .fact { padding: 2rem 1.5rem 2.5rem 0; border-right: 1px solid var(--color-rule); }
+    .fact + .fact { padding-left: 1.5rem; }
+    .fact:last-child { border-right: 0; }
+    .fact-val { font-family: var(--font-display); font-stretch: 112%; font-weight: 700; font-size: var(--fs-stat); line-height: 1; letter-spacing: -0.03em; margin-bottom: 0.75rem; font-variant-numeric: tabular-nums; }
+    .fact-label { font-size: var(--fs-small); color: var(--color-neutral); line-height: 1.45; max-width: 24ch; }
+
+    /* ---------- Products ---------- */
+    .bento-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+    .product {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      background: var(--color-paper); color: var(--color-ink); border-radius: 3px; overflow: hidden;
     }
+    .product-media { position: relative; min-height: 420px; }
+    .product-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .product-media::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 55%, var(--color-paper)); }
+    .product-body { padding: clamp(2rem, 4vw, 3.5rem); display: flex; flex-direction: column; gap: 1.5rem; }
+    .product-tag { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--color-muted); letter-spacing: 0.04em; }
+    .product-tag .live { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-accent); }
+    .product-tag .live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--color-accent); }
+    .product h3 { font-family: var(--font-display); font-stretch: 112%; font-weight: 700; font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.6rem); line-height: 1.05; letter-spacing: -0.025em; }
+    .product-copy { color: var(--color-neutral); max-width: 52ch; }
+    .spec-list { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--color-rule); }
+    .spec-list div { padding: 1rem 1rem 1rem 0; border-bottom: 1px solid var(--color-rule); }
+    .spec-list dt { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--color-muted); margin-bottom: 0.2rem; }
+    .spec-list dd { font-size: var(--fs-small); color: var(--color-ink); }
+    .product-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center; margin-top: auto; padding-top: 0.5rem; }
 
-    .hero-cta-row {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      flex-wrap: wrap;
-      margin-bottom: var(--space-6);
-    }
-
-    /* Interactive Live URL Diagnostic Sandbox inside Hero */
-    .live-diagnostic-box {
-      background-color: oklch(12.8% 0.010 255 / 0.92);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-md);
-      padding: var(--space-5);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .diag-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      margin-bottom: var(--space-3);
-      flex-wrap: wrap;
-    }
-
-    .diag-title {
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--color-ink);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .diag-presets {
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      flex-wrap: wrap;
-    }
-
+    .product-revops { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); }
+    .diag { background: var(--color-paper-2); border-left: 1px solid var(--color-rule); padding: clamp(2rem, 4vw, 3.5rem); display: flex; flex-direction: column; gap: 1.25rem; }
+    .diag-title { font-family: var(--font-display); font-stretch: 108%; font-weight: 600; font-size: 1.25rem; line-height: 1.3; }
+    .diag-sub { font-size: var(--fs-small); color: var(--color-muted); margin-top: -0.6rem; }
+    .diag-presets { display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .preset-chip {
-      background-color: var(--color-paper-3);
-      border: 1px solid var(--color-rule);
-      color: var(--color-neutral);
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      padding: 0.22rem 0.58rem;
-      border-radius: var(--radius-xs);
-      cursor: pointer;
-      transition: border-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
-    }
-
-    .preset-chip:hover {
-      border-color: var(--color-accent);
-      color: var(--color-ink);
-    }
-
-    .diag-form {
-      display: grid;
-      grid-template-columns: 1fr 1.25fr 0.9fr auto;
-      gap: var(--space-2);
-    }
-
-    .diag-input, .diag-select {
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-xs);
-      padding: 0.62rem 0.75rem;
-      color: var(--color-ink);
-      font-size: 0.84rem;
-      outline: none;
-      width: 100%;
-      transition: border-color var(--dur-fast) var(--ease-out);
-    }
-
-    .diag-input:focus, .diag-select:focus {
-      border-color: var(--color-accent);
-    }
-
-    .diag-result-drawer {
-      display: none;
-      margin-top: var(--space-4);
-      padding-top: var(--space-4);
-      border-top: 1px solid var(--color-rule);
-    }
-
-    .diag-result-drawer.active {
-      display: block;
-    }
-
-    .diag-result-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      margin-bottom: var(--space-3);
-      flex-wrap: wrap;
-    }
-
-    .diag-score-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.28rem 0.65rem;
-      border-radius: var(--radius-xs);
-      background-color: var(--color-accent-soft);
-      border: 1px solid var(--color-accent-border);
-      color: var(--color-accent);
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 600;
-    }
-
-    .diag-copy-preview {
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      padding: var(--space-3);
-      font-size: 0.82rem;
-      color: var(--color-neutral);
-      line-height: 1.55;
-      margin-bottom: var(--space-3);
-      white-space: pre-line;
-    }
-
-    /* Right Column: Corporate Capabilities & Divisions Inspector */
-    .blueprint-panel {
-      background-color: oklch(12.8% 0.010 255 / 0.92);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .blueprint-tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      border-bottom: 1px solid var(--color-rule);
-      background-color: var(--color-paper);
-    }
-
-    .bp-tab {
-      padding: 0.85rem 0.75rem;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      color: var(--color-muted);
-      background: transparent;
-      border: none;
-      border-right: 1px solid var(--color-rule);
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      text-align: left;
-      transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
-    }
-
-    .bp-tab:last-child {
-      border-right: none;
-    }
-
-    .bp-tab.active {
-      color: var(--color-ink);
-      background-color: var(--color-paper-2);
-      border-bottom-color: var(--color-accent);
-    }
-
-    .bp-pane {
-      display: none;
-      padding: var(--space-5);
-    }
-
-    .bp-pane.active {
-      display: block;
-    }
-
-    .bp-meta-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: var(--space-3);
-      margin-bottom: var(--space-4);
-      border-bottom: 1px solid var(--color-rule);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--color-muted);
-    }
-
-    .dag-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-    }
-
-    .dag-node {
-      display: grid;
-      grid-template-columns: 38px 1fr auto;
-      align-items: center;
-      gap: var(--space-3);
-      padding: 0.68rem 0.85rem;
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      transition: border-color var(--dur-fast) var(--ease-out);
-    }
-
-    .dag-node:hover {
-      border-color: var(--color-rule-strong);
-    }
-
-    .dag-step {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--color-accent);
-      background-color: var(--color-accent-soft);
-      border: 1px solid var(--color-accent-border);
-      border-radius: var(--radius-xs);
-      text-align: center;
-      padding: 0.2rem 0;
-    }
-
-    .dag-step.amber {
-      color: var(--color-amber);
-      background-color: var(--color-amber-soft);
-      border-color: var(--color-amber-border);
-    }
-
-    .dag-step.sky {
-      color: var(--color-sky);
-      background-color: var(--color-sky-soft);
-      border-color: var(--color-sky-border);
-    }
-
-    .dag-info h4 {
-      font-family: var(--font-display);
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--color-ink);
-      line-height: 1.25;
-    }
-
-    .dag-info p {
-      font-size: 0.76rem;
-      color: var(--color-muted);
-      line-height: 1.35;
-    }
-
-    .dag-metric {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--color-neutral);
-      padding: 0.18rem 0.5rem;
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      white-space: nowrap;
-    }
-
-    .bp-footer {
-      margin-top: var(--space-4);
-      padding-top: var(--space-3);
-      border-top: 1px solid var(--color-rule);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      flex-wrap: wrap;
-    }
-
-    /* ==========================================================================
-       3. KEY METRIC LEDGER STRIP
-       ========================================================================== */
-    .ledger-strip {
-      border-bottom: 1px solid var(--color-rule);
-      background-color: var(--color-paper-2);
-      position: relative;
-      z-index: 2;
-    }
-
-    .ledger-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    .ledger-cell {
-      padding: var(--space-5) var(--space-5);
-      border-right: 1px solid var(--color-rule);
-    }
-
-    .ledger-cell:last-child {
-      border-right: none;
-    }
-
-    .ledger-value {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-      font-size: var(--text-xl);
-      font-weight: 600;
-      color: var(--color-ink);
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 0.35rem;
-    }
-
-    .ledger-label {
-      font-size: 0.83rem;
-      font-weight: 600;
-      color: var(--color-neutral);
-      margin-bottom: 0.2rem;
-    }
-
-    .ledger-note {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--color-muted);
-    }
-
-    /* ==========================================================================
-       4. ASYMMETRIC BENTO GRID: PRODUCTOS Y SERVICIOS (F1)
-       ========================================================================== */
-    .section-block {
-      padding: var(--space-9) 0;
-      border-bottom: 1px solid var(--color-rule);
-      position: relative;
-      z-index: 2;
-    }
-
-    .section-intro {
-      max-width: 68ch;
-      margin-bottom: var(--space-7);
-    }
-
-    .section-index {
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--color-accent);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: var(--space-2);
-    }
-
-    .section-heading {
-      font-family: var(--font-display);
-      font-size: var(--text-2xl);
-      font-weight: 700;
-      letter-spacing: -0.032em;
-      line-height: 1.1;
-      color: var(--color-ink);
-      margin-bottom: var(--space-3);
-    }
-
-    .section-desc {
-      font-size: var(--text-base);
-      color: var(--color-neutral);
-      line-height: 1.65;
-    }
-
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: var(--space-4);
-    }
-
-    .bento-cell {
-      background-color: oklch(12.8% 0.010 255 / 0.9);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-md);
-      padding: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: border-color var(--dur-med) var(--ease-out);
-      position: relative;
-    }
-
-    .bento-cell:hover {
-      border-color: var(--color-rule-strong);
-    }
-
-    .bento-span-7 { grid-column: span 7; }
-    .bento-span-6 { grid-column: span 6; }
-    .bento-span-5 { grid-column: span 5; }
-    .bento-span-4 { grid-column: span 4; }
-
-    .bento-top-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      margin-bottom: var(--space-4);
-    }
-
-    .bento-id {
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      color: var(--color-muted);
-      letter-spacing: 0.04em;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .mini-shield {
-      width: 22px;
-      height: 22px;
-      border-radius: 5px;
-      object-fit: cover;
-      border: 1px solid oklch(96% 0 0 / 0.16);
-    }
-
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.22rem 0.6rem;
-      border-radius: var(--radius-xs);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-    }
-
-    .status-pill.emerald {
-      background-color: var(--color-accent-soft);
-      border: 1px solid var(--color-accent-border);
-      color: var(--color-accent);
-    }
-
-    .status-pill.amber {
-      background-color: var(--color-amber-soft);
-      border: 1px solid var(--color-amber-border);
-      color: var(--color-amber);
-    }
-
-    .status-pill.sky {
-      background-color: var(--color-sky-soft);
-      border: 1px solid var(--color-sky-border);
-      color: var(--color-sky);
-    }
-
-    .bento-title {
-      font-family: var(--font-display);
-      font-size: var(--text-xl);
-      font-weight: 700;
-      letter-spacing: -0.025em;
-      line-height: 1.18;
-      color: var(--color-ink);
-      margin-bottom: var(--space-3);
-    }
-
-    .bento-title-sm {
-      font-family: var(--font-display);
-      font-size: 1.18rem;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      line-height: 1.25;
-      color: var(--color-ink);
-      margin-bottom: var(--space-2);
-    }
-
-    .bento-copy {
-      font-size: 0.92rem;
-      color: var(--color-neutral);
-      line-height: 1.62;
-      margin-bottom: var(--space-5);
-    }
-
-    .spec-kv-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-2);
-      margin-bottom: var(--space-5);
-    }
-
-    .spec-kv {
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      padding: 0.65rem 0.8rem;
-    }
-
-    .spec-kv-key {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--color-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-
-    .spec-kv-val {
-      font-family: var(--font-mono);
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--color-ink);
-    }
-
-    .state-machine-strip {
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      padding: 0.75rem;
-      margin-bottom: var(--space-5);
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-wrap: wrap;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-    }
-
-    .sm-node {
-      padding: 0.2rem 0.5rem;
-      border-radius: var(--radius-xs);
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule-strong);
-      color: var(--color-neutral);
-    }
-
-    .sm-node.highlight {
-      border-color: var(--color-accent-border);
-      color: var(--color-accent);
-      background-color: var(--color-accent-soft);
-    }
-
-    .sm-arrow {
-      color: var(--color-muted);
-    }
-
-    .bento-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-      flex-wrap: wrap;
-      padding-top: var(--space-4);
-      border-top: 1px solid var(--color-rule);
-    }
-
-    .code-snippet {
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      padding: var(--space-3);
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      line-height: 1.55;
-      color: var(--color-neutral);
-    }
-
-    /* ==========================================================================
-       5. HERRAMIENTAS Y CAPACIDADES TECNOLÓGICAS (TABULAR SPEC SHEET)
-       ========================================================================== */
-    .tech-stack-sheet {
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-
-    .tech-row {
-      display: grid;
-      grid-template-columns: 280px 1fr 240px;
-      border-bottom: 1px solid var(--color-rule);
-      padding: var(--space-5) var(--space-6);
-      align-items: start;
-      gap: var(--space-5);
-    }
-
-    .tech-row:last-child {
-      border-bottom: none;
-    }
-
-    .tech-domain {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .tech-domain-code {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--color-accent);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .tech-domain-name {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--color-ink);
-    }
-
-    .tech-desc {
-      font-size: 0.9rem;
-      color: var(--color-neutral);
-      line-height: 1.6;
-      margin-bottom: var(--space-3);
-    }
-
-    .tech-outcome {
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      color: var(--color-ink);
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-xs);
-      padding: 0.65rem 0.85rem;
-      line-height: 1.45;
-    }
-
-    /* ==========================================================================
-       6. INTERACTIVE MULTI-SECTOR SPECIFICATION MATRIX (F3)
-       ========================================================================== */
-    .sector-matrix-wrap {
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-
-    .sector-nav-bar {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      background-color: var(--color-paper);
-      border-bottom: 1px solid var(--color-rule);
-    }
-
+      background: transparent; border: 1px solid var(--color-rule-strong); color: var(--color-neutral);
+      font-family: var(--font-mono); font-size: var(--fs-micro); padding: 0.45rem 0.8rem; border-radius: 2px; cursor: pointer;
+      transition: border-color 140ms var(--ease-spring), color 140ms var(--ease-spring);
+    }
+    .preset-chip:hover { border-color: var(--color-accent); color: var(--color-ink); }
+    .diag-form { display: grid; gap: 0.75rem; }
+    .field { display: grid; gap: 0.4rem; }
+    .field label { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--color-muted); }
+    .field input, .field select {
+      width: 100%; min-height: 3rem; padding: 0.75rem 0.9rem; background: var(--color-paper);
+      border: 1px solid var(--color-rule-strong); border-radius: 2px; color: var(--color-ink); font-size: var(--fs-small); outline: none;
+      transition: border-color 140ms var(--ease-spring);
+    }
+    .field input::placeholder { color: var(--color-muted); }
+    .field input:hover, .field select:hover { border-color: var(--color-muted); }
+    .field input:focus, .field select:focus { border-color: var(--color-accent); }
+    .field-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0.75rem; }
+    .diag-form .btn { width: 100%; margin-top: 0.25rem; }
+
+    .diag-result { display: none; border-top: 1px solid var(--color-rule-strong); padding-top: 1.25rem; gap: 1rem; }
+    .diag-result.active { display: grid; animation: rise 360ms var(--ease-spring); }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .diag-result-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+    .diag-result-top strong { font-size: 1.05rem; }
+    .diag-state { display: block; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--color-accent); margin-top: 0.2rem; }
+    .diag-score { font-family: var(--font-display); font-stretch: 112%; font-weight: 700; font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+    .diag-copy { white-space: pre-wrap; font-size: var(--fs-small); color: var(--color-neutral); line-height: 1.6; max-height: 220px; overflow-y: auto; padding: 1rem; background: var(--color-paper); border: 1px solid var(--color-rule); }
+
+    /* ---------- Services (editorial rows, not cards) ---------- */
+    .service { display: grid; grid-template-columns: 7rem minmax(0, 1fr) minmax(0, 1fr); gap: clamp(1.5rem, 3vw, 3rem); padding: clamp(2.25rem, 4vw, 3.25rem) 0; border-top: 1px solid var(--b-line); }
+    .service:last-child { border-bottom: 1px solid var(--b-line); }
+    .service-num { font-family: var(--font-display); font-stretch: 112%; font-weight: 700; font-size: 2.5rem; line-height: 1; color: var(--b-ink-3); letter-spacing: -0.03em; }
+    .service:hover .service-num { color: var(--color-accent); }
+    .service h3 { font-family: var(--font-display); font-stretch: 110%; font-weight: 650; font-size: var(--fs-h3); line-height: 1.15; letter-spacing: -0.015em; margin-bottom: 1rem; }
+    .service p { color: var(--b-ink-2); max-width: var(--measure); }
+    .checks { list-style: none; display: grid; gap: 0.75rem; align-content: start; padding-top: 0.35rem; }
+    .checks li { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); gap: 0.6rem; font-size: var(--fs-small); color: var(--b-ink); line-height: 1.5; }
+    .checks li::before { content: ""; width: 0.45rem; height: 0.9rem; margin-top: 0.25rem; background: var(--color-accent); transform: skewX(-32deg); }
+
+    /* ---------- Stack sheet ---------- */
+    .stack-row { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr) minmax(0, 0.8fr); gap: clamp(1.5rem, 3vw, 3rem); padding: 2.25rem 0; border-top: 1px solid var(--b-line); }
+    .stack-row:last-child { border-bottom: 1px solid var(--b-line); }
+    .stack-code { display: block; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--b-accent); margin-bottom: 0.5rem; }
+    .stack-name { font-family: var(--font-display); font-stretch: 108%; font-weight: 600; font-size: 1.3rem; line-height: 1.25; }
+    .stack-desc { color: var(--b-ink-2); font-size: var(--fs-small); line-height: 1.65; margin-bottom: 1rem; }
+    .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .tag { font-family: var(--font-mono); font-size: var(--fs-micro); padding: 0.3rem 0.65rem; border: 1px solid var(--b-line-2); border-radius: 2px; color: var(--b-ink); white-space: nowrap; }
+    .stack-outcome { font-size: var(--fs-small); color: var(--b-ink-2); border-left: 2px solid var(--color-accent); padding-left: 1rem; line-height: 1.55; align-self: start; }
+    .stack-outcome strong { display: block; color: var(--b-ink); margin-bottom: 0.25rem; }
+
+    /* ---------- Sectors ---------- */
+    .sector-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--b-line); margin-bottom: 3rem; overflow-x: auto; scrollbar-width: none; }
+    .sector-tabs::-webkit-scrollbar { display: none; }
     .sector-tab-btn {
-      padding: var(--space-4);
-      background: transparent;
-      border: none;
-      border-right: 1px solid var(--color-rule);
-      border-bottom: 2px solid transparent;
-      color: var(--color-muted);
-      cursor: pointer;
-      text-align: left;
-      transition: background-color var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+      flex: 0 0 auto; background: transparent; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+      padding: 1rem 1.4rem 1.1rem 0; margin-right: 1.4rem; cursor: pointer; text-align: left; color: var(--b-ink-3);
+      transition: color 140ms var(--ease-spring), border-color 140ms var(--ease-spring);
     }
+    .sector-tab-btn:hover { color: var(--b-ink); }
+    .sector-tab-btn.active { color: var(--b-ink); border-color: var(--color-accent); }
+    .sector-tab-code { display: block; font-family: var(--font-mono); font-size: var(--fs-micro); margin-bottom: 0.2rem; }
+    .sector-tab-name { font-family: var(--font-display); font-stretch: 105%; font-weight: 600; font-size: 1.05rem; white-space: nowrap; }
 
-    .sector-tab-btn:last-child {
-      border-right: none;
+    .sector-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); gap: clamp(2rem, 4vw, 4rem); }
+    .sector-title { font-family: var(--font-display); font-stretch: 110%; font-weight: 700; font-size: var(--fs-h3); line-height: 1.15; margin-bottom: 2rem; }
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table th, .spec-table td { text-align: left; vertical-align: top; padding: 1.1rem 0; border-top: 1px solid var(--b-line); }
+    .spec-table th { width: 34%; padding-right: 1.5rem; font-family: var(--font-mono); font-size: var(--fs-micro); font-weight: 500; color: var(--b-ink-3); }
+    .spec-table td { font-size: var(--fs-small); color: var(--b-ink); line-height: 1.6; }
+    .sample-label { display: flex; justify-content: space-between; gap: 1rem; font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--b-ink-3); margin-bottom: 0.75rem; }
+    .sample-card { white-space: pre-wrap; background: var(--color-paper); color: var(--color-neutral); padding: 1.75rem; font-size: var(--fs-small); line-height: 1.7; border-radius: 3px; margin-bottom: 1.5rem; border-top: 3px solid var(--color-accent); }
+
+    /* ---------- ROI ---------- */
+    .roi { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); }
+    .control { padding: 1.75rem 0; border-top: 1px solid var(--b-line); }
+    .control:last-child { border-bottom: 1px solid var(--b-line); }
+    .control-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .control-head label { font-weight: 500; }
+    .control-val { font-family: var(--font-mono); font-size: var(--fs-small); color: var(--b-accent); font-variant-numeric: tabular-nums; }
+    .control-hint { display: block; font-size: var(--fs-micro); color: var(--b-ink-3); margin-top: 0.75rem; }
+    .range { -webkit-appearance: none; appearance: none; width: 100%; height: 2px; background: var(--b-line-2); outline: none; cursor: pointer; }
+    .range::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; background: var(--color-accent); border: 3px solid var(--b-bg); box-shadow: 0 0 0 1px var(--color-accent); border-radius: 50%; transition: transform 120ms var(--ease-spring); }
+    .range::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    .range::-moz-range-thumb { width: 16px; height: 16px; background: var(--color-accent); border: 3px solid var(--b-bg); border-radius: 50%; }
+
+    .roi-out { display: flex; flex-direction: column; }
+    .roi-revenue { padding: 2rem; background: var(--color-accent); color: var(--color-accent-ink); border-radius: 3px; margin-bottom: 1.5rem; }
+    .roi-revenue span { display: block; font-family: var(--font-mono); font-size: var(--fs-micro); margin-bottom: 0.75rem; }
+    .roi-revenue div { font-family: var(--font-display); font-stretch: 110%; font-weight: 800; font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3.2rem); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+    .roi-kpis { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--b-line); margin-bottom: 1.5rem; }
+    .roi-kpi { padding: 1.25rem 1rem 1.25rem 0; border-bottom: 1px solid var(--b-line); }
+    .roi-kpi:nth-child(even) { padding-left: 1rem; border-left: 1px solid var(--b-line); }
+    .roi-kpi span { display: block; font-size: var(--fs-micro); color: var(--b-ink-3); margin-bottom: 0.35rem; line-height: 1.4; }
+    .roi-kpi div { font-family: var(--font-display); font-stretch: 108%; font-weight: 700; font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+    .roi-foot { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: auto; }
+    .roi-foot small { font-size: var(--fs-micro); color: var(--b-ink-3); max-width: 32ch; }
+
+    /* ---------- Method (chevron timeline) ---------- */
+    .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); counter-reset: step; }
+    .step { padding: 2rem 1.75rem 0 0; border-top: 2px solid var(--b-line-2); position: relative; }
+    .step::before {
+      counter-increment: step; content: "0" counter(step);
+      display: block; font-family: var(--font-display); font-stretch: 112%; font-weight: 700; font-size: 3rem; line-height: 1;
+      color: var(--b-ink); letter-spacing: -0.03em; margin-bottom: 1.25rem;
     }
+    .step:first-child { border-top-color: var(--color-accent); }
+    .step h3 { font-family: var(--font-display); font-stretch: 106%; font-weight: 600; font-size: 1.2rem; line-height: 1.25; margin-bottom: 0.75rem; }
+    .step p { font-size: var(--fs-small); color: var(--b-ink-2); line-height: 1.6; margin-bottom: 1rem; }
+    .step small { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--b-accent); }
 
-    .sector-tab-btn:hover {
-      color: var(--color-neutral);
-      background-color: var(--color-paper-2);
+    /* ---------- Engagement models ---------- */
+    .models { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr) minmax(0, 1fr); gap: 1.25rem; align-items: stretch; }
+    .model { display: flex; flex-direction: column; gap: 1.25rem; padding: clamp(1.75rem, 3vw, 2.5rem); border: 1px solid var(--b-line); border-radius: 3px; background: var(--b-raise); }
+    .model.featured { background: var(--color-bone); color: var(--color-graphite); border-color: var(--color-bone); }
+    .model-tier { font-family: var(--font-mono); font-size: var(--fs-micro); color: var(--b-ink-3); }
+    .model.featured .model-tier { color: var(--color-accent-deep); }
+    .model h3 { font-family: var(--font-display); font-stretch: 112%; font-weight: 700; font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.02em; }
+    .model-summary { font-size: var(--fs-small); color: var(--b-ink-2); line-height: 1.6; }
+    .model.featured .model-summary { color: var(--color-graphite-2); }
+    .model .checks li { color: inherit; }
+    .model-actions { margin-top: auto; display: grid; gap: 0.6rem; padding-top: 0.5rem; }
+    .model-actions .btn { width: 100%; }
+    .model.featured .btn-line { color: var(--color-graphite); border-color: var(--color-graphite-3); }
+    .model.featured .btn-line:hover { border-color: var(--color-graphite); }
+
+    /* ---------- FAQ ---------- */
+    .faq { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(2rem, 5vw, 6rem); }
+    .faq-aside .section-lead { margin: 1.5rem 0 2rem; }
+    .faq-item { border-top: 1px solid var(--b-line); }
+    .faq-item:last-child { border-bottom: 1px solid var(--b-line); }
+    .faq-item summary {
+      list-style: none; cursor: pointer; display: grid; grid-template-columns: minmax(0, 1fr) 1.5rem; gap: 1.5rem; align-items: start;
+      padding: 1.6rem 0; font-family: var(--font-display); font-stretch: 105%; font-weight: 600; font-size: 1.15rem; line-height: 1.35;
+      transition: color 140ms var(--ease-spring);
     }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary:hover { color: var(--b-accent); }
+    .faq-item summary::after { content: "+"; font-family: var(--font-mono); font-weight: 400; font-size: 1.4rem; line-height: 1; color: var(--b-ink-3); justify-self: end; transition: transform 200ms var(--ease-spring); }
+    .faq-item[open] summary::after { transform: rotate(45deg); color: var(--color-accent-deep); }
+    .faq-answer { padding: 0 2.5rem 1.75rem 0; color: var(--b-ink-2); max-width: var(--measure); }
+    .faq-answer a { color: var(--b-accent); text-decoration: underline; text-underline-offset: 3px; }
 
-    .sector-tab-btn.active {
-      color: var(--color-ink);
-      background-color: var(--color-paper-2);
-      border-bottom-color: var(--color-accent);
-    }
+    /* ---------- Footer (Ft5 statement) ---------- */
+    .site-footer { background: var(--color-paper); border-top: 1px solid var(--color-rule); padding: clamp(5rem, 8vw, 8rem) 0 2.5rem; position: relative; overflow: hidden; }
+    .footer-statement { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.6fr); gap: 3rem; align-items: end; padding-bottom: clamp(4rem, 7vw, 6rem); border-bottom: 1px solid var(--color-rule); }
+    .footer-statement h2 { font-family: var(--font-display); font-stretch: 115%; font-weight: 800; font-size: clamp(2.4rem, 1.5rem + 4vw, 5rem); line-height: 1; letter-spacing: -0.035em; overflow-wrap: anywhere; text-wrap: balance; }
+    .footer-statement h2 .hl { color: var(--color-accent); }
+    .footer-contact { display: grid; gap: 1rem; justify-items: start; }
+    .footer-contact p { color: var(--color-neutral); font-size: var(--fs-small); }
+    .footer-phone { font-family: var(--font-mono); font-size: 1.15rem; color: var(--color-ink); border-bottom: 1px solid var(--color-accent); padding-bottom: 0.2rem; }
+    .footer-cols { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr)); gap: 2rem; padding: 3.5rem 0; }
+    .footer-brand p { color: var(--color-muted); font-size: var(--fs-small); max-width: 34ch; margin-top: 1.25rem; }
+    .footer-col h4 { font-family: var(--font-mono); font-size: var(--fs-micro); font-weight: 500; color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1.25rem; }
+    .footer-col ul { list-style: none; display: grid; gap: 0.75rem; }
+    .footer-col a { font-size: var(--fs-small); color: var(--color-neutral); transition: color 140ms var(--ease-spring); }
+    .footer-col a:hover { color: var(--color-ink); }
+    .colophon { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-top: 2rem; border-top: 1px solid var(--color-rule); font-size: var(--fs-micro); color: var(--color-muted); }
 
-    .sector-tab-code {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--color-accent);
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    .sector-tab-name {
-      font-family: var(--font-display);
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: block;
-    }
-
-    .sector-detail-grid {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-    }
-
-    .sector-specs-col {
-      padding: var(--space-6);
-      border-right: 1px solid var(--color-rule);
-    }
-
-    .sector-sample-col {
-      padding: var(--space-6);
-      background-color: var(--color-paper);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .spec-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .spec-table tr {
-      border-bottom: 1px solid var(--color-rule);
-    }
-
-    .spec-table tr:last-child {
-      border-bottom: none;
-    }
-
-    .spec-table th {
-      width: 34%;
-      padding: 0.95rem 0.75rem 0.95rem 0;
-      text-align: left;
-      vertical-align: top;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      font-weight: 500;
-      color: var(--color-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .spec-table td {
-      padding: 0.95rem 0;
-      font-size: 0.88rem;
-      color: var(--color-ink);
-      line-height: 1.55;
-    }
-
-    .tag-cloud {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-
-    .spec-tag {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      padding: 0.2rem 0.55rem;
-      border-radius: var(--radius-xs);
-      background-color: var(--color-paper);
-      border: 1px solid var(--color-rule-strong);
-      color: var(--color-neutral);
-    }
-
-    .sample-outreach-card {
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-sm);
-      padding: var(--space-4);
-      margin: var(--space-3) 0 var(--space-4);
-      font-size: 0.84rem;
-      color: var(--color-neutral);
-      line-height: 1.6;
-      white-space: pre-line;
-    }
-
-    /* ==========================================================================
-       7. INTERACTIVE REVENUE & ROI CALCULATOR
-       ========================================================================== */
-    .roi-workbench {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-    }
-
-    .roi-controls {
-      padding: var(--space-6);
-      border-right: 1px solid var(--color-rule);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-5);
-    }
-
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-    }
-
-    .control-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.86rem;
-      font-weight: 600;
-      color: var(--color-ink);
-    }
-
-    .control-val {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-      font-size: 0.92rem;
-      color: var(--color-accent);
-    }
-
-    .range-slider {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 100%;
-      height: 6px;
-      background: var(--color-paper-3);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: 999px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .range-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      background: var(--color-accent);
-      border: 2px solid var(--color-paper);
-      cursor: pointer;
-    }
-
-    .roi-telemetry {
-      padding: var(--space-6);
-      background-color: var(--color-paper);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .roi-kpi-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-3);
-      margin-bottom: var(--space-5);
-    }
-
-    .roi-kpi-box {
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-sm);
-      padding: var(--space-4);
-    }
-
-    .roi-kpi-box.featured {
-      grid-column: span 2;
-      border-color: var(--color-accent-border);
-      background-color: var(--color-accent-soft);
-    }
-
-    .roi-kpi-label {
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--color-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      display: block;
-      margin-bottom: 0.35rem;
-    }
-
-    .roi-kpi-num {
-      font-family: var(--font-mono);
-      font-variant-numeric: tabular-nums;
-      font-size: var(--text-xl);
-      font-weight: 700;
-      color: var(--color-ink);
-    }
-
-    .roi-kpi-box.featured .roi-kpi-num {
-      color: var(--color-accent);
-    }
-
-    /* ==========================================================================
-       8. NARRATIVE WORKFLOW & COMMERCIAL MODELS
-       ========================================================================== */
-    .workflow-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-md);
-      background-color: var(--color-paper-2);
-      overflow: hidden;
-    }
-
-    .workflow-step {
-      padding: var(--space-6);
-      border-right: 1px solid var(--color-rule);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .workflow-step:last-child {
-      border-right: none;
-    }
-
-    .wf-num {
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--color-accent);
-      margin-bottom: var(--space-4);
-      display: inline-block;
-    }
-
-    .wf-title {
-      font-family: var(--font-display);
-      font-size: 1.12rem;
-      font-weight: 600;
-      color: var(--color-ink);
-      margin-bottom: var(--space-3);
-      line-height: 1.25;
-    }
-
-    .wf-body {
-      font-size: 0.88rem;
-      color: var(--color-neutral);
-      line-height: 1.6;
-      margin-bottom: var(--space-4);
-    }
-
-    .wf-spec {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--color-muted);
-      padding-top: var(--space-3);
-      border-top: 1px solid var(--color-rule);
-    }
-
-    .models-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-4);
-    }
-
-    .model-card {
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule);
-      border-radius: var(--radius-md);
-      padding: var(--space-6);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .model-card.featured {
-      border-color: var(--color-accent-border);
-      background-color: var(--color-paper-3);
-    }
-
-    .model-tier {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      color: var(--color-accent);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: var(--space-2);
-    }
-
-    .model-name {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--color-ink);
-      margin-bottom: var(--space-2);
-    }
-
-    .model-summary {
-      font-size: 0.88rem;
-      color: var(--color-neutral);
-      line-height: 1.55;
-      margin-bottom: var(--space-5);
-      padding-bottom: var(--space-4);
-      border-bottom: 1px solid var(--color-rule);
-    }
-
-    .model-features {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      margin-bottom: var(--space-6);
-      font-size: 0.86rem;
-      color: var(--color-ink);
-    }
-
-    .model-features li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.55rem;
-      line-height: 1.45;
-    }
-
-    .check-glyph {
-      font-family: var(--font-mono);
-      color: var(--color-accent);
-      font-weight: 600;
-      flex-shrink: 0;
-    }
-
-    /* ==========================================================================
-       9. FAQ & FOOTER
-       ========================================================================== */
-    .faq-layout {
-      display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
-      gap: var(--space-7);
-      align-items: start;
-    }
-
-    .faq-list {
-      border-top: 1px solid var(--color-rule);
-    }
-
-    .faq-item {
-      border-bottom: 1px solid var(--color-rule);
-    }
-
-    .faq-trigger {
-      width: 100%;
-      padding: var(--space-4) 0;
-      background: transparent;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      text-align: left;
-      cursor: pointer;
-      color: var(--color-ink);
-      font-family: var(--font-display);
-      font-size: 1.02rem;
-      font-weight: 600;
-    }
-
-    .faq-trigger:hover {
-      color: var(--color-accent);
-    }
-
-    .faq-icon {
-      font-family: var(--font-mono);
-      font-size: 1rem;
-      color: var(--color-muted);
-      transition: transform var(--dur-fast) var(--ease-out);
-    }
-
-    .faq-item.open .faq-icon {
-      transform: rotate(45deg);
-      color: var(--color-accent);
-    }
-
-    .faq-answer {
-      display: none;
-      padding-bottom: var(--space-4);
-      font-size: 0.9rem;
-      color: var(--color-neutral);
-      line-height: 1.65;
-      max-width: 65ch;
-    }
-
-    .faq-item.open .faq-answer {
-      display: block;
-    }
-
-    .site-footer {
-      padding: var(--space-8) 0 var(--space-6);
-      background-color: var(--color-paper);
-      position: relative;
-      z-index: 2;
-    }
-
-    .footer-cta-banner {
-      background-color: var(--color-paper-2);
-      border: 1px solid var(--color-rule-strong);
-      border-radius: var(--radius-md);
-      padding: var(--space-7);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-6);
-      flex-wrap: wrap;
-      margin-bottom: var(--space-8);
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: var(--space-6);
-      padding-bottom: var(--space-6);
-      border-bottom: 1px solid var(--color-rule);
-    }
-
-    .footer-col-title {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--color-ink);
-      margin-bottom: var(--space-3);
-    }
-
-    .footer-links {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.55rem;
-      font-size: 0.85rem;
-      color: var(--color-neutral);
-    }
-
-    .footer-links a:hover {
-      color: var(--color-ink);
-    }
-
-    .footer-colophon {
-      padding-top: var(--space-5);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-4);
-      flex-wrap: wrap;
-      font-family: var(--font-mono);
-      font-size: 0.74rem;
-      color: var(--color-muted);
-    }
-
+    /* ---------- Responsive ---------- */
     @media (max-width: 1080px) {
-      .hero-grid,
-      .sector-detail-grid,
-      .roi-workbench,
-      .faq-layout,
-      .tech-row {
-        grid-template-columns: 1fr;
-      }
-      .sector-specs-col,
-      .roi-controls {
-        border-right: none;
-        border-bottom: 1px solid var(--color-rule);
-      }
-      .bento-span-7,
-      .bento-span-6,
-      .bento-span-5,
-      .bento-span-4 {
-        grid-column: span 12;
-      }
-      .workflow-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .workflow-step {
-        border-bottom: 1px solid var(--color-rule);
-      }
-      .models-grid {
-        grid-template-columns: 1fr;
-      }
-      .ledger-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .ledger-cell {
-        border-bottom: 1px solid var(--color-rule);
-      }
+      .nav-links { display: none; }
+      .nav-menu { display: block; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); }
+      .hero-divisions { max-width: 640px; }
+      .product, .product-revops { grid-template-columns: minmax(0, 1fr); }
+      .product-media { min-height: 300px; }
+      .product-media::after { background: linear-gradient(180deg, transparent 50%, var(--color-paper)); }
+      .diag { border-left: 0; border-top: 1px solid var(--color-rule); }
+      .stack-row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); }
+      .stack-outcome { grid-column: 2; }
+      .models { grid-template-columns: minmax(0, 1fr); max-width: 640px; }
+      .footer-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
-
-    @media (max-width: 768px) {
-      .nav-links {
-        display: none;
-      }
-      .diag-form,
-      .blueprint-tabs {
-        grid-template-columns: 1fr;
-      }
-      .sector-nav-bar {
-        grid-template-columns: 1fr 1fr;
-      }
-      .workflow-grid,
-      .ledger-grid,
-      .footer-grid,
-      .spec-kv-grid {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 860px) {
+      .section-head { grid-template-columns: minmax(0, 1fr); align-items: start; }
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .fact:nth-child(2) { border-right: 0; }
+      .fact:nth-child(3) { padding-left: 0; }
+      .fact:nth-child(n+3) { border-top: 1px solid var(--color-rule); }
+      .service { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+      .stack-row { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+      .stack-outcome { grid-column: auto; }
+      .sector-grid, .roi, .faq, .footer-statement { grid-template-columns: minmax(0, 1fr); }
+      .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 3rem; }
+      .hero::after { opacity: 0.5; }
+    }
+    @media (max-width: 560px) {
+      .nav { height: 68px; }
+      .brand-word { font-size: 1.15rem; }
+      .hero-ctas .btn, .product-actions .btn { width: 100%; }
+      .facts { grid-template-columns: minmax(0, 1fr); }
+      .fact, .fact + .fact { padding: 1.5rem 0; border-right: 0; }
+      .fact + .fact { border-top: 1px solid var(--color-rule); }
+      .spec-list, .field-row, .roi-kpis { grid-template-columns: minmax(0, 1fr); }
+      .roi-kpi:nth-child(even) { padding-left: 0; border-left: 0; }
+      .steps { grid-template-columns: minmax(0, 1fr); }
+      .spec-table th { width: 40%; padding-right: 1rem; }
+      .footer-cols { grid-template-columns: minmax(0, 1fr); }
+      .btn { white-space: normal; text-align: center; line-height: 1.3; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-arch-grid"></div>
 
-  <!-- 1. EXECUTIVE CORPORATE TOP BAR -->
-  <div class="telemetry-strip">
-    <div class="container telemetry-inner">
-      <div class="telemetry-items">
-        <span class="telemetry-item"><span class="status-dot"></span> HZSAAS STUDIO · INGENIERÍA DE SOFTWARE, IA &amp; PRODUCTOS SAAS</span>
-        <span class="telemetry-item">DIVISIÓN CLOUD ERP &amp; BIOMETRÍA</span>
-        <span class="telemetry-item">DIVISIÓN AGENTES AUTÓNOMOS B2B</span>
-      </div>
-      <div>
-        <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quisiera%20conversar%20sobre%20sus%20soluciones%20tecnol%C3%B3gicas." target="_blank" rel="noopener">CONTACTO INGENIERÍA: +57 313 510 8101 →</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. STICKY CORPORATE NAVIGATION (NO LOGIN BUTTON — FOCUSED ON COMPANY & SOLUTIONS) -->
-  <header class="site-header">
-    <div class="container nav-bar">
-      <a href="/" class="brand-cluster">
-        <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="hzSaaS" class="brand-shield-img" />
-        <div class="brand-text">
-          <div class="brand-name-row">
-            <span class="brand-name">hzSaaS</span>
-            <span class="brand-pill">TECHNOLOGY STUDIO</span>
-          </div>
-          <span class="brand-sub">Productos SaaS, Inteligencia Artificial &amp; Desarrollo B2B</span>
-        </div>
+  <header class="site-header band-dark">
+    <div class="wrap nav">
+      <a href="/" class="brand" aria-label="hzSaaS — inicio">
+        <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="" width="40" height="40" />
+        <span class="brand-word">hz<span>/</span>SaaS</span>
       </a>
 
-      <nav class="nav-links" aria-label="Navegación corporativa">
-        <a href="#empresa" class="nav-link">Qué Hacemos</a>
-        <a href="#productos" class="nav-link">Productos SaaS</a>
-        <a href="#servicios" class="nav-link">Servicios de Ingeniería</a>
-        <a href="#herramientas" class="nav-link">Herramientas &amp; Stack</a>
-        <a href="#sectores" class="nav-link">Sectores</a>
-        <a href="#calculadora-roi" class="nav-link">Simulador ROI</a>
-        <a href="#faq" class="nav-link">Preguntas</a>
+      <nav class="nav-links" aria-label="Navegación principal">
+        <a href="#productos">Productos</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#herramientas">Tecnología</a>
+        <a href="#sectores">Sectores</a>
+        <a href="#calculadora-roi">Simulador</a>
+        <a href="#faq">Preguntas</a>
       </nav>
 
-      <div class="nav-actions">
-        <a href="#productos" class="btn btn-secondary">Nuestros Productos</a>
-        <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20conocer%20sus%20productos%20y%20servicios%20de%20tecnolog%C3%ADa." target="_blank" rel="noopener" class="btn btn-primary">Hablar con Ingeniería →</a>
+      <div style="display:flex;align-items:center;gap:0.75rem;">
+        <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20conocer%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-primary" id="nav-cta">Hablemos <span class="arr">→</span></a>
+        <details class="nav-menu">
+          <summary>Menú</summary>
+          <div class="nav-menu-panel">
+            <a href="#productos">Productos</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#herramientas">Tecnología</a>
+            <a href="#sectores">Sectores</a>
+            <a href="#calculadora-roi">Simulador ROI</a>
+            <a href="#despliegue">Metodología</a>
+            <a href="#modelos">Modalidades</a>
+            <a href="#faq">Preguntas</a>
+          </div>
+        </details>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- 3. SPLIT STUDIO HERO (H2) — QUE HACE NUESTRA EMPRESA -->
-    <section id="empresa" class="hero-section">
-      <div class="container hero-grid">
-        <!-- Left Column -->
-        <div>
-          <div class="eyebrow-badge">
-            <span class="status-dot"></span>
-            <span>EMPRESA DE TECNOLOGÍA E INGENIERÍA DE SOFTWARE · COLOMBIA &amp; LATAM</span>
-          </div>
-
-          <h1 class="hero-title">Diseñamos plataformas SaaS, agentes de IA y tecnología que escala negocios reales.</h1>
-
-          <p class="hero-lead">
-            En <strong>hzSaaS</strong> somos una firma de ingeniería tecnológica con dos líneas de acción: operamos <strong>productos SaaS propios en la nube</strong> (como <em>GymSaaS Enterprise</em> y <em>RevOps AI</em>) y construimos <strong>soluciones tecnológicas a medida</strong> que conectan inteligencia artificial, pasarelas de pago locales y control de hardware físico.
-          </p>
-
-          <div class="hero-cta-row">
-            <a href="#productos" class="btn btn-primary">Conocer Productos Propios →</a>
-            <a href="#servicios" class="btn btn-secondary">Ver Servicios de Tecnología</a>
-            <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20me%20gustar%C3%ADa%20agendar%20una%20sesi%C3%B3n%20para%20evaluar%20una%20soluci%C3%B3n%20tecnol%C3%B3gica." target="_blank" rel="noopener" class="btn btn-accent-outline">Agendar Consultoría (+57 313 510 8101)</a>
-          </div>
-
-          <!-- Interactive Live URL Diagnostic Tool Demonstration -->
-          <div class="live-diagnostic-box" id="diagnostico-vivo">
-            <div class="diag-header">
-              <span class="diag-title">
-                <span class="status-dot"></span>
-                DEMOSTRACIÓN EN VIVO: MOTOR DE AUDITORÍA WEB CON IA (REVOPS AI)
-              </span>
-              <div class="diag-presets">
-                <button type="button" class="preset-chip" data-name="Clínica Dental El Poblado" data-url="https://example.com" data-sector="clinicas">Caso Salud</button>
-                <button type="button" class="preset-chip" data-name="Constructora Capital Andina" data-url="https://example.org" data-sector="inmobiliarias">Caso Constructora</button>
-                <button type="button" class="preset-chip" data-name="Firma Legal Corporativa" data-url="https://example.net" data-sector="abogados">Caso Legal</button>
-              </div>
-            </div>
-
-            <form id="hero-audit-form" class="diag-form">
-              <input type="text" id="hero-audit-name" class="diag-input" placeholder="Nombre de empresa (ej. Clínica Odontológica)" required />
-              <input type="url" id="hero-audit-url" class="diag-input" placeholder="https://sitio-empresa.com" required />
-              <select id="hero-audit-sector" class="diag-select" aria-label="Seleccionar sector">
-                <option value="clinicas">Sector: Salud &amp; Clínicas</option>
-                <option value="inmobiliarias">Sector: Inmobiliarias</option>
-                <option value="abogados">Sector: Firmas Abogados</option>
-                <option value="turismo_medico">Sector: Turismo Médico</option>
-              </select>
-              <button type="submit" id="hero-audit-btn" class="btn btn-primary">Probar IA</button>
-            </form>
-
-            <div id="hero-audit-result" class="diag-result-drawer">
-              <div class="diag-result-top">
-                <div>
-                  <strong id="res-company-name" style="font-size: 0.9rem;">Empresa Diagnosticada</strong>
-                  <span id="res-company-state" class="tabular" style="font-size: 0.74rem; color: var(--color-accent); margin-left: 0.5rem;">OPORTUNIDAD DETECTADA</span>
-                </div>
-                <span id="res-score-badge" class="diag-score-badge">SCORE: 88/100</span>
-              </div>
-              <div id="res-copy-box" class="diag-copy-preview"></div>
-              <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
-                <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Demostración en vivo de nuestro motor de diagnóstico comercial</span>
-                <div style="display: flex; gap: 0.5rem;">
-                  <a id="res-wa-link" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-accent-outline" style="padding: 0.4rem 0.75rem; font-size: 0.76rem;">Implementar esta Tecnología en mi Empresa ↗</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right Column: Interactive Map of Our 3 Technology Divisions -->
-        <aside class="blueprint-panel" aria-label="Divisiones tecnológicas de hzSaaS">
-          <div class="blueprint-tabs">
-            <button type="button" class="bp-tab active" data-bp="bp-div-saas">
-              <span>01 // PRODUCTOS SAAS</span>
-            </button>
-            <button type="button" class="bp-tab" data-bp="bp-div-ai">
-              <span>02 // SISTEMAS DE IA</span>
-            </button>
-            <button type="button" class="bp-tab" data-bp="bp-div-eng">
-              <span>03 // INGENIERÍA A MEDIDA</span>
-            </button>
-          </div>
-
-          <!-- Pane 1: Productos SaaS Propios -->
-          <div id="bp-div-saas" class="bp-pane active">
-            <div class="bp-meta-row">
-              <span>PLATAFORMAS EN LA NUBE LISTAS PARA ACTIVAR</span>
-              <span class="tabular">PRODUCCIÓN 24/7</span>
-            </div>
-
-            <div class="dag-list">
-              <div class="dag-node">
-                <span class="dag-step amber">P1</span>
-                <div class="dag-info">
-                  <h4>GymSaaS Cloud ERP (gym.hzsaas.com)</h4>
-                  <p>Administración integral de gimnasios, acceso facial/biométrico y recaudo Wompi.</p>
-                </div>
-                <span class="dag-metric">Fitness ERP</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step">P2</span>
-                <div class="dag-info">
-                  <h4>RevOps AI — Departamento de Ingresos Digital</h4>
-                  <p>Prospección B2B autónoma, diagnóstico web, scoring 0–100 y tablero Kanban.</p>
-                </div>
-                <span class="dag-metric">9 Agentes IA</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step sky">P3</span>
-                <div class="dag-info">
-                  <h4>Módulos de Punto de Venta (POS) &amp; Recaudo</h4>
-                  <p>Control de inventario en mostrador, arqueo de caja por turno y pagos Nequi/PSE.</p>
-                </div>
-                <span class="dag-metric">Wompi + POS</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step">P4</span>
-                <div class="dag-info">
-                  <h4>Control de Hardware y Torniquetes Físicos</h4>
-                  <p>Integración de baja latencia (&lt; 150ms) con cámaras faciales, huelleros y QR.</p>
-                </div>
-                <span class="dag-metric">&lt; 150ms</span>
-              </div>
-            </div>
-
-            <div class="bp-footer">
-              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Licenciamiento inmediato con soporte en Colombia</span>
-              <a href="#productos" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Ver Detalle de Productos ↓</a>
+    <!-- HERO — qué hace la empresa -->
+    <section id="empresa" class="hero band-dark">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <span class="kicker">Ingeniería de software · Medellín, Colombia</span>
+            <h1 class="hero-title">Construimos el software que <span class="hl">mueve</span> tu operación.</h1>
+            <p class="hero-lead">
+              <strong>hzSaaS</strong> es una firma de ingeniería. Operamos dos productos SaaS propios en producción —
+              <strong>GymSaaS Enterprise</strong> y <strong>RevOps AI</strong>— y diseñamos plataformas, agentes de IA
+              e integraciones de pagos y hardware a la medida de cada empresa.
+            </p>
+            <div class="hero-ctas">
+              <a href="#productos" class="btn btn-primary">Ver nuestros productos <span class="arr">→</span></a>
+              <a href="#servicios" class="btn btn-line">Qué construimos para ti</a>
             </div>
           </div>
 
-          <!-- Pane 2: Sistemas de IA & Automatización -->
-          <div id="bp-div-ai" class="bp-pane">
-            <div class="bp-meta-row">
-              <span>AUTOMATIZACIÓN DETERMINISTA &amp; AGENTES B2B</span>
-              <span class="tabular">CERO ALUCINACIONES</span>
-            </div>
-
-            <div class="dag-list">
-              <div class="dag-node">
-                <span class="dag-step">A1</span>
-                <div class="dag-info">
-                  <h4>Agentes de Investigación y Diagnóstico de Mercado</h4>
-                  <p>Extracción segura de información pública para detectar clientes con alto potencial.</p>
-                </div>
-                <span class="dag-metric">Zero-Trust</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step">A2</span>
-                <div class="dag-info">
-                  <h4>Motores de Calificación y Scoring Comercial</h4>
-                  <p>Algoritmos ponderados adaptados a las reglas de negocio de cada industria.</p>
-                </div>
-                <span class="dag-metric">0–100 Pts</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step">A3</span>
-                <div class="dag-info">
-                  <h4>Redacción Consultiva y Seguimiento Automático</h4>
-                  <p>Generación de propuestas personalizadas y cadencias en los días 3 y 7.</p>
-                </div>
-                <span class="dag-metric">Ley 1581</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step">A4</span>
-                <div class="dag-info">
-                  <h4>Consolas Human-in-the-Loop (HITL)</h4>
-                  <p>Tableros ejecutivos para que tu equipo supervise y apruebe cada acción de la IA.</p>
-                </div>
-                <span class="dag-metric">Control 100%</span>
-              </div>
-            </div>
-
-            <div class="bp-footer">
-              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Reutilizable en múltiples verticales B2B</span>
-              <a href="#sectores" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Explorar Verticales ↓</a>
-            </div>
-          </div>
-
-          <!-- Pane 3: Ingeniería de Software a Medida -->
-          <div id="bp-div-eng" class="bp-pane">
-            <div class="bp-meta-row">
-              <span>ARQUITECTURA EMPRESARIAL &amp; DESARROLLO CLOUD</span>
-              <span class="tabular">ALTA DISPONIBILIDAD</span>
-            </div>
-
-            <div class="dag-list">
-              <div class="dag-node">
-                <span class="dag-step sky">E1</span>
-                <div class="dag-info">
-                  <h4>Desarrollo de Plataformas Web y ERPs Corporativos</h4>
-                  <p>Sistemas multi-sede con roles de usuario, auditoría forense y paneles gerenciales.</p>
-                </div>
-                <span class="dag-metric">Multi-Tenant</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step sky">E2</span>
-                <div class="dag-info">
-                  <h4>Integración de Pasarelas de Pago y Webhooks</h4>
-                  <p>Conexión segura con Wompi Bancolombia, PSE, Nequi, tarjetas y facturación.</p>
-                </div>
-                <span class="dag-metric">SHA-256</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step sky">E3</span>
-                <div class="dag-info">
-                  <h4>Conectores con CRM, WhatsApp y Correo Corporativo</h4>
-                  <p>Sincronización bidireccional con tus herramientas comerciales actuales.</p>
-                </div>
-                <span class="dag-metric">API REST</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step sky">E4</span>
-                <div class="dag-info">
-                  <h4>Ciberseguridad Aplicada y Protección de Datos</h4>
-                  <p>Aislamiento de bases de datos por cliente, sesiones cifradas y cumplimiento legal.</p>
-                </div>
-                <span class="dag-metric">TLS 1.3</span>
-              </div>
-            </div>
-
-            <div class="bp-footer">
-              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Desarrollo guiado por pruebas (TDD)</span>
-              <a href="#herramientas" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Ver Nuestro Stack ↓</a>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- 4. QUANTITATIVE COMPANY LEDGER -->
-    <section class="ledger-strip" aria-label="Capacidades de ingeniería">
-      <div class="container ledger-grid">
-        <div class="ledger-cell">
-          <div class="ledger-value">2 Plataformas</div>
-          <div class="ledger-label">Productos SaaS Propios en Vivo</div>
-          <div class="ledger-note">GYMSAAS CLOUD &amp; REVOPS AI</div>
-        </div>
-        <div class="ledger-cell">
-          <div class="ledger-value">9 Agentes IA</div>
-          <div class="ledger-label">Automatización Comercial B2B</div>
-          <div class="ledger-note">AUDITORÍA, SCORING Y SEGUIMIENTO</div>
-        </div>
-        <div class="ledger-cell">
-          <div class="ledger-value">&lt; 150 ms</div>
-          <div class="ledger-label">Integración Hardware y Pagos</div>
-          <div class="ledger-note">BIOMETRÍA, TORNIQUETES Y WOMPI</div>
-        </div>
-        <div class="ledger-cell">
-          <div class="ledger-value">5 Industrias</div>
-          <div class="ledger-label">Verticales Especializados</div>
-          <div class="ledger-note">SALUD · INMOBILIARIO · LEGAL · FITNESS</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. NUESTROS PRODUCTOS SAAS PROPIOS EN PRODUCCIÓN (#productos) -->
-    <section id="productos" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">01 // PRODUCTOS TECNOLÓGICOS PROPIOS</span>
-          <h2 class="section-heading">Plataformas SaaS desarrolladas y operadas por hzSaaS listas para implementar en tu empresa.</h2>
-          <p class="section-desc">
-            Además de desarrollar tecnología a medida, contamos con dos sistemas empresariales propios en producción que resuelven la gestión operativa y la adquisición de clientes de principio a fin.
-          </p>
-        </div>
-
-        <div class="bento-grid">
-          <!-- Product 1: GymSaaS Enterprise (Span 6) -->
-          <article class="bento-cell bento-span-6">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">
-                  <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="GymSaaS" class="mini-shield" />
-                  <span>PRODUCTO SAAS 01 // GYM.HZSAAS.COM</span>
-                </span>
-                <span class="status-pill amber">CLOUD ERP FITNESS</span>
-              </div>
-
-              <h3 class="bento-title">GymSaaS Enterprise — Sistema Operativo para Gimnasios y Centros de Entrenamiento</h3>
-
-              <p class="bento-copy">
-                Plataforma todo-en-uno en la nube que elimina la fuga de ingresos por mensualidades vencidas y automatiza la operación física y financiera de gimnasios, boxes de CrossFit y cadenas deportivas en Colombia.
-              </p>
-
-              <div class="spec-kv-grid">
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Control de Acceso Físico</span>
-                  <span class="spec-kv-val">Cámaras Faciales, Huella y QR</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Recaudo Digital</span>
-                  <span class="spec-kv-val">Wompi (Nequi, Bancolombia, PSE)</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Ventas de Mostrador</span>
-                  <span class="spec-kv-val">POS Suplementos y Control Caja</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Gobernanza Multi-Sede</span>
-                  <span class="spec-kv-val">Paneles Admin, Recepción y Coach</span>
-                </div>
-              </div>
-
-              <div class="state-machine-strip" aria-label="Flujo operativo GymSaaS">
-                <span class="sm-node">REGISTRO SOCIO</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node highlight">PAGO WOMPI / POS</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node">VALIDACIÓN &lt;150MS</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node highlight">APERTURA TORNIQUETE</span>
-              </div>
-            </div>
-
-            <div class="bento-actions">
-              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary">Explorar Plataforma en gym.hzsaas.com ↗</a>
-              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20una%20demostraci%C3%B3n%20de%20GymSaaS%20para%20mi%20gimnasio." target="_blank" rel="noopener" class="btn btn-secondary">Solicitar Demo GymSaaS</a>
-            </div>
-          </article>
-
-          <!-- Product 2: RevOps AI (Span 6) -->
-          <article class="bento-cell bento-span-6">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">
-                  <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="RevOps AI" class="mini-shield" />
-                  <span>PRODUCTO SAAS 02 // REVOPS AI ENGINE</span>
-                </span>
-                <span class="status-pill emerald">9 AGENTES DE IA B2B</span>
-              </div>
-
-              <h3 class="bento-title">RevOps AI — Departamento de Ingresos Digital y Prospección Autónoma</h3>
-
-              <p class="bento-copy">
-                Sistema multi-agente diseñado para clínicas, constructoras, firmas legales y empresas B2B. Investiga prospectos automáticamente, audita sus brechas digitales, calcula un puntaje de encaje de 0 a 100 y redacta propuestas consultivas listas para aprobar en tu consola Kanban.
-              </p>
-
-              <div class="spec-kv-grid">
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Diagnóstico Automático</span>
-                  <span class="spec-kv-val">Auditoría de Sitios Web y Brechas</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Calificación Ponderada</span>
-                  <span class="spec-kv-val">Scoring 0–100 por Industria</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Control Ejecutivo</span>
-                  <span class="spec-kv-val">Bandeja Kanban de Aprobación</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Despacho y Cadencia</span>
-                  <span class="spec-kv-val">WhatsApp + Email (Días 3 y 7)</span>
-                </div>
-              </div>
-
-              <div class="state-machine-strip" aria-label="Flujo operativo RevOps AI">
-                <span class="sm-node">DESCUBRIMIENTO</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node">AUDITORÍA IA</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node highlight">APROBACIÓN KANBAN</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node highlight">REUNIÓN AGENDADA</span>
-              </div>
-            </div>
-
-            <div class="bento-actions">
-              <a href="/login" class="btn btn-primary">Acceder a Consola RevOps AI →</a>
-              <a href="#diagnostico-vivo" class="btn btn-secondary">Probar Diagnóstico Arriba ↑</a>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. SERVICIOS DE TECNOLOGÍA E INGENIERÍA QUE OFRECEMOS (#servicios) -->
-    <section id="servicios" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">02 // SERVICIOS DE INGENIERÍA Y TECNOLOGÍA</span>
-          <h2 class="section-heading">¿Qué construimos e implementamos para empresas que buscan digitalizar y escalar su operación?</h2>
-          <p class="section-desc">
-            Ponemos nuestra arquitectura, componentes probados en producción y equipo de ingeniería al servicio de tu empresa para resolver desafíos técnicos y comerciales complejos.
-          </p>
-        </div>
-
-        <div class="bento-grid">
-          <article class="bento-cell bento-span-4">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">SERVICIO 01</span>
-                <span class="status-pill emerald">SOFTWARE A MEDIDA</span>
-              </div>
-              <h3 class="bento-title-sm">Desarrollo de Plataformas SaaS, Portales Web y Sistemas Cloud ERP</h3>
-              <p class="bento-copy">
-                Diseñamos y construimos plataformas empresariales modernas desde cero o modernizamos sistemas heredados: paneles administrativos multi-sede, control de inventarios, cajas POS, portales de autogestión de clientes y tableros gerenciales en tiempo real.
-              </p>
-            </div>
-            <div class="code-snippet">
-              ✓ Arquitectura Multi-Empresa (Multi-Tenant)<br />
-              ✓ Interfaces de Alta Velocidad y Cero Fricción<br />
-              ✓ Despliegue en la Nube Listo para Escalar
-            </div>
-          </article>
-
-          <article class="bento-cell bento-span-4">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">SERVICIO 02</span>
-                <span class="status-pill sky">INTELIGENCIA ARTIFICIAL</span>
-              </div>
-              <h3 class="bento-title-sm">Sistemas Multi-Agente de IA y Automatización Comercial B2B</h3>
-              <p class="bento-copy">
-                Implementamos agentes especializados que investigan mercados, pre-califican leads, redactan comunicaciones consultivas, responden consultas operativas y ejecutan seguimientos automáticos bajo supervisión humana y reglas deterministas.
-              </p>
-            </div>
-            <div class="code-snippet">
-              ✓ Agentes con Reglas de Negocio Verificables<br />
-              ✓ Protección contra Alucinaciones y Spam<br />
-              ✓ Integración con WhatsApp y Correo Corporativo
-            </div>
-          </article>
-
-          <article class="bento-cell bento-span-4">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">SERVICIO 03</span>
-                <span class="status-pill amber">PAGOS &amp; HARDWARE</span>
-              </div>
-              <h3 class="bento-title-sm">Integración de Pasarelas de Pago, Biometría y Dispositivos Físicos</h3>
-              <p class="bento-copy">
-                Conectamos tu software con el mundo físico y bancario en Colombia: pasarelas Wompi Bancolombia (PSE, Nequi, tarjetas de crédito) con conciliación automática por Webhooks, cámaras de reconocimiento facial, lectores de huella y torniquetes QR.
-              </p>
-            </div>
-            <div class="code-snippet">
-              ✓ Conciliación Criptográfica de Pagos SHA-256<br />
-              ✓ Respuesta de Hardware en &lt; 150ms<br />
-              ✓ Sincronización con ERPs y CRMs Existentes
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. CON QUÉ HERRAMIENTAS Y CAPACIDADES TECNOLÓGICAS CONTAMOS (#herramientas) -->
-    <section id="herramientas" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">03 // HERRAMIENTAS, ARQUITECTURA Y CAPACIDADES TÉCNICAS</span>
-          <h2 class="section-heading">Tecnología empresarial de nivel industrial bajo el capó.</h2>
-          <p class="section-desc">
-            Trabajamos con herramientas y estándares de ingeniería modernos que garantizan velocidad, seguridad de datos, facilidad de mantenimiento y disponibilidad continua.
-          </p>
-        </div>
-
-        <div class="tech-stack-sheet">
-          <div class="tech-row">
-            <div class="tech-domain">
-              <span class="tech-domain-code">CAPACIDAD 01 // BACKEND CORE</span>
-              <span class="tech-domain-name">Ingeniería de Servidor y Microservicios</span>
-            </div>
-            <div>
-              <p class="tech-desc">
-                Desarrollamos núcleos transaccionales robustos utilizando arquitecturas limpias y hexagonales que separan la lógica de negocio de la infraestructura, permitiendo procesar miles de operaciones concurrentes sin degradación.
-              </p>
-              <div class="tag-cloud">
-                <span class="spec-tag">Java 21 Enterprise</span>
-                <span class="spec-tag">Spring Boot 4</span>
-                <span class="spec-tag">Python High-Performance APIs</span>
-                <span class="spec-tag">Arquitectura Hexagonal</span>
-                <span class="spec-tag">REST &amp; Webhooks</span>
-              </div>
-            </div>
-            <div class="tech-outcome">
-              <strong>Impacto:</strong> Sistemas estables 24/7 capaces de crecer de 1 a 500 sedes o clientes sin reescribir el código.
-            </div>
-          </div>
-
-          <div class="tech-row">
-            <div class="tech-domain">
-              <span class="tech-domain-code">CAPACIDAD 02 // FRONTEND &amp; UX</span>
-              <span class="tech-domain-name">Consolas Operativas y Diseño de Precisión</span>
-            </div>
-            <div>
-              <p class="tech-desc">
-                Creamos interfaces de usuario rápidas, sobrias y táctiles (tableros Kanban, puntos de venta POS, consolas de recepción y portales ejecutivos) con sistemas de color perceptuales OKLCH y tipografía técnica de alta legibilidad.
-              </p>
-              <div class="tag-cloud">
-                <span class="spec-tag">React 19</span>
-                <span class="spec-tag">TypeScript Estricto</span>
-                <span class="spec-tag">Diseño OKLCH</span>
-                <span class="spec-tag">Consolas Kanban HITL</span>
-                <span class="spec-tag">Responsive Mobile-First</span>
-              </div>
-            </div>
-            <div class="tech-outcome">
-              <strong>Impacto:</strong> Tu personal aprende a usar la plataforma en minutos, sin pantallas confusas ni lentitud.
-            </div>
-          </div>
-
-          <div class="tech-row">
-            <div class="tech-domain">
-              <span class="tech-domain-code">CAPACIDAD 03 // IA DETERMINISTA</span>
-              <span class="tech-domain-name">Orquestación de Agentes y Seguridad Zero-Trust</span>
-            </div>
-            <div>
-              <p class="tech-desc">
-                Nuestros motores de IA combinan análisis estructurado de documentos web, sanitización contra inyecciones de prompt, enmascarado automático de datos personales (PII) y reglas declarativas por sector.
-              </p>
-              <div class="tag-cloud">
-                <span class="spec-tag">Orquestación Multi-Agente</span>
-                <span class="spec-tag">Zero-Trust DOM Scraper</span>
-                <span class="spec-tag">Scoring Ponderado</span>
-                <span class="spec-tag">Protección PII</span>
-                <span class="spec-tag">Human-in-the-Loop</span>
-              </div>
-            </div>
-            <div class="tech-outcome">
-              <strong>Impacto:</strong> Automatización real que protege la reputación de tu marca y cumple la Ley 1581.
-            </div>
-          </div>
-
-          <div class="tech-row">
-            <div class="tech-domain">
-              <span class="tech-domain-code">CAPACIDAD 04 // DATOS &amp; CLOUD</span>
-              <span class="tech-domain-name">Persistencia Multi-Tenant, Pagos y Hardware</span>
-            </div>
-            <div>
-              <p class="tech-desc">
-                Operamos sobre bases de datos relacionales en la nube con aislamiento lógico por organización, contenedores automatizados, certificados SSL/TLS 1.3 y conectores directos con pasarelas de pago y dispositivos biométricos.
-              </p>
-              <div class="tag-cloud">
-                <span class="spec-tag">PostgreSQL Cloud</span>
-                <span class="spec-tag">Contenedores Docker</span>
-                <span class="spec-tag">Pasarela Wompi SHA-256</span>
-                <span class="spec-tag">Biometría &amp; Torniquetes QR</span>
-                <span class="spec-tag">Auditoría Inmutable</span>
-              </div>
-            </div>
-            <div class="tech-outcome">
-              <strong>Impacto:</strong> Cero pérdida de información, trazabilidad completa de cada acción y recaudo seguro.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8. INTERACTIVE MULTI-SECTOR SPECIFICATION MATRIX (#sectores) -->
-    <section id="sectores" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">04 // SOLUCIONES POR INDUSTRIA</span>
-          <h2 class="section-heading">Tecnología adaptada a los 5 sectores de mayor crecimiento en Colombia.</h2>
-          <p class="section-desc">
-            Selecciona una industria para explorar cómo aplicamos nuestras herramientas de automatización comercial y gestión operativa en cada mercado.
-          </p>
-        </div>
-
-        <div class="sector-matrix-wrap">
-          <div class="sector-nav-bar" role="tablist" aria-label="Sectores disponibles">
-            <button type="button" class="sector-tab-btn active" data-sector-key="clinicas" role="tab" aria-selected="true">
-              <span class="sector-tab-code">SECTOR 01</span>
-              <span class="sector-tab-name">Salud &amp; Odontología</span>
-            </button>
-            <button type="button" class="sector-tab-btn" data-sector-key="inmobiliarias" role="tab" aria-selected="false">
-              <span class="sector-tab-code">SECTOR 02</span>
-              <span class="sector-tab-name">Inmobiliarias &amp; Constructoras</span>
-            </button>
-            <button type="button" class="sector-tab-btn" data-sector-key="abogados" role="tab" aria-selected="false">
-              <span class="sector-tab-code">SECTOR 03</span>
-              <span class="sector-tab-name">Firmas de Abogados B2B</span>
-            </button>
-            <button type="button" class="sector-tab-btn" data-sector-key="turismo_medico" role="tab" aria-selected="false">
-              <span class="sector-tab-code">SECTOR 04</span>
-              <span class="sector-tab-name">Turismo Médico &amp; Cirugía</span>
-            </button>
-            <button type="button" class="sector-tab-btn" data-sector-key="gymsaas" role="tab" aria-selected="false">
-              <span class="sector-tab-code">SECTOR 05</span>
-              <span class="sector-tab-name">Gimnasios &amp; Centros Fitness</span>
-            </button>
-          </div>
-
-          <div class="sector-detail-grid">
-            <div class="sector-specs-col">
-              <table class="spec-table">
-                <tbody>
-                  <tr>
-                    <th>Sector / Vertical</th>
-                    <td id="matrix-title"><strong>Clínicas Odontológicas, Estética y Especialidades Médicas</strong></td>
-                  </tr>
-                  <tr>
-                    <th>Valor Promedio por Cliente</th>
-                    <td id="matrix-ticket" class="tabular">$3.500.000 – $25.000.000 COP por tratamiento</td>
-                  </tr>
-                  <tr>
-                    <th>Señales Clave Detectadas</th>
-                    <td>
-                      <div id="matrix-signals" class="tag-cloud">
-                        <span class="spec-tag">Implantes dentales</span>
-                        <span class="spec-tag">Ortodoncia invisible</span>
-                        <span class="spec-tag">Diseño de sonrisa</span>
-                        <span class="spec-tag">Armonización facial</span>
-                        <span class="spec-tag">Rehabilitación oral</span>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>Problema que Resolvemos</th>
-                    <td id="matrix-gaps">Ausencia de agendamiento online directo, falta de botón WhatsApp para valoración inmediata y fuga de pacientes tras entrega de presupuesto.</td>
-                  </tr>
-                  <tr>
-                    <th>Tecnología Aplicada</th>
-                    <td id="matrix-scoring" class="tabular">Motor RevOps AI con calificación automática (Score &gt;= 70/100) y seguimiento en los días 3 y 7.</td>
-                  </tr>
-                  <tr>
-                    <th>Garantía Normativa</th>
-                    <td id="matrix-compliance">Cumplimiento Ley 1581 de 2012 (Habeas Data Colombia), respeto de ética médica y exclusión automática a solicitud.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="sector-sample-col">
+          <aside class="hero-divisions" aria-label="Líneas de trabajo de hzSaaS">
+            <div class="division">
+              <span class="division-num">/01</span>
               <div>
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
-                  <span class="tabular" style="font-size: 0.72rem; color: var(--color-accent); font-weight: 600;">EJEMPLO REAL DE SALIDA TECNOLÓGICA</span>
-                  <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">SCORE: 88/100</span>
+                <h3>Productos SaaS propios</h3>
+                <p>GymSaaS para centros deportivos y RevOps AI para prospección B2B, listos para activar.</p>
+              </div>
+            </div>
+            <div class="division">
+              <span class="division-num">/02</span>
+              <div>
+                <h3>Sistemas de IA supervisados</h3>
+                <p>Agentes con reglas de negocio verificables y aprobación humana antes de cada envío.</p>
+              </div>
+            </div>
+            <div class="division">
+              <span class="division-num">/03</span>
+              <div>
+                <h3>Ingeniería a medida</h3>
+                <p>ERPs, portales, pasarelas Wompi / PSE / Nequi y control de torniquetes y biometría.</p>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="facts" aria-label="hzSaaS en cifras">
+          <div class="fact"><div class="fact-val">2</div><div class="fact-label">Productos SaaS propios operando en producción</div></div>
+          <div class="fact"><div class="fact-val">9</div><div class="fact-label">Agentes especializados en el motor RevOps AI</div></div>
+          <div class="fact"><div class="fact-val">&lt;150<small style="font-size:0.45em;margin-left:0.15em;">ms</small></div><div class="fact-label">Validación de acceso en torniquetes y biometría</div></div>
+          <div class="fact"><div class="fact-val">5</div><div class="fact-label">Industrias con configuración dedicada</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section id="productos" class="section band-bone">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/01</b> Productos propios</span>
+            <h2 class="h2">Dos plataformas que diseñamos, operamos y <span class="hl">mantenemos</span> nosotros.</h2>
+          </div>
+          <p class="section-lead">No son maquetas: son sistemas en la nube con clientes, pagos y hardware conectados. Puedes activarlos en tu empresa con acompañamiento directo de nuestro equipo.</p>
+        </div>
+
+        <div class="bento-grid">
+          <!-- GymSaaS -->
+          <article class="product">
+            <div class="product-media">
+              <img src="/static/gym-landing-hero.jpg" alt="Zona de pesas de un gimnasio gestionado con GymSaaS" loading="lazy" />
+            </div>
+            <div class="product-body">
+              <div class="product-tag"><span>PRODUCTO 01 · gym.hzsaas.com</span><span class="live">En producción</span></div>
+              <h3>GymSaaS Enterprise</h3>
+              <p class="product-copy">El sistema operativo para gimnasios, boxes y cadenas deportivas: membresías, cobro automático, control de acceso físico y punto de venta en una sola plataforma.</p>
+              <dl class="spec-list">
+                <div><dt>Acceso físico</dt><dd>Facial, huella y QR</dd></div>
+                <div><dt>Recaudo</dt><dd>Wompi · Nequi · PSE</dd></div>
+                <div><dt>Mostrador</dt><dd>POS y arqueo de caja</dd></div>
+                <div><dt>Multi-sede</dt><dd>Admin, recepción y coach</dd></div>
+              </dl>
+              <div class="product-actions">
+                <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary">Ir a gym.hzsaas.com <span class="arr">↗</span></a>
+                <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20una%20demostraci%C3%B3n%20de%20GymSaaS%20para%20mi%20gimnasio." target="_blank" rel="noopener" class="btn-text btn">Pedir una demo</a>
+              </div>
+            </div>
+          </article>
+
+          <!-- RevOps AI -->
+          <article class="product product-revops">
+            <div class="product-body">
+              <div class="product-tag"><span>PRODUCTO 02 · RevOps AI</span><span class="live">En producción</span></div>
+              <h3>RevOps AI</h3>
+              <p class="product-copy">Un departamento comercial digital: investiga empresas de tu mercado, audita sus brechas digitales, las califica de 0 a 100 y redacta propuestas que tu equipo aprueba en un tablero Kanban antes de enviarlas.</p>
+              <dl class="spec-list">
+                <div><dt>Diagnóstico</dt><dd>Auditoría web automática</dd></div>
+                <div><dt>Calificación</dt><dd>Score 0–100 por industria</dd></div>
+                <div><dt>Control</dt><dd>Aprobación humana en Kanban</dd></div>
+                <div><dt>Seguimiento</dt><dd>WhatsApp y correo, días 3 y 7</dd></div>
+              </dl>
+              <div class="product-actions">
+                <a href="/login" class="btn btn-primary">Entrar a la consola <span class="arr">→</span></a>
+                <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20implementar%20RevOps%20AI%20en%20mi%20empresa." target="_blank" rel="noopener" class="btn-text btn">Cotizar RevOps AI</a>
+              </div>
+            </div>
+
+            <div class="diag" id="diagnostico-vivo">
+              <div>
+                <div class="diag-title">Pruébalo con una empresa real</div>
+              </div>
+              <p class="diag-sub">Ingresa un nombre y un sitio web. El motor devuelve un diagnóstico y un borrador de propuesta.</p>
+              <div class="diag-presets" aria-label="Ejemplos rápidos">
+                <button type="button" class="preset-chip" data-name="Clínica Dental El Poblado" data-url="https://example.com" data-sector="clinicas">Clínica</button>
+                <button type="button" class="preset-chip" data-name="Constructora Capital Andina" data-url="https://example.org" data-sector="inmobiliarias">Constructora</button>
+                <button type="button" class="preset-chip" data-name="Firma Legal Corporativa" data-url="https://example.net" data-sector="abogados">Firma legal</button>
+              </div>
+              <form id="hero-audit-form" class="diag-form">
+                <div class="field">
+                  <label for="hero-audit-name">Empresa</label>
+                  <input type="text" id="hero-audit-name" placeholder="Clínica Odontológica Norte" required autocomplete="organization" />
                 </div>
+                <div class="field-row">
+                  <div class="field">
+                    <label for="hero-audit-url">Sitio web</label>
+                    <input type="url" id="hero-audit-url" placeholder="https://empresa.com" required />
+                  </div>
+                  <div class="field">
+                    <label for="hero-audit-sector">Sector</label>
+                    <select id="hero-audit-sector">
+                      <option value="clinicas">Salud y clínicas</option>
+                      <option value="inmobiliarias">Inmobiliarias</option>
+                      <option value="abogados">Firmas de abogados</option>
+                      <option value="turismo_medico">Turismo médico</option>
+                    </select>
+                  </div>
+                </div>
+                <button type="submit" id="hero-audit-btn" class="btn btn-primary">Generar diagnóstico</button>
+              </form>
 
-                <div id="matrix-sample-copy" class="sample-outreach-card">Hola equipo de Clínica Dental Especializada,
-
-Revisando su sitio web vimos su enfoque en implantes dentales y rehabilitación oral, pero notamos que los pacientes deben llenar un formulario estático sin confirmación de agenda ni canal directo de valoración por WhatsApp.
-
-En clínicas de Medellín y Bogotá con ese volumen de tratamientos, implementar calificación y seguimiento automatizado de presupuestos recupera entre 8 y 15 tratamientos de alto ticket al mes sin cambiar su software médico actual.
-
-¿Les hace sentido una llamada de 10 minutos este jueves para mostrarles el diagnóstico puntual de su web?
-
----
-Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia). Responda BAJA para excluir su contacto.</div>
+              <div id="hero-audit-result" class="diag-result" aria-live="polite">
+                <div class="diag-result-top">
+                  <div>
+                    <strong id="res-company-name">Empresa</strong>
+                    <span id="res-company-state" class="diag-state">Oportunidad detectada</span>
+                  </div>
+                  <span id="res-score-badge" class="diag-score">—</span>
+                </div>
+                <div id="res-copy-box" class="diag-copy"></div>
+                <a id="res-wa-link" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-line">Implementarlo en mi empresa <span class="arr">↗</span></a>
               </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-              <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <a id="matrix-cta-primary" href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Salud." target="_blank" rel="noopener" class="btn btn-primary">Solicitar Implementación para este Sector →</a>
-                <a href="#productos" class="btn btn-secondary">Ver Productos</a>
-              </div>
+    <!-- SERVICIOS -->
+    <section id="servicios" class="section band-dark">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/02</b> Servicios de ingeniería</span>
+            <h2 class="h2">Lo que construimos para empresas que quieren <span class="hl">operar mejor</span>.</h2>
+          </div>
+          <p class="section-lead">Ponemos a tu servicio la misma arquitectura y los mismos componentes que sostienen nuestros productos en producción.</p>
+        </div>
+
+        <div class="service">
+          <span class="service-num">01</span>
+          <div>
+            <h3>Plataformas SaaS, portales y ERPs en la nube</h3>
+            <p>Diseñamos plataformas desde cero o modernizamos sistemas heredados: paneles multi-sede, inventarios, cajas POS, portales de autogestión y tableros gerenciales en tiempo real.</p>
+          </div>
+          <ul class="checks">
+            <li>Arquitectura multi-empresa (multi-tenant)</li>
+            <li>Interfaces rápidas que tu equipo aprende en minutos</li>
+            <li>Despliegue en la nube listo para crecer</li>
+          </ul>
+        </div>
+
+        <div class="service">
+          <span class="service-num">02</span>
+          <div>
+            <h3>Agentes de IA y automatización comercial</h3>
+            <p>Agentes que investigan mercados, califican oportunidades, redactan comunicaciones y hacen seguimiento, siempre bajo reglas deterministas y con una persona aprobando lo que sale.</p>
+          </div>
+          <ul class="checks">
+            <li>Reglas de negocio verificables por sector</li>
+            <li>Sin mensajes inventados ni envíos masivos</li>
+            <li>Integración con WhatsApp y correo corporativo</li>
+          </ul>
+        </div>
+
+        <div class="service">
+          <span class="service-num">03</span>
+          <div>
+            <h3>Pagos, biometría y dispositivos físicos</h3>
+            <p>Conectamos tu software con bancos y hardware en Colombia: Wompi Bancolombia (PSE, Nequi, tarjetas) con conciliación por webhooks, cámaras faciales, lectores de huella y torniquetes QR.</p>
+          </div>
+          <ul class="checks">
+            <li>Firma y verificación de pagos SHA-256</li>
+            <li>Respuesta de hardware en menos de 150 ms</li>
+            <li>Sincronización con tu ERP o CRM actual</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERRAMIENTAS / STACK -->
+    <section id="herramientas" class="section band-deep">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/03</b> Herramientas y stack</span>
+            <h2 class="h2">Tecnología de nivel empresarial, elegida con criterio.</h2>
+          </div>
+          <p class="section-lead">Estándares modernos que priorizan seguridad de datos, facilidad de mantenimiento y disponibilidad continua.</p>
+        </div>
+
+        <div class="stack-row">
+          <div><span class="stack-code">BACKEND</span><span class="stack-name">Servidores y microservicios</span></div>
+          <div>
+            <p class="stack-desc">Núcleos transaccionales con arquitectura hexagonal que separa la lógica de negocio de la infraestructura.</p>
+            <div class="tags"><span class="tag">Java 21</span><span class="tag">Spring Boot</span><span class="tag">Python · FastAPI</span><span class="tag">REST y webhooks</span></div>
+          </div>
+          <p class="stack-outcome"><strong>Resultado</strong>Sistemas estables que crecen de una a cientos de sedes sin reescribirse.</p>
+        </div>
+
+        <div class="stack-row">
+          <div><span class="stack-code">FRONTEND</span><span class="stack-name">Consolas operativas</span></div>
+          <div>
+            <p class="stack-desc">Tableros Kanban, puntos de venta, recepción y portales ejecutivos: sobrios, rápidos y legibles.</p>
+            <div class="tags"><span class="tag">React 19</span><span class="tag">TypeScript</span><span class="tag">Mobile-first</span><span class="tag">Accesibilidad</span></div>
+          </div>
+          <p class="stack-outcome"><strong>Resultado</strong>Tu personal opera desde el primer día, sin pantallas confusas.</p>
+        </div>
+
+        <div class="stack-row">
+          <div><span class="stack-code">IA</span><span class="stack-name">Orquestación de agentes</span></div>
+          <div>
+            <p class="stack-desc">Análisis estructurado de sitios web, protección contra inyección de instrucciones, enmascarado de datos personales y reglas por sector.</p>
+            <div class="tags"><span class="tag">Multi-agente</span><span class="tag">Scoring ponderado</span><span class="tag">Protección PII</span><span class="tag">Human-in-the-loop</span></div>
+          </div>
+          <p class="stack-outcome"><strong>Resultado</strong>Automatización que cuida tu reputación y cumple la Ley 1581.</p>
+        </div>
+
+        <div class="stack-row">
+          <div><span class="stack-code">DATOS · CLOUD</span><span class="stack-name">Persistencia, pagos y hardware</span></div>
+          <div>
+            <p class="stack-desc">Bases relacionales con aislamiento por organización, contenedores, TLS y conectores directos con pasarelas y biometría.</p>
+            <div class="tags"><span class="tag">PostgreSQL</span><span class="tag">Docker</span><span class="tag">Wompi</span><span class="tag">Torniquetes QR</span></div>
+          </div>
+          <p class="stack-outcome"><strong>Resultado</strong>Trazabilidad completa de cada acción y recaudo seguro.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTORES -->
+    <section id="sectores" class="section band-bone">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/04</b> Soluciones por industria</span>
+            <h2 class="h2">Configurado para cinco industrias que conocemos a fondo.</h2>
+          </div>
+          <p class="section-lead">Elige un sector para ver qué problema resolvemos, con qué tecnología y un ejemplo de lo que produce el sistema.</p>
+        </div>
+
+        <div class="sector-tabs" role="tablist" aria-label="Sectores">
+          <button type="button" class="sector-tab-btn active" data-sector-key="clinicas" role="tab" aria-selected="true"><span class="sector-tab-code">01</span><span class="sector-tab-name">Salud y odontología</span></button>
+          <button type="button" class="sector-tab-btn" data-sector-key="inmobiliarias" role="tab" aria-selected="false"><span class="sector-tab-code">02</span><span class="sector-tab-name">Inmobiliarias</span></button>
+          <button type="button" class="sector-tab-btn" data-sector-key="abogados" role="tab" aria-selected="false"><span class="sector-tab-code">03</span><span class="sector-tab-name">Firmas de abogados</span></button>
+          <button type="button" class="sector-tab-btn" data-sector-key="turismo_medico" role="tab" aria-selected="false"><span class="sector-tab-code">04</span><span class="sector-tab-name">Turismo médico</span></button>
+          <button type="button" class="sector-tab-btn" data-sector-key="gymsaas" role="tab" aria-selected="false"><span class="sector-tab-code">05</span><span class="sector-tab-name">Gimnasios</span></button>
+        </div>
+
+        <div class="sector-grid">
+          <div>
+            <h3 id="matrix-title" class="sector-title">Clínicas odontológicas, estética y especialidades médicas</h3>
+            <table class="spec-table">
+              <tbody>
+                <tr><th>Valor por cliente</th><td id="matrix-ticket">$3.500.000 – $25.000.000 COP por tratamiento</td></tr>
+                <tr><th>Señales que detectamos</th><td><div id="matrix-signals" class="tags"><span class="tag">Implantes dentales</span><span class="tag">Ortodoncia invisible</span><span class="tag">Diseño de sonrisa</span><span class="tag">Armonización facial</span></div></td></tr>
+                <tr><th>Problema que resolvemos</th><td id="matrix-gaps">Sin agendamiento en línea, sin canal de WhatsApp para valoración inmediata y pacientes que se pierden después de recibir el presupuesto.</td></tr>
+                <tr><th>Tecnología aplicada</th><td id="matrix-scoring">RevOps AI con calificación automática (score ≥ 70/100) y seguimiento en los días 3 y 7.</td></tr>
+                <tr><th>Cumplimiento</th><td id="matrix-compliance">Ley 1581 de 2012 (Habeas Data), ética médica y exclusión inmediata a solicitud.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <div class="sample-label"><span>Ejemplo de salida del sistema</span><span>Score 88/100</span></div>
+            <div id="matrix-sample-copy" class="sample-card">Hola equipo de Clínica Dental Especializada,
+
+Revisando su sitio web vimos su enfoque en implantes y rehabilitación oral, pero los pacientes deben llenar un formulario sin confirmación de agenda ni canal directo de valoración por WhatsApp.
+
+Automatizar la calificación y el seguimiento de presupuestos les permite recuperar tratamientos de alto valor sin cambiar su software médico actual.
+
+¿Les sirve una llamada de 10 minutos este jueves para mostrarles el diagnóstico de su web?
+
+—
+Comunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para excluir su contacto.</div>
+            <a id="matrix-cta-primary" href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Salud." target="_blank" rel="noopener" class="btn btn-primary">Implementar en salud <span class="arr">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMULADOR ROI -->
+    <section id="calculadora-roi" class="section band-dark">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/05</b> Simulador de impacto</span>
+            <h2 class="h2">¿Cuánto vale automatizar tu prospección?</h2>
+          </div>
+          <p class="section-lead">Ajusta tu volumen y tu ticket promedio. Es una estimación conservadora; en la reunión la calibramos con tus números reales.</p>
+        </div>
+
+        <div class="roi">
+          <div>
+            <div class="control">
+              <div class="control-head"><label for="roi-leads-slider">Empresas evaluadas por mes</label><span id="roi-leads-val" class="control-val">250</span></div>
+              <input type="range" id="roi-leads-slider" class="range" min="50" max="1000" step="25" value="250" />
+              <span class="control-hint">Volumen que procesan los agentes de investigación.</span>
+            </div>
+            <div class="control">
+              <div class="control-head"><label for="roi-ticket-slider">Valor promedio por contrato (COP)</label><span id="roi-ticket-val" class="control-val">$4.500.000</span></div>
+              <input type="range" id="roi-ticket-slider" class="range" min="500000" max="30000000" step="500000" value="4500000" />
+              <span class="control-hint">Ej.: tratamiento odontológico, servicio B2B o asesoría legal.</span>
+            </div>
+            <div class="control">
+              <div class="control-head"><label for="roi-conv-slider">Cierre sobre reuniones</label><span id="roi-conv-val" class="control-val">15%</span></div>
+              <input type="range" id="roi-conv-slider" class="range" min="5" max="35" step="1" value="15" />
+              <span class="control-hint">Porcentaje de reuniones que terminan en cliente.</span>
+            </div>
+          </div>
+
+          <div class="roi-out">
+            <div class="roi-revenue">
+              <span>Ingresos adicionales estimados por mes</span>
+              <div id="kpi-revenue">$9.000.000 COP</div>
+            </div>
+            <div class="roi-kpis">
+              <div class="roi-kpi"><span>Oportunidades calificadas</span><div id="kpi-qualified">95</div></div>
+              <div class="roi-kpi"><span>Horas operativas ahorradas</span><div id="kpi-hours">62 h</div></div>
+              <div class="roi-kpi"><span>Reuniones estimadas</span><div id="kpi-meetings">14</div></div>
+              <div class="roi-kpi"><span>Clientes nuevos</span><div id="kpi-deals">2</div></div>
+            </div>
+            <div class="roi-foot">
+              <small>Estimación ilustrativa; no constituye una garantía de resultados.</small>
+              <a id="roi-wa-btn" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-primary">Revisar mi caso <span class="arr">→</span></a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 9. INTERACTIVE B2B REVENUE & ROI CALCULATOR -->
-    <section id="calculadora-roi" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">05 // SIMULADOR DE IMPACTO ECONÓMICO</span>
-          <h2 class="section-heading">Calcula el retorno mensual proyectado al automatizar tu operación comercial con hzSaaS.</h2>
-          <p class="section-desc">
-            Ajusta el volumen de empresas evaluadas al mes y el ticket promedio de tu servicio para estimar el impacto en tiempo ahorrado, reuniones agendadas y cierres mensuales.
-          </p>
+    <!-- METODOLOGÍA -->
+    <section id="despliegue" class="section band-bone">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/06</b> Cómo trabajamos</span>
+            <h2 class="h2">De la primera reunión a producción, en cuatro pasos.</h2>
+          </div>
+          <p class="section-lead">Igual si activas uno de nuestros productos o si construimos algo nuevo: entregas verificables desde la primera semana.</p>
+        </div>
+        <div class="steps">
+          <div class="step"><h3>Diagnóstico</h3><p>Revisamos tu operación y ubicamos dónde la tecnología genera retorno más rápido.</p><small>Sesión con ingeniería</small></div>
+          <div class="step"><h3>Configuración</h3><p>Desplegamos tu entorno aislado, calibramos reglas y conectamos pagos o dispositivos.</p><small>Puesta en marcha en 24–48 h</small></div>
+          <div class="step"><h3>Salida en vivo</h3><p>Capacitamos a tu equipo para operar la plataforma desde el primer día.</p><small>Acompañamiento directo</small></div>
+          <div class="step"><h3>Evolución</h3><p>Medimos, optimizamos y sumamos módulos a medida que tu empresa crece.</p><small>Soporte y mejora continua</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODALIDADES -->
+    <section id="modelos" class="section band-dark">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <span class="kicker"><b>/07</b> Modalidades</span>
+            <h2 class="h2">Tres formas de trabajar con nosotros.</h2>
+          </div>
+          <p class="section-lead">Elige según la etapa de tu negocio. Todas incluyen trato directo con el equipo que construye.</p>
         </div>
 
-        <div class="roi-workbench">
-          <div class="roi-controls">
-            <div class="control-group">
-              <div class="control-header">
-                <label for="roi-leads-slider">Empresas / Prospectos Auditados por Mes</label>
-                <span id="roi-leads-val" class="control-val">250 empresas / mes</span>
-              </div>
-              <input type="range" id="roi-leads-slider" class="range-slider" min="50" max="1000" step="25" value="250" />
-              <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">Volumen mensual procesado automáticamente por nuestros agentes de investigación.</span>
-            </div>
-
-            <div class="control-group">
-              <div class="control-header">
-                <label for="roi-ticket-slider">Valor Promedio por Contrato o Tratamiento (COP)</label>
-                <span id="roi-ticket-val" class="control-val">$4.500.000 COP</span>
-              </div>
-              <input type="range" id="roi-ticket-slider" class="range-slider" min="500000" max="30000000" step="500000" value="4500000" />
-              <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">Ej: Tratamiento odontológico ($4.5M), Servicio B2B ($6M), Consultoría legal ($12M).</span>
-            </div>
-
-            <div class="control-group">
-              <div class="control-header">
-                <label for="roi-conv-slider">Tasa Conservadora de Cierre sobre Reuniones</label>
-                <span id="roi-conv-val" class="control-val">15%</span>
-              </div>
-              <input type="range" id="roi-conv-slider" class="range-slider" min="5" max="35" step="1" value="15" />
-              <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">Porcentaje de reuniones agendadas que se convierten en clientes efectivos.</span>
+        <div class="models">
+          <div class="model">
+            <span class="model-tier">Automatización B2B</span>
+            <h3>RevOps AI gestionado</h3>
+            <p class="model-summary">Activamos el motor de 9 agentes para auditar tu mercado, calificar oportunidades y entregarte propuestas listas para aprobar.</p>
+            <ul class="checks">
+              <li>Entorno calibrado para tu sector y ciudad</li>
+              <li>Acceso a la consola Kanban de RevOps AI</li>
+              <li>Envío por WhatsApp Business y correo</li>
+              <li>Cumplimiento Ley 1581 y reportes CSV</li>
+            </ul>
+            <div class="model-actions">
+              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20implementar%20RevOps%20AI%20en%20mi%20empresa." target="_blank" rel="noopener" class="btn btn-line">Cotizar RevOps AI</a>
             </div>
           </div>
 
-          <div class="roi-telemetry">
-            <div class="roi-kpi-grid">
-              <div class="roi-kpi-box">
-                <span class="roi-kpi-label">Oportunidades Cualificadas (Score &gt;= 70)</span>
-                <div id="kpi-qualified" class="roi-kpi-num">95 / mes</div>
-              </div>
-              <div class="roi-kpi-box">
-                <span class="roi-kpi-label">Horas Operativas Ahorradas</span>
-                <div id="kpi-hours" class="roi-kpi-num">62 hrs / mes</div>
-              </div>
-              <div class="roi-kpi-box">
-                <span class="roi-kpi-label">Reuniones Comerciales Estimadas</span>
-                <div id="kpi-meetings" class="roi-kpi-num">14 reuniones</div>
-              </div>
-              <div class="roi-kpi-box">
-                <span class="roi-kpi-label">Nuevos Clientes Estimados / Mes</span>
-                <div id="kpi-deals" class="roi-kpi-num">2 cierres</div>
-              </div>
-              <div class="roi-kpi-box featured">
-                <span class="roi-kpi-label">Ingresos Adicionales Proyectados por Mes</span>
-                <div id="kpi-revenue" class="roi-kpi-num">$9.000.000 COP / mes</div>
-              </div>
+          <div class="model featured">
+            <span class="model-tier">Licencia cloud</span>
+            <h3>GymSaaS Enterprise</h3>
+            <p class="model-summary">Suscripción mensual o anual a gym.hzsaas.com para gimnasios, centros de entrenamiento y cadenas deportivas.</p>
+            <ul class="checks">
+              <li>Cámaras faciales, huella, QR y torniquetes</li>
+              <li>Cobro automático con Wompi (Nequi, PSE)</li>
+              <li>POS para suplementos y arqueo de caja</li>
+              <li>Paneles de administración y recepción</li>
+            </ul>
+            <div class="model-actions">
+              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary">Conocer GymSaaS <span class="arr">↗</span></a>
+              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20activar%20GymSaaS%20en%20mi%20centro%20deportivo." target="_blank" rel="noopener" class="btn btn-line">Hablar con un especialista</a>
             </div>
+          </div>
 
-            <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Proyección conservadora basada en métricas reales de conversión B2B.</span>
-              <a id="roi-wa-btn" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-primary">Solicitar este Plan por WhatsApp →</a>
+          <div class="model">
+            <span class="model-tier">Ingeniería dedicada</span>
+            <h3>Desarrollo a medida</h3>
+            <p class="model-summary">Plataformas propias, ERPs, agentes de IA personalizados o integración de pagos y hardware para tu empresa.</p>
+            <ul class="checks">
+              <li>Arquitectura diseñada para tu negocio</li>
+              <li>Integración con tus sistemas y equipos</li>
+              <li>Entregas iterativas con pruebas automáticas</li>
+              <li>Trato directo con los arquitectos</li>
+            </ul>
+            <div class="model-actions">
+              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20queremos%20cotizar%20un%20desarrollo%20de%20software%20o%20sistema%20de%20IA%20a%20medida." target="_blank" rel="noopener" class="btn btn-line">Agendar reunión técnica</a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 10. METODOLOGÍA DE IMPLEMENTACIÓN (#despliegue) -->
-    <section id="despliegue" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">06 // METODOLOGÍA DE INGENIERÍA</span>
-          <h2 class="section-heading">Cómo llevamos nuestras soluciones a tu empresa en tiempo récord.</h2>
-          <p class="section-desc">
-            Ya sea que actives uno de nuestros productos SaaS o contratemos un desarrollo tecnológico a medida, trabajamos con entregas verificables desde la primera semana.
-          </p>
+    <!-- FAQ -->
+    <section id="faq" class="section band-bone">
+      <div class="wrap faq">
+        <div class="faq-aside">
+          <span class="kicker"><b>/08</b> Preguntas frecuentes</span>
+          <h2 class="h2">Respuestas directas.</h2>
+          <p class="section-lead">¿Tienes un caso específico? Escríbenos y te responde alguien del equipo de ingeniería.</p>
+          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20tengo%20una%20consulta%20sobre%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-primary">Escribir por WhatsApp <span class="arr">↗</span></a>
         </div>
 
-        <div class="workflow-grid">
-          <div class="workflow-step">
-            <div>
-              <span class="wf-num">FASE 1.0 // DIAGNÓSTICO</span>
-              <h3 class="wf-title">Análisis de Operación y Cuellos de Botella</h3>
-              <p class="wf-body">
-                Evaluamos tu proceso comercial u operativo actual e identificamos dónde la automatización con IA o nuestras plataformas SaaS generan el mayor retorno inmediato.
-              </p>
-            </div>
-            <div class="wf-spec">SESIÓN CON INGENIERÍA · DÍA 1</div>
-          </div>
-
-          <div class="workflow-step">
-            <div>
-              <span class="wf-num">FASE 2.0 // CONFIGURACIÓN</span>
-              <h3 class="wf-title">Activación de Entorno, Reglas y Dispositivos</h3>
-              <p class="wf-body">
-                Desplegamos tu instancia aislada en la nube, calibramos los agentes para tu industria o conectamos tus pasarelas Wompi y lectores biométricos.
-              </p>
-            </div>
-            <div class="wf-spec">PUESTA EN MARCHA EN &lt; 24–48H</div>
-          </div>
-
-          <div class="workflow-step">
-            <div>
-              <span class="wf-num">FASE 3.0 // OPERACIÓN</span>
-              <h3 class="wf-title">Entrenamiento de tu Equipo y Salida en Vivo</h3>
-              <p class="wf-body">
-                Capacitamos a tus operadores o personal de recepción para que dominen la consola desde el primer día con soporte técnico directo en Colombia.
-              </p>
-            </div>
-            <div class="wf-spec">ACOMPAÑAMIENTO DIRECTO</div>
-          </div>
-
-          <div class="workflow-step">
-            <div>
-              <span class="wf-num">FASE 4.0 // ESCALADO</span>
-              <h3 class="wf-title">Métricas Continuas y Evolución Tecnológica</h3>
-              <p class="wf-body">
-                Monitoreamos el rendimiento, optimizamos tasas de conversión y agregamos nuevos módulos o integraciones a medida que tu empresa crece.
-              </p>
-            </div>
-            <div class="wf-spec">SOPORTE Y MEJORA CONTINUA</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 11. MODALIDADES DE CONTRATACIÓN (#modelos) -->
-    <section id="modelos" class="section-block">
-      <div class="container">
-        <div class="section-intro">
-          <span class="section-index">07 // MODALIDADES DE TRABAJO</span>
-          <h2 class="section-heading">Tres formas de incorporar la tecnología de hzSaaS en tu organización.</h2>
-          <p class="section-desc">
-            Elige la modalidad que mejor se adapte a la etapa actual de tu negocio.
-          </p>
-        </div>
-
-        <div class="models-grid">
-          <!-- Model 1 -->
-          <div class="model-card">
-            <div>
-              <div class="model-tier">MODALIDAD 01 // AUTOMATIZACIÓN B2B</div>
-              <h3 class="model-name">RevOps AI Gestionado</h3>
-              <p class="model-summary">
-                Activamos nuestro motor de 9 agentes para auditar tu mercado, calificar oportunidades y entregarte propuestas listas para cerrar nuevos clientes.
-              </p>
-              <ul class="model-features">
-                <li><span class="check-glyph">+</span><span>Entorno exclusivo calibrado para tu sector y ciudad.</span></li>
-                <li><span class="check-glyph">+</span><span>Diagnóstico automatizado de prospectos y redacción consultiva.</span></li>
-                <li><span class="check-glyph">+</span><span>Acceso de operador a la Consola Kanban de RevOps AI.</span></li>
-                <li><span class="check-glyph">+</span><span>Despacho directo por WhatsApp Business y correo corporativo.</span></li>
-                <li><span class="check-glyph">+</span><span>Cumplimiento Ley 1581 Habeas Data y reportes CSV.</span></li>
-              </ul>
-            </div>
-            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20implementar%20RevOps%20AI%20en%20mi%20empresa." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Cotizar RevOps AI →</a>
-          </div>
-
-          <!-- Model 2 -->
-          <div class="model-card featured">
-            <div>
-              <div class="model-tier">MODALIDAD 02 // LICENCIA CLOUD ERP</div>
-              <h3 class="model-name">GymSaaS Enterprise</h3>
-              <p class="model-summary">
-                Suscripción mensual o anual a nuestra plataforma en <code>gym.hzsaas.com</code> para gimnasios, centros de entrenamiento y cadenas deportivas.
-              </p>
-              <ul class="model-features">
-                <li><span class="check-glyph">+</span><span>Integración con cámaras faciales, biometría, QR y torniquetes.</span></li>
-                <li><span class="check-glyph">+</span><span>Pagos automatizados con Wompi (Nequi, Bancolombia, PSE).</span></li>
-                <li><span class="check-glyph">+</span><span>Módulo de Punto de Venta (POS) para suplementos y arqueo de caja.</span></li>
-                <li><span class="check-glyph">+</span><span>Paneles separados para Administración y Recepción con auditoría.</span></li>
-                <li><span class="check-glyph">+</span><span>Soporte técnico directo y acompañamiento en implementación.</span></li>
-              </ul>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary" style="width: 100%;">Conocer GymSaaS en gym.hzsaas.com ↗</a>
-              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20activar%20GymSaaS%20en%20mi%20centro%20deportivo." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Hablar con Especialista GymSaaS</a>
-            </div>
-          </div>
-
-          <!-- Model 3 -->
-          <div class="model-card">
-            <div>
-              <div class="model-tier">MODALIDAD 03 // INGENIERÍA DEDICADA</div>
-              <h3 class="model-name">Desarrollo &amp; IA a Medida</h3>
-              <p class="model-summary">
-                Construcción de plataformas SaaS propias, ERPs corporativos, agentes de IA personalizados o integración de pagos y hardware para tu empresa.
-              </p>
-              <ul class="model-features">
-                <li><span class="check-glyph">+</span><span>Arquitectura de software diseñada para tu modelo de negocio.</span></li>
-                <li><span class="check-glyph">+</span><span>Integración con tus sistemas actuales, pasarelas o equipos físicos.</span></li>
-                <li><span class="check-glyph">+</span><span>Entregas iterativas con pruebas automatizadas de calidad.</span></li>
-                <li><span class="check-glyph">+</span><span>Infraestructura en la nube segura y escalable.</span></li>
-                <li><span class="check-glyph">+</span><span>Trato directo con los ingenieros arquitectos del proyecto.</span></li>
-              </ul>
-            </div>
-            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20queremos%20cotizar%20un%20desarrollo%20de%20software%20o%20sistema%20de%20IA%20a%20medida." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Agendar Reunión de Ingeniería →</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 12. EXECUTIVE FAQ ACCORDION (#faq) -->
-    <section id="faq" class="section-block">
-      <div class="container faq-layout">
         <div>
-          <span class="section-index">08 // PREGUNTAS FRECUENTES</span>
-          <h2 class="section-heading">Respuestas claras sobre nuestra empresa y tecnología.</h2>
-          <p class="section-desc" style="margin-bottom: var(--space-5);">
-            Si deseas evaluar un caso específico para tu empresa en Colombia o Latinoamérica, escríbenos directamente por WhatsApp.
-          </p>
-          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20tengo%20una%20consulta%20sobre%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-accent-outline">Escribir a Ingeniería (+57 313 510 8101) ↗</a>
-        </div>
-
-        <div class="faq-list">
-          <div class="faq-item open">
-            <button type="button" class="faq-trigger">
-              <span>¿Qué hace exactamente hzSaaS y qué diferencia sus soluciones de una agencia tradicional?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              Somos una empresa de ingeniería de software e inteligencia artificial, no una agencia de marketing. Construimos y operamos sistemas tecnológicos reales en producción: desde nuestro ERP en la nube para centros deportivos (<strong>GymSaaS</strong>) y nuestro motor multi-agente de prospección B2B (<strong>RevOps AI</strong>), hasta plataformas e integraciones a medida con calidad industrial.
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-trigger">
-              <span>¿Necesito modificar mis servidores actuales para implementar RevOps AI?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              No. <strong>RevOps AI</strong> opera en la nube como un departamento de ingresos externo: audita sitios públicos de tu mercado objetivo, califica cada oportunidad y te entrega las propuestas listas en tu consola Kanban para aprobar y despachar sin tocar tu infraestructura interna.
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-trigger">
-              <span>¿Cómo garantizan que los agentes de IA no inventen información ni envíen spam?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              Nuestros agentes operan bajo reglas deterministas: primero descartan prospectos con puntaje menor a 70/100; segundo, redactan cada mensaje basándose únicamente en los servicios y brechas reales detectadas en la web de la empresa; y tercero, ninguna comunicación se envía sin pasar por la bandeja de aprobación humana (Human-in-the-Loop).
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-trigger">
-              <span>¿GymSaaS se conecta con dispositivos biométricos y medios de pago en Colombia?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              Sí. <strong>GymSaaS Enterprise</strong> (<a href="https://gym.hzsaas.com" target="_blank" rel="noopener" style="color: var(--color-accent); text-decoration: underline;">gym.hzsaas.com</a>) se integra con cámaras faciales, lectores de huella, códigos QR y torniquetes físicos con validación en menos de 150ms, e incluye pasarela Wompi para pagos por Nequi, Bancolombia, PSE y tarjetas.
-            </div>
-          </div>
-
-          <div class="faq-item">
-            <button type="button" class="faq-trigger">
-              <span>¿También desarrollan software o agentes de IA personalizados para mi empresa?</span>
-              <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-              Sí. A través de nuestra división de ingeniería a medida diseñamos y desplegamos plataformas SaaS, sistemas internos, integraciones con pasarelas de pago y flujos de IA adaptados exactamente a las reglas operativas de tu negocio.
-            </div>
-          </div>
+          <details class="faq-item" open>
+            <summary>¿Qué hace hzSaaS y en qué se diferencia de una agencia?</summary>
+            <div class="faq-answer">Somos una empresa de ingeniería de software, no una agencia de marketing. Construimos y operamos sistemas reales en producción: nuestro ERP para centros deportivos (<strong>GymSaaS</strong>), nuestro motor de prospección B2B (<strong>RevOps AI</strong>) y plataformas e integraciones a medida.</div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Debo cambiar mis servidores para usar RevOps AI?</summary>
+            <div class="faq-answer">No. <strong>RevOps AI</strong> funciona en la nube como un departamento comercial externo: analiza sitios públicos de tu mercado, califica cada oportunidad y te entrega las propuestas en tu consola para aprobarlas, sin tocar tu infraestructura.</div>
+          </details>
+          <details class="faq-item">
+            <summary>¿Cómo evitan que la IA invente información o envíe spam?</summary>
+            <div class="faq-answer">Con reglas deterministas: se descartan prospectos con puntaje menor a 70/100, cada mensaje se basa solo en servicios y brechas reales detectadas en la web de la empresa, y nada se envía sin aprobación humana.</div>
+          </details>
+          <details class="faq-item">
+            <summary>¿GymSaaS funciona con biometría y medios de pago colombianos?</summary>
+            <div class="faq-answer">Sí. <a href="https://gym.hzsaas.com" target="_blank" rel="noopener">GymSaaS Enterprise</a> se integra con cámaras faciales, huelleros, QR y torniquetes con validación en menos de 150 ms, e incluye Wompi para pagos por Nequi, Bancolombia, PSE y tarjetas.</div>
+          </details>
+          <details class="faq-item">
+            <summary>¿También desarrollan software o agentes de IA a medida?</summary>
+            <div class="faq-answer">Sí. Diseñamos y desplegamos plataformas SaaS, sistemas internos, integraciones de pagos y flujos de IA ajustados a las reglas de tu negocio.</div>
+          </details>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- 13. STATEMENT FOOTER (Ft5) WITH OFFICIAL SHIELD LOGO -->
   <footer class="site-footer">
-    <div class="container">
-      <div class="footer-cta-banner">
-        <div style="max-width: 60ch;">
-          <span class="section-index">CONVERSEMOS SOBRE TU PROYECTO</span>
-          <h2 class="section-heading" style="margin-bottom: var(--space-2);">Construyamos o activemos la tecnología que tu negocio necesita.</h2>
-          <p class="section-desc">
-            Escríbenos directamente por WhatsApp para agendar una demostración en vivo de nuestros productos SaaS o evaluar un desarrollo a medida con nuestro equipo de ingeniería.
-          </p>
-        </div>
-        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
-          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20hablar%20con%20ingenier%C3%ADa%20sobre%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-primary">Contactar por WhatsApp (+57 313 510 8101) →</a>
-          <a href="#productos" class="btn btn-secondary">Ver Productos Propios</a>
+    <div class="wrap">
+      <div class="footer-statement">
+        <h2>¿Tienes un proceso que debería <span class="hl">funcionar solo</span>?</h2>
+        <div class="footer-contact">
+          <p>Agenda una demostración de nuestros productos o cuéntanos qué necesitas construir.</p>
+          <a class="footer-phone" href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20hablar%20con%20ingenier%C3%ADa%20sobre%20sus%20productos%20y%20servicios." target="_blank" rel="noopener">+57 313 510 8101</a>
+          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20hablar%20con%20ingenier%C3%ADa." target="_blank" rel="noopener" class="btn btn-primary">Hablar por WhatsApp <span class="arr">→</span></a>
         </div>
       </div>
 
-      <div class="footer-grid">
-        <div>
-          <div class="brand-cluster" style="margin-bottom: var(--space-3);">
-            <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="hzSaaS" class="brand-shield-img" style="width: 34px; height: 34px;" />
-            <div class="brand-text">
-              <div class="brand-name-row">
-                <span class="brand-name">hzSaaS</span>
-                <span class="brand-pill">TECHNOLOGY STUDIO</span>
-              </div>
-              <span class="brand-sub">Ingeniería de Software, IA &amp; Productos Cloud</span>
-            </div>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--color-neutral); max-width: 36ch; margin-bottom: var(--space-3);">
-            Desarrollamos plataformas SaaS propias, sistemas autónomos de inteligencia artificial e infraestructura digital de alto rendimiento.
-          </p>
-          <span class="tabular" style="font-size: 0.75rem; color: var(--color-accent);">Colombia &amp; Latinoamérica · Ingeniería Directa</span>
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <a href="/" class="brand"><img src="/static/hzsaas-shield-logo.jpg?v=3" alt="" width="40" height="40" /><span class="brand-word">hz<span>/</span>SaaS</span></a>
+          <p>Ingeniería de software, sistemas de IA y productos SaaS desde Colombia para Latinoamérica.</p>
         </div>
-
-        <div>
-          <h4 class="footer-col-title">Productos SaaS Propios</h4>
-          <ul class="footer-links">
-            <li><a href="https://gym.hzsaas.com" target="_blank" rel="noopener">GymSaaS Cloud ERP (gym.hzsaas.com)</a></li>
-            <li><a href="/login">Consola Operativa RevOps AI</a></li>
-            <li><a href="#diagnostico-vivo">Demostración IA en Vivo</a></li>
-            <li><a href="#calculadora-roi">Simulador de Impacto ROI</a></li>
+        <div class="footer-col">
+          <h4>Productos</h4>
+          <ul>
+            <li><a href="https://gym.hzsaas.com" target="_blank" rel="noopener">GymSaaS Enterprise</a></li>
+            <li><a href="/login">Consola RevOps AI</a></li>
+            <li><a href="#diagnostico-vivo">Diagnóstico en vivo</a></li>
           </ul>
         </div>
-
-        <div>
-          <h4 class="footer-col-title">Servicios &amp; Capacidades</h4>
-          <ul class="footer-links">
-            <li><a href="#servicios">Desarrollo de Plataformas SaaS</a></li>
-            <li><a href="#servicios">Agentes de IA &amp; Automatización B2B</a></li>
-            <li><a href="#servicios">Integración Wompi &amp; Biometría</a></li>
-            <li><a href="#herramientas">Herramientas y Stack Tecnológico</a></li>
+        <div class="footer-col">
+          <h4>Empresa</h4>
+          <ul>
+            <li><a href="#servicios">Servicios</a></li>
+            <li><a href="#herramientas">Tecnología</a></li>
+            <li><a href="#despliegue">Metodología</a></li>
+            <li><a href="#modelos">Modalidades</a></li>
           </ul>
         </div>
-
-        <div>
-          <h4 class="footer-col-title">Sectores &amp; Contacto</h4>
-          <ul class="footer-links">
-            <li><a href="#sectores">Salud, Inmobiliario, Legal y Fitness</a></li>
-            <li><a href="#modelos">Modalidades de Contratación</a></li>
-            <li><a href="#faq">Preguntas Frecuentes</a></li>
-            <li><a href="https://wa.me/573135108101" target="_blank" rel="noopener">WhatsApp: +57 313 510 8101</a></li>
+        <div class="footer-col">
+          <h4>Contacto</h4>
+          <ul>
+            <li><a href="https://wa.me/573135108101" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="#sectores">Sectores</a></li>
+            <li><a href="#faq">Preguntas</a></li>
           </ul>
         </div>
       </div>
 
-      <div class="footer-colophon">
-        <span>© 2026 hzSaaS Colombia. Todos los derechos reservados. Cumplimiento Ley 1581 de 2012 (Habeas Data).</span>
-        <span>INGENIERÍA DE SOFTWARE EMPRESARIAL · ALTA DISPONIBILIDAD</span>
+      <div class="colophon">
+        <span>© 2026 hzSaaS Colombia. Todos los derechos reservados.</span>
+        <span>Tratamiento de datos conforme a la Ley 1581 de 2012.</span>
       </div>
     </div>
   </footer>
 
-  <!-- CLEAN CLIENT SCRIPTS (ZERO INTERNAL DATA EXPOSURE) -->
   <script>
     (function () {
       'use strict';
+      var WA = 'https://wa.me/573135108101?text=';
 
-      // 1. Corporate Divisions Tabs Switcher
-      const bpTabs = document.querySelectorAll('.bp-tab');
-      const bpPanes = document.querySelectorAll('.bp-pane');
-      bpTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-          const target = tab.dataset.bp;
-          bpTabs.forEach(t => t.classList.toggle('active', t === tab));
-          bpPanes.forEach(p => p.classList.toggle('active', p.id === target));
-        });
-      });
-
-      // 2. Interactive Multi-Sector Matrix Switcher
-      const sectorData = {
+      // 1. Sector matrix
+      var sectorData = {
         clinicas: {
-          title: 'Clínicas Odontológicas, Estética y Especialidades Médicas',
+          title: 'Clínicas odontológicas, estética y especialidades médicas',
           ticket: '$3.500.000 – $25.000.000 COP por tratamiento',
-          signals: ['Implantes dentales', 'Ortodoncia invisible', 'Diseño de sonrisa', 'Armonización facial', 'Rehabilitación oral', 'Cirugía maxilofacial'],
-          gaps: 'Ausencia de agendamiento online directo, falta de botón WhatsApp para valoración inmediata y fuga de pacientes tras entrega de presupuesto.',
-          scoring: 'Motor RevOps AI con calificación automática (Score >= 70/100) y seguimiento en los días 3 y 7.',
-          compliance: 'Cumplimiento Ley 1581 de 2012 (Habeas Data Colombia), respeto de ética médica y exclusión automática a solicitud.',
-          sample: `Hola equipo de Clínica Dental Especializada,\n\nRevisando su sitio web vimos su enfoque en implantes dentales y rehabilitación oral, pero notamos que los pacientes deben llenar un formulario estático sin confirmación de agenda ni canal directo de valoración por WhatsApp.\n\nEn clínicas de Medellín y Bogotá con ese volumen de tratamientos, implementar calificación y seguimiento automatizado de presupuestos recupera entre 8 y 15 tratamientos de alto ticket al mes sin cambiar su software médico actual.\n\n¿Les hace sentido una llamada de 10 minutos este jueves para mostrarles el diagnóstico puntual de su web?\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia). Responda BAJA para excluir su contacto.`,
-          ctaText: 'Solicitar Implementación para Salud →',
-          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Salud.'
+          signals: ['Implantes dentales', 'Ortodoncia invisible', 'Diseño de sonrisa', 'Armonización facial', 'Rehabilitación oral'],
+          gaps: 'Sin agendamiento en línea, sin canal de WhatsApp para valoración inmediata y pacientes que se pierden después de recibir el presupuesto.',
+          scoring: 'RevOps AI con calificación automática (score ≥ 70/100) y seguimiento en los días 3 y 7.',
+          compliance: 'Ley 1581 de 2012 (Habeas Data), ética médica y exclusión inmediata a solicitud.',
+          sample: 'Hola equipo de Clínica Dental Especializada,\n\nRevisando su sitio web vimos su enfoque en implantes y rehabilitación oral, pero los pacientes deben llenar un formulario sin confirmación de agenda ni canal directo de valoración por WhatsApp.\n\nAutomatizar la calificación y el seguimiento de presupuestos les permite recuperar tratamientos de alto valor sin cambiar su software médico actual.\n\n¿Les sirve una llamada de 10 minutos este jueves para mostrarles el diagnóstico de su web?\n\n—\nComunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para excluir su contacto.',
+          ctaText: 'Implementar en salud',
+          ctaHref: WA + 'Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Salud.'
         },
         inmobiliarias: {
-          title: 'Inmobiliarias, Constructoras y Comercializadoras de Proyectos',
-          ticket: '$250.000.000 – $1.800.000.000 COP por unidad inmobiliaria',
-          signals: ['Proyectos sobre planos', 'Inversión inmobiliaria', 'Fiducia estructurada', 'Apartamentos', 'Lotes campestres', 'Rentas cortas'],
-          gaps: 'Formularios de proyectos sin pre-calificación financiera ni agendamiento inmediato a sala de ventas virtual o presencial.',
-          scoring: 'Priorización de constructoras con proyectos activos y brechas en captura de inversionistas (Score >= 70/100).',
-          compliance: 'Cumplimiento Ley 1581 de 2012 (Habeas Data Colombia) y transparencia informativa en proyectos.',
-          sample: `Hola Dirección Comercial de Constructora Capital,\n\nAnalizando la página de sus proyectos sobre planos e inversión inmobiliaria, identificamos que los compradores interesados no cuentan con pre-calificación inmediata por WhatsApp ni agendamiento directo a sala de ventas.\n\nCuando un inversionista solicita brochure y tarda más de 15 minutos en recibir respuesta consultiva, la conversión a visita cae más del 60%. Con nuestro motor RevOps AI automatizamos el seguimiento en los días 3 y 7 hasta agendar la cita con su asesor.\n\n¿Podemos compartirles el informe de fricción detectado en su portal en una breve llamada de 10 minutos?\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para dejar de recibir mensajes.`,
-          ctaText: 'Solicitar Implementación Inmobiliaria →',
-          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Inmobiliario.'
+          title: 'Inmobiliarias, constructoras y comercializadoras de proyectos',
+          ticket: '$250.000.000 – $1.800.000.000 COP por unidad',
+          signals: ['Proyectos sobre planos', 'Inversión inmobiliaria', 'Fiducia', 'Apartamentos', 'Lotes campestres'],
+          gaps: 'Formularios de proyectos sin precalificación financiera ni agendamiento inmediato a sala de ventas.',
+          scoring: 'Prioriza constructoras con proyectos activos y brechas en la captura de inversionistas (score ≥ 70/100).',
+          compliance: 'Ley 1581 de 2012 y transparencia informativa en proyectos.',
+          sample: 'Hola Dirección Comercial de Constructora Capital,\n\nAnalizando la página de sus proyectos sobre planos, vimos que los compradores interesados no reciben precalificación por WhatsApp ni agendamiento directo a sala de ventas.\n\nCon RevOps AI automatizamos el seguimiento en los días 3 y 7 hasta agendar la cita con su asesor.\n\n¿Podemos mostrarles el informe de fricción de su portal en una llamada de 10 minutos?\n\n—\nComunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para dejar de recibir mensajes.',
+          ctaText: 'Implementar en inmobiliarias',
+          ctaHref: WA + 'Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Inmobiliario.'
         },
         abogados: {
-          title: 'Firmas de Abogados Corporativos, Tributarios y Litigios de Alto Valor',
-          ticket: '$8.000.000 – $80.000.000 COP por proceso o asesoría corporativa',
-          signals: ['Derecho corporativo', 'Planeación tributaria', 'Fusiones y adquisiciones', 'Propiedad intelectual', 'Litigios arbitrales', 'Compliance'],
-          gaps: 'Portales jurídicos sin filtro de admisión de casos empresariales ni programación ágil de consulta diagnóstica.',
-          scoring: 'Calificación enfocada en firmas con prácticas corporativas B2B y oportunidades de digitalización (Score >= 70/100).',
-          compliance: 'Cumplimiento Ley 1581 de 2012 y confidencialidad profesional estricta.',
-          sample: `Estimados Socios de Bufete Legal Corporativo,\n\nVimos su trayectoria en planeación tributaria y derecho societario, pero observamos que su sitio web carece de un flujo ágil para agendar consultas diagnósticas de empresas y filtrar casos según cuantía.\n\nAyudamos a firmas legales en Colombia a sistematizar la recepción y seguimiento de prospectos corporativos sin comprometer la confidencialidad ni requerir cambios en su infraestructura.\n\n¿Tienen disponibilidad esta semana para revisar el diagnóstico digital de su firma?\n\n---\nComunicación informativa B2B conforme a la Ley 1581 de 2012. Responda BAJA para excluir su correo.`,
-          ctaText: 'Solicitar Implementación Sector Legal →',
-          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20nuestra%20Firma%20Legal.'
+          title: 'Firmas de abogados corporativos, tributarios y de litigio',
+          ticket: '$8.000.000 – $80.000.000 COP por proceso o asesoría',
+          signals: ['Derecho corporativo', 'Planeación tributaria', 'Fusiones y adquisiciones', 'Propiedad intelectual', 'Compliance'],
+          gaps: 'Portales sin filtro de admisión de casos empresariales ni agenda ágil de consulta diagnóstica.',
+          scoring: 'Califica firmas con prácticas corporativas B2B y oportunidades de digitalización (score ≥ 70/100).',
+          compliance: 'Ley 1581 de 2012 y confidencialidad profesional estricta.',
+          sample: 'Estimados socios,\n\nVimos su trayectoria en planeación tributaria y derecho societario, pero su sitio web no tiene un flujo para agendar consultas diagnósticas de empresas ni filtrar casos por cuantía.\n\nAyudamos a firmas legales en Colombia a sistematizar la recepción y el seguimiento de prospectos corporativos sin comprometer la confidencialidad.\n\n¿Tienen disponibilidad esta semana para revisar el diagnóstico digital de su firma?\n\n—\nComunicación informativa B2B conforme a la Ley 1581 de 2012. Responda BAJA para excluir su correo.',
+          ctaText: 'Implementar en mi firma',
+          ctaHref: WA + 'Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20nuestra%20Firma%20Legal.'
         },
         turismo_medico: {
-          title: 'Turismo Médico, Cirugía Plástica y Pacientes Internacionales',
-          ticket: '$15.000.000 – $45.000.000 COP por paquete médico / quirúrgico',
-          signals: ['Pacientes internacionales', 'Cirugía plástica', 'Valoración virtual', 'Atención bilingüe', 'Casa de recuperación', 'Rehabilitación avanzada'],
-          gaps: 'Tiempos de respuesta lentos a pacientes en el exterior y ausencia de pre-valoración virtual bilingüe.',
-          scoring: 'Calificación de clínicas con infraestructura internacional y potencial de conversión rápida (Score >= 72/100).',
-          compliance: 'Cumplimiento normativa de salud en Colombia y Ley 1581 de 2012.',
-          sample: `Hola Dirección de Pacientes Internacionales,\n\nObservamos que su clínica atiende pacientes del exterior en cirugía estética y rehabilitación avanzada, pero su web actual no ofrece agendamiento directo de valoración virtual ni canal inmediato bilingüe.\n\nLos pacientes internacionales suelen comparar opciones en simultáneo y eligen la clínica que responde y estructura su plan primero.\n\n¿Les gustaría ver cómo automatizamos la calificación y seguimiento de pacientes del exterior?\n\n---\nComunicación B2B bajo Ley 1581 de 2012. Responda BAJA para no recibir más comunicaciones.`,
-          ctaText: 'Solicitar Implementación Turismo Médico →',
-          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20Turismo%20M%C3%A9dico.'
+          title: 'Turismo médico, cirugía plástica y pacientes internacionales',
+          ticket: '$15.000.000 – $45.000.000 COP por paquete',
+          signals: ['Pacientes internacionales', 'Cirugía plástica', 'Valoración virtual', 'Atención bilingüe', 'Recuperación'],
+          gaps: 'Respuesta lenta a pacientes en el exterior y sin prevaloración virtual bilingüe.',
+          scoring: 'Califica clínicas con infraestructura internacional y potencial de conversión rápida (score ≥ 72/100).',
+          compliance: 'Normativa de salud colombiana y Ley 1581 de 2012.',
+          sample: 'Hola Dirección de Pacientes Internacionales,\n\nSu clínica atiende pacientes del exterior en cirugía estética, pero su web no ofrece agendamiento de valoración virtual ni un canal bilingüe inmediato.\n\nLos pacientes internacionales comparan opciones en paralelo y suelen elegir la clínica que les responde primero con un plan claro.\n\n¿Les gustaría ver cómo automatizamos la calificación y el seguimiento de estos pacientes?\n\n—\nComunicación B2B bajo Ley 1581 de 2012. Responda BAJA para no recibir más comunicaciones.',
+          ctaText: 'Implementar en turismo médico',
+          ctaHref: WA + 'Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20Turismo%20M%C3%A9dico.'
         },
         gymsaas: {
-          title: 'Gimnasios, Centros de Entrenamiento Funcional y Cadenas Fitness (GymSaaS)',
-          ticket: '$120.000 – $350.000 COP / mes por afiliado activo',
-          signals: ['Control facial y huella', 'Torniquetes QR < 150ms', 'Pagos Wompi (Nequi/PSE)', 'Punto de venta POS', 'Multi-sede', 'Paneles Admin y Recepción'],
-          gaps: 'Fuga de ingresos por mensualidades vencidas llevadas en Excel o cuadernos, filas en recepción y falta de cobro digital automático.',
-          scoring: 'Plataforma Cloud en producción en gym.hzsaas.com con activación inmediata para centros deportivos.',
-          compliance: 'Protección de datos de afiliados bajo Ley 1581 de 2012 y seguridad transaccional con Wompi Bancolombia.',
-          sample: `PLATAFORMA GYMSAAS ENTERPRISE (https://gym.hzsaas.com):\n\n1. Control de Acceso en Tiempo Real (<150ms): Nos integramos con cámaras faciales, lectores biométricos o torniquetes QR para autorizar solo socios al día.\n2. Recaudo Automatizado Wompi: Tus afiliados pagan con Nequi, Bancolombia, PSE o tarjetas y su membresía se renueva al instante.\n3. Mostrador POS y Auditoría: Controla ventas de proteínas, creatinas y bebidas, y audita cada turno de tu equipo de recepción.`,
-          ctaText: 'Explorar Plataforma GymSaaS (gym.hzsaas.com) ↗',
+          title: 'Gimnasios, centros de entrenamiento y cadenas fitness',
+          ticket: '$120.000 – $350.000 COP al mes por afiliado',
+          signals: ['Acceso facial y huella', 'Torniquetes QR', 'Wompi · Nequi · PSE', 'Punto de venta', 'Multi-sede'],
+          gaps: 'Mensualidades vencidas controladas en Excel o cuadernos, filas en recepción y cobro manual.',
+          scoring: 'GymSaaS en producción en gym.hzsaas.com, con activación inmediata para centros deportivos.',
+          compliance: 'Protección de datos de afiliados (Ley 1581) y transacciones seguras con Wompi Bancolombia.',
+          sample: 'GymSaaS Enterprise — gym.hzsaas.com\n\n1. Control de acceso en menos de 150 ms: cámaras faciales, huelleros o torniquetes QR que solo abren a socios al día.\n\n2. Cobro automático con Wompi: tus afiliados pagan con Nequi, Bancolombia, PSE o tarjeta y la membresía se renueva al instante.\n\n3. Mostrador y auditoría: ventas de suplementos y bebidas, y cierre de caja por turno de recepción.',
+          ctaText: 'Conocer GymSaaS',
           ctaHref: 'https://gym.hzsaas.com'
         }
       };
 
-      const sectorBtns = document.querySelectorAll('.sector-tab-btn');
-      const elTitle = document.getElementById('matrix-title');
-      const elTicket = document.getElementById('matrix-ticket');
-      const elSignals = document.getElementById('matrix-signals');
-      const elGaps = document.getElementById('matrix-gaps');
-      const elScoring = document.getElementById('matrix-scoring');
-      const elCompliance = document.getElementById('matrix-compliance');
-      const elSample = document.getElementById('matrix-sample-copy');
-      const elCtaPrimary = document.getElementById('matrix-cta-primary');
+      var sectorBtns = document.querySelectorAll('.sector-tab-btn');
+      var el = function (id) { return document.getElementById(id); };
+      var elTitle = el('matrix-title'), elTicket = el('matrix-ticket'), elSignals = el('matrix-signals'),
+          elGaps = el('matrix-gaps'), elScoring = el('matrix-scoring'), elCompliance = el('matrix-compliance'),
+          elSample = el('matrix-sample-copy'), elCta = el('matrix-cta-primary');
 
-      sectorBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          const key = btn.dataset.sectorKey;
-          const info = sectorData[key];
+      function setCta(text, href) {
+        elCta.textContent = text + ' ';
+        var arr = document.createElement('span');
+        arr.className = 'arr';
+        arr.textContent = href.indexOf('gym.hzsaas.com') !== -1 ? '↗' : '→';
+        elCta.appendChild(arr);
+        elCta.href = href;
+      }
+
+      sectorBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var info = sectorData[btn.dataset.sectorKey];
           if (!info) return;
-
-          sectorBtns.forEach(b => {
-            const active = b === btn;
-            b.classList.toggle('active', active);
-            b.setAttribute('aria-selected', active ? 'true' : 'false');
+          sectorBtns.forEach(function (b) {
+            var on = b === btn;
+            b.classList.toggle('active', on);
+            b.setAttribute('aria-selected', on ? 'true' : 'false');
           });
-
-          elTitle.innerHTML = `<strong>${info.title}</strong>`;
+          elTitle.textContent = info.title;
           elTicket.textContent = info.ticket;
-          elSignals.innerHTML = info.signals.map(s => `<span class="spec-tag">${s}</span>`).join('');
+          elSignals.replaceChildren.apply(elSignals, info.signals.map(function (s) {
+            var t = document.createElement('span'); t.className = 'tag'; t.textContent = s; return t;
+          }));
           elGaps.textContent = info.gaps;
           elScoring.textContent = info.scoring;
           elCompliance.textContent = info.compliance;
           elSample.textContent = info.sample;
-          elCtaPrimary.textContent = info.ctaText;
-          elCtaPrimary.href = info.ctaHref;
+          setCta(info.ctaText, info.ctaHref);
         });
       });
 
-      // 3. Interactive Live URL Diagnostic using Sanitized Public Endpoint
-      const presetChips = document.querySelectorAll('.preset-chip');
-      const inputName = document.getElementById('hero-audit-name');
-      const inputUrl = document.getElementById('hero-audit-url');
-      const selectSector = document.getElementById('hero-audit-sector');
-      const auditForm = document.getElementById('hero-audit-form');
-      const auditBtn = document.getElementById('hero-audit-btn');
-      const resultDrawer = document.getElementById('hero-audit-result');
-      const resName = document.getElementById('res-company-name');
-      const resState = document.getElementById('res-company-state');
-      const resScore = document.getElementById('res-score-badge');
-      const resCopy = document.getElementById('res-copy-box');
-      const resWaLink = document.getElementById('res-wa-link');
+      // 2. Live diagnostic (sanitized public endpoint)
+      var inputName = el('hero-audit-name'), inputUrl = el('hero-audit-url'), selectSector = el('hero-audit-sector'),
+          auditForm = el('hero-audit-form'), auditBtn = el('hero-audit-btn'), resultDrawer = el('hero-audit-result'),
+          resName = el('res-company-name'), resState = el('res-company-state'), resScore = el('res-score-badge'),
+          resCopy = el('res-copy-box'), resWa = el('res-wa-link');
 
-      presetChips.forEach(chip => {
-        chip.addEventListener('click', () => {
+      document.querySelectorAll('.preset-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
           inputName.value = chip.dataset.name || '';
           inputUrl.value = chip.dataset.url || '';
           selectSector.value = chip.dataset.sector || 'clinicas';
+          inputName.focus();
         });
       });
 
       if (auditForm) {
-        auditForm.addEventListener('submit', async (e) => {
+        auditForm.addEventListener('submit', async function (e) {
           e.preventDefault();
-          const name = inputName.value.trim();
-          const url = inputUrl.value.trim();
-          const sector = selectSector.value;
+          var name = inputName.value.trim(), url = inputUrl.value.trim(), sector = selectSector.value;
           if (!name || !url) return;
-
           auditBtn.disabled = true;
-          auditBtn.textContent = 'Analizando...';
-
+          auditBtn.textContent = 'Analizando…';
           try {
-            const resp = await fetch('/api/v1/public/diagnostic', {
+            var resp = await fetch('/api/v1/public/diagnostic', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                name: name,
-                url: url,
-                sector: sector
-              })
+              body: JSON.stringify({ name: name, url: url, sector: sector })
             });
-
-            if (!resp.ok) throw new Error('Generando diagnóstico...');
-
-            const data = await resp.json();
+            if (!resp.ok) throw new Error('unavailable');
+            var data = await resp.json();
+            var score = data.score || 85;
             resName.textContent = data.company || name;
-            resState.textContent = data.qualified ? 'ALTO POTENCIAL COMERCIAL' : 'DIAGNÓSTICO COMPLETADO';
-            resScore.textContent = `SCORE: ${data.score || 85}/100`;
+            resState.textContent = data.qualified ? 'Alto potencial comercial' : 'Diagnóstico completado';
+            resScore.textContent = score + '/100';
             resCopy.textContent = data.proposal || data.summary || 'Diagnóstico finalizado.';
-            const waText = encodeURIComponent(`Hola hzSaaS, probé su motor de IA con "${name}" (Score ${data.score || 85}/100) y quiero conocer cómo implementarlo en mi empresa.`);
-            resWaLink.href = `https://wa.me/573135108101?text=${waText}`;
-            resultDrawer.classList.add('active');
+            resWa.href = WA + encodeURIComponent('Hola hzSaaS, probé su motor con "' + name + '" (score ' + score + '/100) y quiero implementarlo en mi empresa.');
           } catch (_) {
             resName.textContent = name;
-            resState.textContent = 'OPORTUNIDAD COMERCIAL';
-            resScore.textContent = 'SCORE: 86/100';
-            resCopy.textContent = `Hola equipo de ${name},\n\nAl analizar su presencia digital (${url}), identificamos una oportunidad inmediata para automatizar la calificación de clientes y el seguimiento comercial en los días 3 y 7.\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia).`;
-            const waText = encodeURIComponent(`Hola hzSaaS, quiero analizar "${name}" (${url}) con su tecnología RevOps AI.`);
-            resWaLink.href = `https://wa.me/573135108101?text=${waText}`;
-            resultDrawer.classList.add('active');
+            resState.textContent = 'Vista previa';
+            resScore.textContent = '—';
+            resCopy.textContent = 'Hola equipo de ' + name + ',\n\nAl revisar su presencia digital (' + url + ') identificamos una oportunidad para automatizar la calificación de clientes y el seguimiento comercial en los días 3 y 7.\n\n—\nComunicación comercial B2B conforme a la Ley 1581 de 2012.';
+            resWa.href = WA + encodeURIComponent('Hola hzSaaS, quiero analizar "' + name + '" (' + url + ') con RevOps AI.');
           } finally {
+            resultDrawer.classList.add('active');
             auditBtn.disabled = false;
-            auditBtn.textContent = 'Probar IA';
+            auditBtn.textContent = 'Generar diagnóstico';
           }
         });
       }
 
-      // 4. Interactive B2B ROI Calculator
-      const leadsSlider = document.getElementById('roi-leads-slider');
-      const ticketSlider = document.getElementById('roi-ticket-slider');
-      const convSlider = document.getElementById('roi-conv-slider');
-      const leadsVal = document.getElementById('roi-leads-val');
-      const ticketVal = document.getElementById('roi-ticket-val');
-      const convVal = document.getElementById('roi-conv-val');
-
-      const kpiQualified = document.getElementById('kpi-qualified');
-      const kpiHours = document.getElementById('kpi-hours');
-      const kpiMeetings = document.getElementById('kpi-meetings');
-      const kpiDeals = document.getElementById('kpi-deals');
-      const kpiRevenue = document.getElementById('kpi-revenue');
-      const roiWaBtn = document.getElementById('roi-wa-btn');
-
-      function formatCOP(val) {
-        return '$' + Math.round(val).toLocaleString('es-CO') + ' COP';
-      }
+      // 3. ROI simulator
+      var leadsSlider = el('roi-leads-slider'), ticketSlider = el('roi-ticket-slider'), convSlider = el('roi-conv-slider');
+      var COP = function (v) { return '$' + Math.round(v).toLocaleString('es-CO'); };
 
       function updateRoi() {
-        const leads = parseInt(leadsSlider.value, 10) || 250;
-        const ticket = parseInt(ticketSlider.value, 10) || 4500000;
-        const convPct = parseInt(convSlider.value, 10) || 15;
+        var leads = parseInt(leadsSlider.value, 10) || 250;
+        var ticket = parseInt(ticketSlider.value, 10) || 4500000;
+        var conv = parseInt(convSlider.value, 10) || 15;
+        el('roi-leads-val').textContent = leads.toLocaleString('es-CO');
+        el('roi-ticket-val').textContent = COP(ticket);
+        el('roi-conv-val').textContent = conv + '%';
 
-        leadsVal.textContent = `${leads.toLocaleString('es-CO')} empresas / mes`;
-        ticketVal.textContent = formatCOP(ticket);
-        convVal.textContent = `${convPct}%`;
+        var qualified = Math.round(leads * 0.38);
+        var hours = Math.round(leads * 0.25);
+        var meetings = Math.max(1, Math.round(qualified * 0.15));
+        var deals = Math.max(1, Math.round(meetings * (conv / 100)));
+        var revenue = deals * ticket;
 
-        const qualified = Math.round(leads * 0.38);
-        const hoursSaved = Math.round(leads * 0.25);
-        const meetings = Math.max(1, Math.round(qualified * 0.15));
-        const closedDeals = Math.max(1, Math.round(meetings * (convPct / 100)));
-        const projectedRev = closedDeals * ticket;
-
-        kpiQualified.textContent = `${qualified} / mes`;
-        kpiHours.textContent = `${hoursSaved} hrs / mes`;
-        kpiMeetings.textContent = `${meetings} reuniones`;
-        kpiDeals.textContent = `${closedDeals} ${closedDeals === 1 ? 'cierre' : 'cierres'}`;
-        kpiRevenue.textContent = `${formatCOP(projectedRev)} / mes`;
-
-        const msg = encodeURIComponent(
-          `Hola equipo hzSaaS, simulé en su calculadora web: ${leads} empresas/mes con ticket de ${formatCOP(ticket)}, proyectando ${meetings} reuniones y ${formatCOP(projectedRev)}/mes. Quiero agendar una demostración.`
-        );
-        roiWaBtn.href = `https://wa.me/573135108101?text=${msg}`;
+        el('kpi-qualified').textContent = qualified;
+        el('kpi-hours').textContent = hours + ' h';
+        el('kpi-meetings').textContent = meetings;
+        el('kpi-deals').textContent = deals;
+        el('kpi-revenue').textContent = COP(revenue) + ' COP';
+        el('roi-wa-btn').href = WA + encodeURIComponent('Hola equipo hzSaaS, simulé ' + leads + ' empresas/mes con ticket de ' + COP(ticket) + ' COP (' + meetings + ' reuniones, ' + COP(revenue) + ' COP/mes). Quiero revisar mi caso.');
       }
 
       if (leadsSlider && ticketSlider && convSlider) {
-        leadsSlider.addEventListener('input', updateRoi);
-        ticketSlider.addEventListener('input', updateRoi);
-        convSlider.addEventListener('input', updateRoi);
+        [leadsSlider, ticketSlider, convSlider].forEach(function (s) { s.addEventListener('input', updateRoi); });
         updateRoi();
       }
 
-      // 5. FAQ Accordion
-      const faqItems = document.querySelectorAll('.faq-item');
-      faqItems.forEach(item => {
-        const trigger = item.querySelector('.faq-trigger');
-        if (!trigger) return;
-        trigger.addEventListener('click', () => {
-          const isOpen = item.classList.contains('open');
-          faqItems.forEach(other => other.classList.remove('open'));
-          if (!isOpen) item.classList.add('open');
+      // 4. Close mobile menu after choosing a link
+      var menu = document.querySelector('.nav-menu');
+      if (menu) {
+        menu.querySelectorAll('a').forEach(function (a) {
+          a.addEventListener('click', function () { menu.removeAttribute('open'); });
         });
-      });
+      }
     })();
   </script>
 </body>

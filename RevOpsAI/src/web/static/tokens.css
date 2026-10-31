@@ -1,44 +1,57 @@
-/* Hallmark · pre-emit critique:
- *   - Replaced raw hex defaults with perceptual OKLCH tokens tinted toward carbon-slate (hue 255).
- *   - Enforced 2+1 typography rule: Space Grotesk (display) + Plus Jakarta Sans (body) + JetBrains Mono (tabular outlier).
- *   - Restricted primary emerald-teal signal accent to <= 4% of viewport surface area.
- * · genre: modern-minimal · macrostructure: Bento Grid + Workbench · palette: carbon-slate & emerald-signal */
+/* Hallmark · pre-emit critique: P5 H4 E4 S5 R5 V4
+ *   - Palette derived from the official hzSaaS shield: carbon black, bone white, and the
+ *     signature green diagonal. No slate/navy (hue 255) tint, no purple, no neon.
+ *   - Neutrals are carbon tinted very slightly toward the brand green (hue 150–155), so the
+ *     dark surfaces read as "ink/graphite", not as the generic AI navy.
+ *   - One chromatic accent (brand green). Amber / sky / crimson remain ONLY as semantic
+ *     status colours for the RevOps AI console (dashboard), never as decoration.
+ * · genre: modern-minimal · theme: custom (hzSaaS Shield) · paper: dark + bone bands · accent: chromatic-green */
 
 :root {
-  /* Surface Hierarchy (OKLCH Carbon-Slate Tinted Neutrals) */
-  --color-paper: oklch(9.5% 0.008 255);
-  --color-paper-2: oklch(12.8% 0.010 255);
-  --color-paper-3: oklch(16.2% 0.012 255);
-  --color-paper-hover: oklch(19.0% 0.014 255);
+  /* Carbon surfaces (dark bands) */
+  --color-paper: oklch(14.5% 0.004 155);
+  --color-paper-2: oklch(17.5% 0.005 155);
+  --color-paper-3: oklch(21.0% 0.006 155);
+  --color-paper-hover: oklch(24.0% 0.007 155);
 
-  /* Ink & Typography Hierarchy */
-  --color-ink: oklch(96.5% 0.005 255);
-  --color-neutral: oklch(71.0% 0.012 255);
-  --color-muted: oklch(52.0% 0.012 255);
+  /* Ink on carbon */
+  --color-ink: oklch(96.5% 0.004 110);
+  --color-neutral: oklch(78.0% 0.006 120);
+  --color-muted: oklch(62.0% 0.006 130);
 
-  /* Hairline Structural Rules */
-  --color-rule: oklch(21.5% 0.012 255);
-  --color-rule-strong: oklch(29.5% 0.015 255);
+  /* Hairlines on carbon */
+  --color-rule: oklch(26.0% 0.005 155);
+  --color-rule-strong: oklch(34.0% 0.006 155);
 
-  /* Precision Signal Accents (Used strictly as semantic indicators & primary CTAs) */
-  --color-accent: oklch(72.0% 0.165 162);
-  --color-accent-ink: oklch(11.0% 0.020 162);
-  --color-accent-soft: oklch(22.0% 0.045 162 / 0.45);
-  --color-accent-border: oklch(72.0% 0.165 162 / 0.35);
+  /* Bone surfaces (light bands) — the white of the shield */
+  --color-bone: oklch(96.2% 0.007 105);
+  --color-bone-2: oklch(92.6% 0.008 105);
+  --color-bone-rule: oklch(85.5% 0.008 105);
+  --color-graphite: oklch(20.0% 0.005 155);
+  --color-graphite-2: oklch(40.0% 0.006 150);
+  --color-graphite-3: oklch(52.0% 0.006 145);
 
-  --color-amber: oklch(78.0% 0.155 75);
-  --color-amber-soft: oklch(24.0% 0.045 75 / 0.45);
-  --color-amber-border: oklch(78.0% 0.155 75 / 0.35);
+  /* Brand green — the diagonal of the shield */
+  --color-accent: oklch(66.0% 0.165 152);
+  --color-accent-deep: oklch(49.0% 0.130 152);
+  --color-accent-ink: oklch(14.0% 0.020 152);
+  --color-accent-soft: oklch(66.0% 0.165 152 / 0.12);
+  --color-accent-border: oklch(66.0% 0.165 152 / 0.40);
 
-  --color-sky: oklch(70.0% 0.140 245);
-  --color-sky-soft: oklch(22.0% 0.045 245 / 0.45);
-  --color-sky-border: oklch(70.0% 0.140 245 / 0.35);
+  /* Semantic status colours (console only — not decorative) */
+  --color-amber: oklch(78.0% 0.150 75);
+  --color-amber-soft: oklch(78.0% 0.150 75 / 0.12);
+  --color-amber-border: oklch(78.0% 0.150 75 / 0.35);
 
-  --color-crimson: oklch(64.0% 0.195 25);
-  --color-crimson-soft: oklch(21.0% 0.050 25 / 0.45);
-  --color-crimson-border: oklch(64.0% 0.195 25 / 0.35);
+  --color-sky: oklch(72.0% 0.110 230);
+  --color-sky-soft: oklch(72.0% 0.110 230 / 0.12);
+  --color-sky-border: oklch(72.0% 0.110 230 / 0.35);
 
-  /* 2+1 Typography System */
+  --color-crimson: oklch(64.0% 0.190 27);
+  --color-crimson-soft: oklch(64.0% 0.190 27 / 0.12);
+  --color-crimson-border: oklch(64.0% 0.190 27 / 0.35);
+
+  /* 2+1 Typography System (console defaults; the corporate landing overrides locally) */
   --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -72,4 +85,3 @@
   --dur-fast: 150ms;
   --dur-med: 260ms;
 }
-
