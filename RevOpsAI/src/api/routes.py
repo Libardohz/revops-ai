@@ -20,6 +20,7 @@ from RevOpsAI.src.agents.followup_agent import FollowUpAgent
 from RevOpsAI.src.api.webhooks import webhook_router
 from RevOpsAI.src.db.repository import TenantScopedRepository
 from RevOpsAI.src.db.session import get_engine, init_db, get_session_factory
+from RevOpsAI.src.api.rate_limiter import rate_limiter, get_client_ip
 
 router = APIRouter(prefix="/api/v1")
 router.include_router(webhook_router)
@@ -98,12 +99,33 @@ class LoginRequest(BaseModel):
 
 
 @router.post("/auth/login", include_in_schema=False)
-def login_session(req: LoginRequest, response: Response) -> dict[str, Any]:
-    """Authenticate user server-side and set an HttpOnly signed session cookie."""
+def login_session(req: LoginRequest, response: Response, request: Request = None) -> dict[str, Any]:
+    """Authenticate user server-side with rate limiting, brute-force lockout, and HttpOnly cookie."""
+    client_ip = get_client_ip(request)
+    clean_user = req.username.strip().lower()
+
+    # 1. General IP flood protection: max 20 login attempts per minute
+    is_flooded, flood_sec = rate_limiter.is_rate_limited(f"login_ip:{client_ip}", max_requests=20, window_seconds=60.0)
+    if is_flooded:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Demasiadas solicitudes de acceso desde esta dirección IP. Por favor intente en {flood_sec} segundos.",
+            headers={"Retry-After": str(flood_sec)},
+        )
+
+    # 2. Brute-force lockout: max 5 failed attempts in 5 minutes per IP + username pair
+    fail_key = f"fail:{client_ip}:{clean_user}"
+    is_locked, lock_sec = rate_limiter.is_brute_force_locked(fail_key, max_failures=5, lock_window_seconds=300.0)
+    if is_locked:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Acceso temporalmente pausado por múltiples intentos fallidos (5). Por seguridad corporativa, espere {lock_sec} segundos antes de reintentar.",
+            headers={"Retry-After": str(lock_sec)},
+        )
+
     expected_user = os.getenv("DASHBOARD_USERNAME", "admin@hzsaas.com")
     expected_pass = os.getenv("DASHBOARD_PASSWORD", "HzSaaS2026!")
 
-    clean_user = req.username.strip().lower()
     valid_users = {expected_user.lower(), "admin@hzsaas.com", "admin", "ingenieria@hzsaas.com"}
     valid_passwords = {expected_pass, "HzSaaS2026!", "admin123"}
 
@@ -111,17 +133,23 @@ def login_session(req: LoginRequest, response: Response) -> dict[str, Any]:
     pass_ok = any(secrets.compare_digest(req.password, p) for p in valid_passwords)
 
     if not (user_ok and pass_ok):
+        rate_limiter.record_failure(fail_key)
         raise HTTPException(
             status_code=401,
             detail="Credenciales de acceso inválidas. Verifique su correo corporativo y contraseña.",
         )
 
+    # Reset failure counter on valid authentication
+    rate_limiter.reset_failures(fail_key)
+
     token = create_session_token(clean_user, req.mode.upper())
+    is_secure = os.getenv("ENVIRONMENT", "").lower() == "production"
     response.set_cookie(
         key=_SESSION_COOKIE_NAME,
         value=token,
         httponly=True,
         samesite="lax",
+        secure=is_secure,
         max_age=86400 * 7,
         path="/",
     )
@@ -378,8 +406,17 @@ class PublicDiagnosticRequest(BaseModel):
 
 
 @router.post("/public/diagnostic", include_in_schema=False)
-def public_website_diagnostic(req: PublicDiagnosticRequest) -> dict[str, Any]:
-    """Execute a public website diagnostic returning only sanitized commercial metrics."""
+def public_website_diagnostic(req: PublicDiagnosticRequest, request: Request = None) -> dict[str, Any]:
+    """Execute a public website diagnostic returning only sanitized commercial metrics with IP rate limiting."""
+    client_ip = get_client_ip(request)
+    is_limited, retry_sec = rate_limiter.is_rate_limited(f"diag_ip:{client_ip}", max_requests=10, window_seconds=60.0)
+    if is_limited:
+        raise HTTPException(
+            status_code=429,
+            detail=f"Límite de solicitudes de diagnóstico alcanzado para esta dirección IP. Por favor espere {retry_sec} segundos antes de realizar una nueva prueba.",
+            headers={"Retry-After": str(retry_sec)},
+        )
+
     try:
         html = fetch_remote_html(req.url)
     except ValueError as val_err:
@@ -518,7 +555,7 @@ def _build_demo_prospects_for_tenant(tenant_id: str) -> list[Prospect]:
                 name="Constructora Capital & Proyectos Andinos",
                 url="https://constructoracapital.co",
                 score=89,
-                research_summary="Proyectos sobre planos en Medellín y Bogotá. Sin agendamiento online a sala de ventas ni pre-calificación por WhatsApp.",
+                research_summary="Proyectos sobre planos en Montería, Bogotá y la Costa Caribe. Sin agendamiento online a sala de ventas ni pre-calificación por WhatsApp.",
                 draft_message="Estimada Dirección Comercial de Constructora Capital,\n\nObservamos su portafolio de proyectos sobre planos e inversión fiduciaria, pero notamos que los compradores interesados no cuentan con agendamiento directo a sala de ventas ni filtro inmediato por WhatsApp.\n\nEn constructoras con alto tráfico digital, automatizar la respuesta consultiva y el seguimiento en los días 3 y 7 eleva la asistencia a sala de ventas en un 35%.\n\n¿Les parece bien una breve llamada de 10 minutos este jueves para mostrarles el diagnóstico de su portal?\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia). Responda BAJA para excluir su contacto.",
                 state=ProspectState.PENDING_APPROVAL,
             ),

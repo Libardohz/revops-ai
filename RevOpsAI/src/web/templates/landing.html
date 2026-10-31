@@ -429,12 +429,18 @@
       .stack-outcome { grid-column: auto; }
       .sector-grid, .roi, .faq, .footer-statement { grid-template-columns: minmax(0, 1fr); }
       .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 3rem; }
-      .hero::after { opacity: 0.5; }
+      .hero::after { display: none; }
     }
     @media (max-width: 560px) {
-      .nav { height: 68px; }
-      .brand-word { font-size: 1.15rem; }
+      .nav { height: 62px; gap: 0.35rem; }
+      .brand { gap: 0.45rem; }
+      .brand img { width: 30px; height: 30px; }
+      .brand-word { font-size: 1rem; }
+      .nav-actions-wrap { gap: 0.35rem !important; }
+      #nav-cta { padding: 0.4rem 0.65rem; font-size: 0.78rem; min-height: 2.2rem; }
+      .nav-menu summary { padding: 0.4rem 0.65rem; font-size: 0.74rem; min-height: 2.2rem; }
       .hero-ctas .btn, .product-actions .btn { width: 100%; }
+      .kicker { font-size: 0.72rem; letter-spacing: 0.04em; gap: 0.5rem; }
       .facts { grid-template-columns: minmax(0, 1fr); }
       .fact, .fact + .fact { padding: 1.5rem 0; border-right: 0; }
       .fact + .fact { border-top: 1px solid var(--color-rule); }
@@ -465,7 +471,7 @@
         <a href="#faq">Preguntas</a>
       </nav>
 
-      <div style="display:flex;align-items:center;gap:0.75rem;">
+      <div class="nav-actions-wrap" style="display:flex;align-items:center;gap:0.75rem;">
         <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20conocer%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-primary" id="nav-cta">Hablemos <span class="arr">→</span></a>
         <details class="nav-menu">
           <summary>Menú</summary>
@@ -490,7 +496,7 @@
       <div class="wrap">
         <div class="hero-grid">
           <div>
-            <span class="kicker">Ingeniería de software · Medellín, Colombia</span>
+            <span class="kicker">Ingeniería de software · Montería, Colombia</span>
             <h1 class="hero-title">Construimos el software que <span class="hl">mueve</span> tu operación.</h1>
             <p class="hero-lead">
               <strong>hzSaaS</strong> es una firma de ingeniería. Operamos dos productos SaaS propios en producción —
@@ -971,7 +977,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para e
       <div class="footer-cols">
         <div class="footer-brand">
           <a href="/" class="brand"><img src="/static/hzsaas-shield-logo.jpg?v=3" alt="" width="40" height="40" /><span class="brand-word">hz<span>/</span>SaaS</span></a>
-          <p>Ingeniería de software, sistemas de IA y productos SaaS desde Colombia para Latinoamérica.</p>
+          <p>Ingeniería de software, sistemas de IA y productos SaaS desde Montería, Colombia para toda Latinoamérica.</p>
         </div>
         <div class="footer-col">
           <h4>Productos</h4>
@@ -1001,7 +1007,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para e
       </div>
 
       <div class="colophon">
-        <span>© 2026 hzSaaS Colombia. Todos los derechos reservados.</span>
+        <span>© 2026 hzSaaS Montería, Colombia. Todos los derechos reservados.</span>
         <span>Tratamiento de datos conforme a la Ley 1581 de 2012.</span>
       </div>
     </div>

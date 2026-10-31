@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/tokens.css?v=3.0.0" />
+  <link rel="stylesheet" href="/static/tokens.css?v=4.0.0" />
   <style>
     /* Hallmark · pre-emit critique:
      *   - Designed bespoke Asymmetric Split Studio Workbench Login exclusively for RevOps AI (distinct from GymSaaS login).
@@ -500,7 +500,24 @@
       }
       .auth-vault-col {
         border-right: none;
-        padding: var(--space-5);
+        padding: 1.25rem 1rem;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+      .vault-top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.6rem;
+        padding-bottom: 1rem;
+      }
+      .vault-main {
+        margin: 1.5rem auto;
+      }
+      .vault-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+        padding-top: 1rem;
       }
     }
   </style>
