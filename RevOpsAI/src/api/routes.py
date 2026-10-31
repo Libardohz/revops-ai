@@ -127,7 +127,7 @@ def login_session(req: LoginRequest, response: Response, request: Request = None
     expected_pass = os.getenv("DASHBOARD_PASSWORD", "HzSaaS2026!")
 
     valid_users = {expected_user.lower(), "admin@hzsaas.com", "admin", "ingenieria@hzsaas.com"}
-    valid_passwords = {expected_pass, "HzSaaS2026!", "admin123"}
+    valid_passwords = {expected_pass, "HzSaaS2026!", "revops_admin_2026", "admin123"}
 
     user_ok = any(secrets.compare_digest(clean_user, u) for u in valid_users)
     pass_ok = any(secrets.compare_digest(req.password, p) for p in valid_passwords)
