@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/jpeg" href="/static/hzsaas-shield-logo.jpg?v=3" />
+  <link rel="shortcut icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
+  <link rel="apple-touch-icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
   <title>RevOps AI — Centro de Control Multi-Agente | hzSaaS Enterprise</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,16 +18,17 @@
   <!-- Top Navigation & Tenant Switcher -->
   <header class="topbar">
     <div class="brand-group">
-      <a href="/" class="brand-logo" title="Volver al portal corporativo hzSaaS">hz</a>
+      <a href="/" title="Volver al portal corporativo hzSaaS" style="display: flex; align-items: center;">
+        <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="hzSaaS" style="width: 34px; height: 34px; border-radius: 7px; object-fit: cover; border: 1px solid oklch(96% 0 0 / 0.16);" />
+      </a>
       <div>
         <div class="brand-title">RevOps AI</div>
         <div class="brand-subtitle">CONSOLA DE AUDITORÍA COMERCIAL &amp; GOBERNANZA HITL</div>
       </div>
-      <span class="brand-badge">v2.2 PRO · LEY 1581</span>
+      <span class="brand-badge">ENTERPRISE · LEY 1581</span>
       <div class="header-ecosystem-links">
         <a href="/" class="eco-link">← Portal hzSaaS</a>
         <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="eco-link">GymSaaS ERP ↗</a>
-        <a href="/docs" target="_blank" rel="noopener" class="eco-link">API Docs ↗</a>
       </div>
     </div>
 
@@ -32,15 +36,15 @@
       <button id="btn-open-audit-modal" class="btn-primary-emerald" title="Auditar empresa por URL en vivo">
         + Auditar Empresa (URL)
       </button>
-      <button id="btn-seed-demo" class="btn-outline" title="Poblar tenant actual con prospectos multi-sector de demostración">
+      <button id="btn-seed-demo" class="btn-outline" title="Poblar unidad actual con prospectos multi-sector de demostración">
         ⚡ Cargar Demo Sector
       </button>
       <button id="btn-export-csv" class="btn-outline" title="Exportar pipeline actual a CSV">
         ↓ Exportar CSV
       </button>
       <div class="tenant-selector-wrapper">
-        <span class="tenant-label">TENANT:</span>
-        <select id="tenant-select" class="tenant-select" aria-label="Seleccionar Tenant">
+        <span class="tenant-label">UNIDAD:</span>
+        <select id="tenant-select" class="tenant-select" aria-label="Seleccionar Unidad">
           <option value="tenant_clinicas_madrid">Salud &amp; Odontología (Principal)</option>
           <option value="hzsaas_colombia">hzSaaS Colombia (Multi-Sector)</option>
           <option value="tenant_inmobiliarias_col">Inmobiliarias &amp; Constructoras</option>
@@ -48,11 +52,14 @@
           <option value="tenant_turismo_medico_col">Turismo Médico &amp; Cirugía</option>
           <option value="tenant_dental_bcn">Dental &amp; Ortodoncia</option>
           <option value="tenant_estetica_sur">Medicina Estética</option>
-          <option value="cliente_demo">Sandbox Demo</option>
+          <option value="cliente_demo">Entorno Demo</option>
         </select>
       </div>
-      <button id="refresh-btn" class="btn-icon" title="Sincronizar con PostgreSQL">
+      <button id="refresh-btn" class="btn-icon" title="Sincronizar Pipeline">
         ↻ Actualizar
+      </button>
+      <button id="btn-logout" class="btn-outline" title="Cerrar sesión segura">
+        Salir
       </button>
     </div>
   </header>
@@ -358,12 +365,12 @@
       <form id="form-live-audit" class="audit-form">
         <div class="form-row-2col">
           <div class="form-group">
-            <label for="audit-sector">Sector Vertical (Reglas YAML)</label>
+            <label for="audit-sector">Sector Vertical</label>
             <select id="audit-sector" class="form-input">
-              <option value="clinicas">01 · Salud, Clínicas &amp; Odontología (clinicas.yaml)</option>
-              <option value="inmobiliarias">02 · Inmobiliarias &amp; Constructoras (inmobiliarias.yaml)</option>
-              <option value="abogados">03 · Firmas de Abogados B2B (abogados.yaml)</option>
-              <option value="turismo_medico">04 · Turismo Médico &amp; Cirugía (turismo_medico.yaml)</option>
+              <option value="clinicas">01 · Salud, Clínicas &amp; Odontología</option>
+              <option value="inmobiliarias">02 · Inmobiliarias &amp; Constructoras</option>
+              <option value="abogados">03 · Firmas de Abogados B2B</option>
+              <option value="turismo_medico">04 · Turismo Médico &amp; Cirugía</option>
             </select>
           </div>
 

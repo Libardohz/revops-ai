@@ -29,6 +29,7 @@
     btnSeedDemo: document.getElementById('btn-seed-demo'),
     btnExportCsv: document.getElementById('btn-export-csv'),
     refreshBtn: document.getElementById('refresh-btn'),
+    btnLogout: document.getElementById('btn-logout'),
     engineStatus: document.getElementById('engine-status'),
 
     // KPI Counters
@@ -784,6 +785,18 @@
         await Promise.all([fetchLeads(), fetchStats()]);
         el.refreshBtn.disabled = false;
         showToast('Datos actualizados');
+      });
+    }
+
+    // Logout Button
+    if (el.btnLogout) {
+      el.btnLogout.addEventListener('click', async () => {
+        try {
+          await fetch('/api/v1/auth/logout', { method: 'POST' });
+        } catch (_) {
+          // ignore network error
+        }
+        window.location.href = '/login';
       });
     }
 

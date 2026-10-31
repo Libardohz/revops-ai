@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/jpeg" href="/static/hzsaas-shield-logo.jpg?v=3" />
+  <link rel="shortcut icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
+  <link rel="apple-touch-icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
+  <title>hzSaaS — Acceso a Consola Empresarial</title>
+  <meta name="description" content="Portal de autenticación segura para la infraestructura empresarial hzSaaS y el Centro de Control RevOps AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/tokens.css?v=3.0.0" />
+  <style>
+    /* Hallmark · pre-emit critique:
+     *   - Built split-pane Enterprise Login Master Card unified with GymSaaS visual identity and official hzSaaS Shield Logo.
+     *   - Strictly zero hardcoded credentials, tokens, or internal keys in DOM or client scripts; uses server-side HttpOnly session cookie.
+     * · genre: modern-minimal · macrostructure: Split Studio Auth · palette: carbon-slate & emerald-signal */
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-color: var(--color-paper);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: clip;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    .login-screen-wrapper {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background-color: var(--color-paper);
+      background-image:
+        radial-gradient(circle at 50% 25%, oklch(18% 0.035 162 / 0.22), oklch(8% 0.008 255 / 0.94) 70%),
+        url('/static/gym-login-bg.jpg');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, oklch(96% 0 0 / 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, oklch(96% 0 0 / 0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .login-desktop-telemetry {
+      position: absolute;
+      top: 1.5rem;
+      left: 2rem;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--color-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .login-corner-crosshair {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .crosshair-tr {
+      top: 1.5rem;
+      right: 2rem;
+      border-top: 1px solid oklch(96% 0 0 / 0.22);
+      border-right: 1px solid oklch(96% 0 0 / 0.22);
+    }
+
+    .crosshair-bl {
+      bottom: 1.5rem;
+      left: 2rem;
+      border-bottom: 1px solid oklch(96% 0 0 / 0.22);
+      border-left: 1px solid oklch(96% 0 0 / 0.22);
+    }
+
+    .login-back-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      z-index: 30;
+      background-color: oklch(96% 0 0 / 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid oklch(96% 0 0 / 0.16);
+      color: var(--color-ink);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: background-color 150ms ease, border-color 150ms ease;
+    }
+
+    .login-back-btn:hover {
+      background-color: oklch(96% 0 0 / 0.12);
+      border-color: oklch(96% 0 0 / 0.28);
+    }
+
+    .login-master-card {
+      width: 880px;
+      max-width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background-color: oklch(11.5% 0.010 255 / 0.94);
+      border: 1px solid oklch(96% 0 0 / 0.14);
+      border-radius: 16px;
+      box-shadow: 0 32px 70px -15px oklch(0% 0 0 / 0.92), 0 0 0 1px oklch(96% 0 0 / 0.06);
+      overflow: hidden;
+      z-index: 5;
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+    }
+
+    .login-left-pane {
+      padding: 3rem 2.5rem;
+      background-color: oklch(9.5% 0.008 255 / 0.85);
+      border-right: 1px solid oklch(96% 0 0 / 0.07);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 2.25rem;
+    }
+
+    .shield-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 9px;
+      object-fit: cover;
+      border: 1px solid oklch(96% 0 0 / 0.18);
+      box-shadow: 0 4px 14px oklch(0% 0 0 / 0.6);
+    }
+
+    .brand-title-text {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--color-ink);
+      line-height: 1.1;
+    }
+
+    .brand-sub-text {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      color: var(--color-accent);
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    .left-heading {
+      font-family: var(--font-display);
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--color-ink);
+      line-height: 1.22;
+      margin-bottom: 0.75rem;
+    }
+
+    .left-desc {
+      font-size: 0.84rem;
+      color: var(--color-neutral);
+      line-height: 1.58;
+      margin-bottom: 2rem;
+    }
+
+    .pillar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.95rem;
+    }
+
+    .pillar-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+    }
+
+    .pillar-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background-color: var(--color-accent-soft);
+      border: 1px solid var(--color-accent-border);
+      color: var(--color-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .pillar-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    .pillar-sub {
+      font-size: 0.72rem;
+      color: var(--color-muted);
+    }
+
+    .left-footer {
+      padding-top: 1.75rem;
+      border-top: 1px solid oklch(96% 0 0 / 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--color-muted);
+    }
+
+    .status-online {
+      color: var(--color-accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+    }
+
+    .status-online::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--color-accent);
+      box-shadow: 0 0 8px var(--color-accent);
+    }
+
+    /* Right Pane */
+    .login-right-pane {
+      padding: 3rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .login-mobile-brand {
+      display: none;
+    }
+
+    .mode-switcher {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem;
+      background-color: var(--color-paper);
+      padding: 0.32rem;
+      border-radius: 8px;
+      border: 1px solid oklch(96% 0 0 / 0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .mode-btn {
+      padding: 0.62rem 0.5rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--color-neutral);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 140ms ease;
+    }
+
+    .mode-btn.active {
+      background-color: var(--color-paper-3);
+      color: var(--color-ink);
+      border-color: oklch(96% 0 0 / 0.12);
+    }
+
+    .security-banner {
+      display: none;
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 0.9rem;
+      background-color: var(--color-amber-soft);
+      border: 1px solid var(--color-amber-border);
+      border-radius: 6px;
+      font-size: 0.74rem;
+      color: var(--color-amber);
+      line-height: 1.45;
+    }
+
+    .security-banner.visible {
+      display: block;
+    }
+
+    .error-banner {
+      display: none;
+      padding: 0.75rem 0.85rem;
+      background-color: var(--color-crimson-soft);
+      border: 1px solid var(--color-crimson-border);
+      color: var(--color-crimson);
+      border-radius: 6px;
+      font-size: 0.78rem;
+      margin-bottom: 1.15rem;
+      line-height: 1.4;
+    }
+
+    .error-banner.visible {
+      display: block;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.05rem;
+    }
+
+    .field-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-neutral);
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .input-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 0.72rem 0.9rem;
+      background-color: var(--color-paper);
+      border: 1px solid oklch(96% 0 0 / 0.10);
+      border-radius: 6px;
+      color: var(--color-ink);
+      font-size: 0.86rem;
+      outline: none;
+      transition: border-color 140ms ease;
+    }
+
+    .auth-input:focus {
+      border-color: var(--color-accent);
+    }
+
+    .pwd-toggle {
+      position: absolute;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--color-muted);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .pwd-toggle:hover {
+      color: var(--color-ink);
+    }
+
+    .submit-btn {
+      margin-top: 0.35rem;
+      padding: 0.78rem 1.25rem;
+      background-color: var(--color-accent);
+      color: var(--color-accent-ink);
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: filter 140ms ease, transform 140ms ease;
+    }
+
+    .submit-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .submit-btn:active {
+      transform: translateY(1px);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .ecosystem-shortcuts {
+      margin-top: 1.5rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid oklch(96% 0 0 / 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+    }
+
+    .ecosystem-shortcuts a {
+      color: var(--color-neutral);
+      font-weight: 500;
+      transition: color 140ms ease;
+    }
+
+    .ecosystem-shortcuts a:hover {
+      color: var(--color-accent);
+    }
+
+    @media (max-width: 860px) {
+      .login-screen-wrapper {
+        padding: 4.5rem 1rem 2rem;
+      }
+      .login-desktop-telemetry,
+      .login-corner-crosshair,
+      .login-left-pane {
+        display: none;
+      }
+      .login-back-btn {
+        top: 1rem;
+        left: 1rem;
+        right: auto;
+        padding: 0.42rem 0.8rem;
+        font-size: 0.78rem;
+      }
+      .login-master-card {
+        max-width: 440px;
+        grid-template-columns: 1fr;
+      }
+      .login-right-pane {
+        padding: 1.85rem 1.35rem;
+      }
+      .login-mobile-brand {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 1.4rem;
+        padding-bottom: 1.15rem;
+        border-bottom: 1px solid oklch(96% 0 0 / 0.08);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-screen-wrapper">
+    <div class="login-grid-overlay"></div>
+
+    <div class="login-desktop-telemetry">
+      <span>ENCRYPTED SESSION CHANNEL (TLS 1.3 / HMAC-SHA256)</span>
+      <span>PLATFORM REGION: BOG-01 / SOUTH AMERICA</span>
+    </div>
+
+    <div class="login-corner-crosshair crosshair-tr"></div>
+    <div class="login-corner-crosshair crosshair-bl"></div>
+
+    <a href="/" class="login-back-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Página Principal</span>
+    </a>
+
+    <div class="login-master-card">
+      <!-- Left Pane -->
+      <div class="login-left-pane">
+        <div>
+          <div class="brand-row">
+            <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="hzSaaS" class="shield-logo" />
+            <div>
+              <div class="brand-title-text">hzSaaS</div>
+              <div class="brand-sub-text">CORE ARCHITECTURE</div>
+            </div>
+          </div>
+
+          <h1 id="pane-title" class="left-heading">Centro de Control RevOps AI</h1>
+          <p id="pane-desc" class="left-desc">
+            Orquestación comercial determinista de 9 agentes, calificación ponderada de oportunidades B2B y bandeja de gobernanza humana Kanban.
+          </p>
+
+          <div class="pillar-list">
+            <div class="pillar-item">
+              <div class="pillar-icon">01</div>
+              <div>
+                <div class="pillar-title">Sesión Cifrada HttpOnly</div>
+                <div class="pillar-sub">Tokens firmados en servidor sin exposición en el navegador</div>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon">02</div>
+              <div>
+                <div class="pillar-title">Aislamiento Multi-Tenant</div>
+                <div class="pillar-sub">Particionamiento lógico independiente por organización y vertical</div>
+              </div>
+            </div>
+            <div class="pillar-item">
+              <div class="pillar-icon">03</div>
+              <div>
+                <div class="pillar-title">Gobernanza Ley 1581 &amp; RFC 8058</div>
+                <div class="pillar-sub">Trazabilidad inmutable de aprobaciones y cumplimiento normativo</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="left-footer">
+          <span>BUILD 2026.10 · LATAM</span>
+          <span class="status-online">OPERACIONAL</span>
+        </div>
+      </div>
+
+      <!-- Right Pane -->
+      <div class="login-right-pane">
+        <div class="login-mobile-brand">
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem;">
+            <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="hzSaaS" class="shield-logo" style="width: 36px; height: 36px;" />
+            <div style="text-align: left;">
+              <div class="brand-title-text">hzSaaS</div>
+              <div class="brand-sub-text">ENTERPRISE CORE</div>
+            </div>
+          </div>
+          <span style="font-size: 0.76rem; color: var(--color-neutral);">Acceso a Consola Empresarial</span>
+        </div>
+
+        <div class="mode-switcher" role="tablist" aria-label="Seleccionar módulo de acceso">
+          <button type="button" class="mode-btn active" data-mode="REVOPS">Consola RevOps AI</button>
+          <button type="button" class="mode-btn" data-mode="INFRA">Infraestructura Global</button>
+        </div>
+
+        <div id="infra-banner" class="security-banner">
+          <strong>Acceso de Alta Seguridad:</strong> Este punto de entrada está reservado para los administradores de la infraestructura central multi-tenant.
+        </div>
+
+        <div id="login-error" class="error-banner" role="alert"></div>
+
+        <form id="login-form" class="auth-form" autocomplete="on">
+          <div>
+            <label for="login-user" class="field-label">Correo Corporativo o Usuario</label>
+            <div class="input-wrap">
+              <input
+                type="text"
+                id="login-user"
+                name="username"
+                class="auth-input"
+                placeholder="nombre@empresa.com"
+                autocomplete="username"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label for="login-pass" class="field-label">Contraseña de Acceso</label>
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="login-pass"
+                name="password"
+                class="auth-input"
+                placeholder="••••••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <button type="button" id="toggle-pwd" class="pwd-toggle" aria-label="Mostrar u ocultar contraseña">VER</button>
+            </div>
+          </div>
+
+          <button type="submit" id="login-submit" class="submit-btn">Autenticar e Ingresar →</button>
+        </form>
+
+        <div class="ecosystem-shortcuts">
+          <a href="https://gym.hzsaas.com" target="_blank" rel="noopener">Ir a GymSaaS Cloud ↗</a>
+          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20necesito%20asistencia%20con%20mis%20credenciales%20de%20acceso." target="_blank" rel="noopener">Soporte de Acceso (+57 313 510 8101)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      let currentMode = 'REVOPS';
+      const modeBtns = document.querySelectorAll('.mode-btn');
+      const paneTitle = document.getElementById('pane-title');
+      const paneDesc = document.getElementById('pane-desc');
+      const infraBanner = document.getElementById('infra-banner');
+      const errorBox = document.getElementById('login-error');
+      const form = document.getElementById('login-form');
+      const userInput = document.getElementById('login-user');
+      const passInput = document.getElementById('login-pass');
+      const togglePwd = document.getElementById('toggle-pwd');
+      const submitBtn = document.getElementById('login-submit');
+
+      modeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentMode = btn.dataset.mode;
+          modeBtns.forEach(b => b.classList.toggle('active', b === btn));
+          if (currentMode === 'INFRA') {
+            paneTitle.textContent = 'Consola Global de Infraestructura';
+            paneDesc.textContent = 'Monitoreo multi-tenant, políticas de seguridad corporativa y auditoría forense de sistemas hzSaaS.';
+            infraBanner.classList.add('visible');
+          } else {
+            paneTitle.textContent = 'Centro de Control RevOps AI';
+            paneDesc.textContent = 'Orquestación comercial determinista de 9 agentes, calificación ponderada de oportunidades B2B y bandeja de gobernanza humana Kanban.';
+            infraBanner.classList.remove('visible');
+          }
+        });
+      });
+
+      if (togglePwd && passInput) {
+        togglePwd.addEventListener('click', () => {
+          const isPwd = passInput.type === 'password';
+          passInput.type = isPwd ? 'text' : 'password';
+          togglePwd.textContent = isPwd ? 'OCULTAR' : 'VER';
+        });
+      }
+
+      if (form) {
+        form.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          errorBox.classList.remove('visible');
+          errorBox.textContent = '';
+
+          const username = userInput.value.trim();
+          const password = passInput.value;
+          if (!username || !password) return;
+
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Verificando credenciales...';
+
+          try {
+            const res = await fetch('/api/v1/auth/login', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                username: username,
+                password: password,
+                mode: currentMode
+              })
+            });
+
+            if (!res.ok) {
+              const err = await res.json().catch(() => ({}));
+              throw new Error(err.detail || 'Credenciales inválidas.');
+            }
+
+            const data = await res.json();
+            window.location.href = data.redirect || '/dashboard';
+          } catch (err) {
+            errorBox.textContent = err.message;
+            errorBox.classList.add('visible');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Autenticar e Ingresar →';
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
