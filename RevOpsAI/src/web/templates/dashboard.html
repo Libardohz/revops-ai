@@ -25,19 +25,36 @@
           <span class="brand-word">RevOps<span class="brand-slash">/</span>AI</span>
         </a>
         <span class="topbar-divider" aria-hidden="true"></span>
-        <label class="workspace" for="tenant-select">
+        <div class="workspace">
           <span class="workspace-label">Unidad</span>
-          <select id="tenant-select" class="workspace-select" aria-label="Seleccionar unidad de negocio">
-            <option value="tenant_clinicas_madrid">Salud y odontología</option>
-            <option value="hzsaas_colombia">hzSaaS Colombia · Multi-sector</option>
-            <option value="tenant_inmobiliarias_col">Inmobiliarias y constructoras</option>
-            <option value="tenant_abogados_col">Firmas de abogados</option>
-            <option value="tenant_turismo_medico_col">Turismo médico</option>
-            <option value="tenant_dental_bcn">Dental y ortodoncia</option>
-            <option value="tenant_estetica_sur">Medicina estética</option>
-            <option value="cliente_demo">Entorno de pruebas</option>
-          </select>
-        </label>
+          <div class="custom-select" id="tenant-custom-dropdown">
+            <button type="button" class="custom-select-trigger" id="tenant-select-btn" aria-haspopup="listbox" aria-expanded="false">
+              <span class="custom-select-label" id="tenant-select-label">Inmobiliarias y constructoras</span>
+              <svg class="custom-select-chevron" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+            </button>
+            <ul class="custom-select-menu" id="tenant-select-menu" role="listbox" tabindex="-1">
+              <li class="custom-select-option" data-value="tenant_clinicas_madrid" role="option">Salud y odontología</li>
+              <li class="custom-select-option" data-value="hzsaas_colombia" role="option">hzSaaS Colombia · Multi-sector</li>
+              <li class="custom-select-option" data-value="tenant_inmobiliarias_col" role="option">Inmobiliarias y constructoras</li>
+              <li class="custom-select-option" data-value="tenant_abogados_col" role="option">Firmas de abogados</li>
+              <li class="custom-select-option" data-value="tenant_turismo_medico_col" role="option">Turismo médico</li>
+              <li class="custom-select-option" data-value="tenant_dental_bcn" role="option">Dental y ortodoncia</li>
+              <li class="custom-select-option" data-value="tenant_estetica_sur" role="option">Medicina estética</li>
+              <li class="custom-select-option" data-value="cliente_demo" role="option">Entorno de pruebas</li>
+            </ul>
+            <!-- Hidden native select for fallback and script compatibility -->
+            <select id="tenant-select" class="workspace-select-native-sr" aria-label="Seleccionar unidad de negocio" tabindex="-1" aria-hidden="true">
+              <option value="tenant_clinicas_madrid">Salud y odontología</option>
+              <option value="hzsaas_colombia">hzSaaS Colombia · Multi-sector</option>
+              <option value="tenant_inmobiliarias_col">Inmobiliarias y constructoras</option>
+              <option value="tenant_abogados_col">Firmas de abogados</option>
+              <option value="tenant_turismo_medico_col">Turismo médico</option>
+              <option value="tenant_dental_bcn">Dental y ortodoncia</option>
+              <option value="tenant_estetica_sur">Medicina estética</option>
+              <option value="cliente_demo">Entorno de pruebas</option>
+            </select>
+          </div>
+        </div>
       </div>
 
       <nav class="topbar-right" aria-label="Acciones de sesión">

@@ -765,14 +765,95 @@
   /**
    * Bind DOM Events
    */
+  /**
+   * Bind DOM Events
+   */
   function bindEvents() {
-    // Tenant Selector
+    // Tenant Custom Selector Setup
+    const customDropdown = document.getElementById('tenant-custom-dropdown');
+    const triggerBtn = document.getElementById('tenant-select-btn');
+    const triggerLabel = document.getElementById('tenant-select-label');
+    const options = document.querySelectorAll('.custom-select-option');
+
+    function updateDropdownDisplay(val) {
+      let matchedLabel = '';
+      options.forEach(opt => {
+        if (opt.getAttribute('data-value') === val) {
+          opt.classList.add('selected');
+          matchedLabel = opt.textContent.trim();
+        } else {
+          opt.classList.remove('selected');
+        }
+      });
+      if (triggerLabel && matchedLabel) {
+        triggerLabel.textContent = matchedLabel;
+      }
+      return matchedLabel;
+    }
+
+    if (triggerBtn && customDropdown) {
+      // Set initial selection
+      updateDropdownDisplay(state.tenantId);
+
+      triggerBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = customDropdown.classList.contains('active');
+        customDropdown.classList.toggle('active', !isOpen);
+        triggerBtn.setAttribute('aria-expanded', !isOpen);
+      });
+
+      options.forEach(opt => {
+        opt.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const newVal = opt.getAttribute('data-value');
+          if (newVal === state.tenantId) {
+            customDropdown.classList.remove('active');
+            triggerBtn.setAttribute('aria-expanded', 'false');
+            return;
+          }
+
+          state.tenantId = newVal;
+          localStorage.setItem('revops_tenant', state.tenantId);
+          const friendlyName = updateDropdownDisplay(state.tenantId);
+
+          if (el.tenantSelect) {
+            el.tenantSelect.value = state.tenantId;
+          }
+
+          customDropdown.classList.remove('active');
+          triggerBtn.setAttribute('aria-expanded', 'false');
+
+          showToast(`Unidad activa: ${friendlyName || state.tenantId}`);
+          await fetchLeads();
+          await fetchStats();
+        });
+      });
+
+      // Close dropdown if clicked outside or Escape
+      document.addEventListener('click', (e) => {
+        if (!customDropdown.contains(e.target)) {
+          customDropdown.classList.remove('active');
+          triggerBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && customDropdown.classList.contains('active')) {
+          customDropdown.classList.remove('active');
+          triggerBtn.setAttribute('aria-expanded', 'false');
+          triggerBtn.focus();
+        }
+      });
+    }
+
+    // Native Fallback / Programmatic Tenant Selector
     if (el.tenantSelect) {
       el.tenantSelect.value = state.tenantId;
       el.tenantSelect.addEventListener('change', async (e) => {
         state.tenantId = e.target.value;
         localStorage.setItem('revops_tenant', state.tenantId);
-        showToast(`Tenant cambiado a: ${state.tenantId}`);
+        const friendlyName = updateDropdownDisplay(state.tenantId);
+        showToast(`Unidad activa: ${friendlyName || state.tenantId}`);
         await fetchLeads();
         await fetchStats();
       });
