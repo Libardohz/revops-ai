@@ -544,6 +544,249 @@ select.form-input { appearance: none; -webkit-appearance: none; padding-right: 2
 
 .modal-actions { display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 0.5rem; }
 
+/* ===================== REAL-TIME OPERATIONAL TELEMETRY ===================== */
+.ops-telemetry {
+  padding: 0 1.5rem 1.25rem;
+}
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.telemetry-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--r);
+  padding: 1.1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 140ms var(--ease);
+}
+.telemetry-card:hover {
+  border-color: var(--border-strong);
+}
+.telemetry-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.telemetry-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.telemetry-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+.telemetry-card-title {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.telemetry-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--accent);
+  padding: 0.2rem 0.5rem;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 2px;
+}
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+  animation: pulseRate 1.8s infinite ease-in-out;
+}
+@keyframes pulseRate {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+.telemetry-sub-meta {
+  font-size: 11px;
+  color: var(--text-3);
+}
+.telemetry-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.legend-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.dot-high { background: var(--accent); }
+.dot-mid { background: var(--color-ink); }
+.dot-low { background: var(--color-muted); }
+.legend-text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  margin-right: 0.25rem;
+}
+
+.telemetry-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 1. Funnel Bars */
+.funnel-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+.funnel-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.funnel-label-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+}
+.funnel-step {
+  color: var(--text-2);
+}
+.funnel-val {
+  color: var(--text);
+  font-weight: 600;
+}
+.funnel-track {
+  height: 6px;
+  background: var(--bg-raise);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.funnel-fill {
+  height: 100%;
+  background: var(--text-2);
+  transition: width 400ms var(--ease);
+}
+.funnel-fill-accent {
+  background: var(--accent);
+}
+.funnel-fill-bright {
+  background: var(--color-ink);
+}
+
+/* 2. Gaps Heatmap */
+.gaps-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.gap-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.gap-item-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.gap-name {
+  color: var(--text-2);
+}
+.gap-pct {
+  color: var(--text);
+  font-size: 11.5px;
+  font-weight: 500;
+}
+.gap-meter {
+  height: 6px;
+  background: var(--bg-raise);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.gap-meter-fill {
+  height: 100%;
+  background: var(--color-crimson);
+  transition: width 400ms var(--ease);
+}
+.gap-fill-compliant {
+  background: var(--accent);
+}
+
+/* 3. Spectrum Histogram */
+.spectrum-bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 120px;
+  gap: 1.25rem;
+  padding-top: 0.5rem;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0.4rem;
+}
+.spectrum-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+.spectrum-track {
+  width: 100%;
+  max-width: 44px;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  background: var(--bg-raise);
+  border: 1px solid var(--border-subtle);
+  border-radius: 2px 2px 0 0;
+  overflow: hidden;
+}
+.spectrum-fill {
+  width: 100%;
+  transition: height 450ms var(--ease);
+}
+.spectrum-high {
+  background: var(--accent);
+}
+.spectrum-mid {
+  background: var(--color-ink);
+}
+.spectrum-low {
+  background: var(--color-muted);
+}
+.spectrum-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+.spectrum-lbl {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+}
+
 /* ===================== TOAST ===================== */
 .toast-container { position: fixed; right: 1.25rem; bottom: 3.5rem; z-index: 80; display: grid; gap: 0.5rem; }
 .toast {
@@ -574,6 +817,7 @@ select.form-input { appearance: none; -webkit-appearance: none; padding-right: 2
   .kpi:nth-child(3) { border-right: 0; }
   .kpi:nth-child(n+4) { border-top: 1px solid var(--border-subtle); }
   .pipeline { display: none; }
+  .telemetry-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 900px) {
   .top-link { display: none; }

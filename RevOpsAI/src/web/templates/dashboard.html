@@ -111,6 +111,130 @@
       </div>
     </section>
 
+    <!-- ============ OPERATIONAL REAL-TIME TELEMETRY ============ -->
+    <section class="ops-telemetry" aria-label="Operatividad y métricas en tiempo real">
+      <div class="telemetry-grid">
+        <!-- Chart 1: Pipeline Conversion & Flow Funnel -->
+        <article class="telemetry-card">
+          <header class="telemetry-card-head">
+            <div class="telemetry-title-wrap">
+              <span class="telemetry-tag">Embudo HITL</span>
+              <h3 class="telemetry-card-title">Distribución del Flujo Operativo</h3>
+            </div>
+            <span class="telemetry-live-badge"><span class="pulse-dot"></span>En vivo</span>
+          </header>
+          <div class="telemetry-card-body">
+            <div class="funnel-bars" id="ops-funnel-bars">
+              <div class="funnel-row">
+                <div class="funnel-label-wrap">
+                  <span class="funnel-step">01. Auditados</span>
+                  <span class="funnel-val mono" id="funnel-val-total">0</span>
+                </div>
+                <div class="funnel-track"><div class="funnel-fill" id="funnel-bar-total" style="width: 100%;"></div></div>
+              </div>
+              <div class="funnel-row">
+                <div class="funnel-label-wrap">
+                  <span class="funnel-step">02. Precalificados (≥70 pts)</span>
+                  <span class="funnel-val mono" id="funnel-val-qual">0</span>
+                </div>
+                <div class="funnel-track"><div class="funnel-fill funnel-fill-accent" id="funnel-bar-qual" style="width: 0%;"></div></div>
+              </div>
+              <div class="funnel-row">
+                <div class="funnel-label-wrap">
+                  <span class="funnel-step">03. En Seguimiento / Despacho</span>
+                  <span class="funnel-val mono" id="funnel-val-sent">0</span>
+                </div>
+                <div class="funnel-track"><div class="funnel-fill" id="funnel-bar-sent" style="width: 0%;"></div></div>
+              </div>
+              <div class="funnel-row">
+                <div class="funnel-label-wrap">
+                  <span class="funnel-step">04. Oportunidades Ganadas</span>
+                  <span class="funnel-val mono" id="funnel-val-inter">0</span>
+                </div>
+                <div class="funnel-track"><div class="funnel-fill funnel-fill-bright" id="funnel-bar-inter" style="width: 0%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Chart 2: Friction & Gap Audit Heatmap -->
+        <article class="telemetry-card">
+          <header class="telemetry-card-head">
+            <div class="telemetry-title-wrap">
+              <span class="telemetry-tag">Diagnóstico B2B</span>
+              <h3 class="telemetry-card-title">Brechas Digitales Detectadas</h3>
+            </div>
+            <span class="telemetry-sub-meta mono" id="telemetry-audited-units">0 entidades analizadas</span>
+          </header>
+          <div class="telemetry-card-body">
+            <div class="gaps-chart" id="ops-gaps-chart">
+              <div class="gap-item">
+                <div class="gap-item-head">
+                  <span class="gap-name">Sin canal directo WhatsApp</span>
+                  <span class="gap-pct mono" id="gap-pct-wa">0%</span>
+                </div>
+                <div class="gap-meter"><div class="gap-meter-fill" id="gap-bar-wa" style="width: 0%;"></div></div>
+              </div>
+              <div class="gap-item">
+                <div class="gap-item-head">
+                  <span class="gap-name">Sin motor de reserva / agenda online</span>
+                  <span class="gap-pct mono" id="gap-pct-booking">0%</span>
+                </div>
+                <div class="gap-meter"><div class="gap-meter-fill" id="gap-bar-booking" style="width: 0%;"></div></div>
+              </div>
+              <div class="gap-item">
+                <div class="gap-item-head">
+                  <span class="gap-name">Alineados a Ley 1581 (Habeas Data)</span>
+                  <span class="gap-pct mono" id="gap-pct-compliance">100%</span>
+                </div>
+                <div class="gap-meter"><div class="gap-meter-fill gap-fill-compliant" id="gap-bar-compliance" style="width: 100%;"></div></div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Chart 3: Real-Time Score Spectrum Histogram -->
+        <article class="telemetry-card">
+          <header class="telemetry-card-head">
+            <div class="telemetry-title-wrap">
+              <span class="telemetry-tag">Score Umbral</span>
+              <h3 class="telemetry-card-title">Distribución de Calidad</h3>
+            </div>
+            <div class="telemetry-legend">
+              <span class="legend-dot dot-high"></span><span class="legend-text">≥80</span>
+              <span class="legend-dot dot-mid"></span><span class="legend-text">65-79</span>
+              <span class="legend-dot dot-low"></span><span class="legend-text">&lt;65</span>
+            </div>
+          </header>
+          <div class="telemetry-card-body">
+            <div class="spectrum-bars" id="ops-spectrum-bars">
+              <div class="spectrum-col">
+                <div class="spectrum-track">
+                  <div class="spectrum-fill spectrum-high" id="spec-bar-high" style="height: 0%;"></div>
+                </div>
+                <span class="spectrum-count mono" id="spec-count-high">0</span>
+                <span class="spectrum-lbl">Alto Valor</span>
+              </div>
+              <div class="spectrum-col">
+                <div class="spectrum-track">
+                  <div class="spectrum-fill spectrum-mid" id="spec-bar-mid" style="height: 0%;"></div>
+                </div>
+                <span class="spectrum-count mono" id="spec-count-mid">0</span>
+                <span class="spectrum-lbl">Medio</span>
+              </div>
+              <div class="spectrum-col">
+                <div class="spectrum-track">
+                  <div class="spectrum-fill spectrum-low" id="spec-bar-low" style="height: 0%;"></div>
+                </div>
+                <span class="spectrum-count mono" id="spec-count-low">0</span>
+                <span class="spectrum-lbl">Descartable</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
     <!-- ============ TOOLBAR ============ -->
     <section class="toolbar" aria-label="Búsqueda y filtros">
       <div class="search">

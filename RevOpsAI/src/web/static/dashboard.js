@@ -186,9 +186,98 @@
       if (el.metricRate) el.metricRate.textContent = `${data.qualification_rate ?? 0}%`;
       if (el.metricInterested) el.metricInterested.textContent = data.interested_count ?? 0;
       if (el.metricDiscarded) el.metricDiscarded.textContent = data.discarded_count ?? 0;
+
+      updateTelemetryCharts();
     } catch (err) {
       console.warn('Stats sync warning:', err.message);
     }
+  }
+
+  /**
+   * Update Real-Time Operational Telemetry Charts
+   */
+  function updateTelemetryCharts() {
+    const leads = state.leads || [];
+    const total = state.stats.total_leads || leads.length || 0;
+    const qualified = state.stats.qualified_count || 0;
+    const sent = (state.stats.total_leads ? (leads.filter(l => l.state === 'SENT' || l.state === 'APPROVED').length) : 0);
+    const interested = state.stats.interested_count || 0;
+
+    // 1. Funnel Bars
+    const fTotalVal = document.getElementById('funnel-val-total');
+    const fQualVal = document.getElementById('funnel-val-qual');
+    const fSentVal = document.getElementById('funnel-val-sent');
+    const fInterVal = document.getElementById('funnel-val-inter');
+
+    const fBarTotal = document.getElementById('funnel-bar-total');
+    const fBarQual = document.getElementById('funnel-bar-qual');
+    const fBarSent = document.getElementById('funnel-bar-sent');
+    const fBarInter = document.getElementById('funnel-bar-inter');
+
+    if (fTotalVal) fTotalVal.textContent = total;
+    if (fQualVal) fQualVal.textContent = `${qualified} (${total > 0 ? Math.round((qualified / total) * 100) : 0}%)`;
+    if (fSentVal) fSentVal.textContent = `${sent} (${total > 0 ? Math.round((sent / total) * 100) : 0}%)`;
+    if (fInterVal) fInterVal.textContent = `${interested} (${total > 0 ? Math.round((interested / total) * 100) : 0}%)`;
+
+    if (fBarTotal) fBarTotal.style.width = '100%';
+    if (fBarQual) fBarQual.style.width = total > 0 ? `${Math.min(100, Math.round((qualified / total) * 100))}%` : '0%';
+    if (fBarSent) fBarSent.style.width = total > 0 ? `${Math.min(100, Math.round((sent / total) * 100))}%` : '0%';
+    if (fBarInter) fBarInter.style.width = total > 0 ? `${Math.min(100, Math.round((interested / total) * 100))}%` : '0%';
+
+    // 2. Gaps & Audit Heatmap
+    const telAudited = document.getElementById('telemetry-audited-units');
+    if (telAudited) telAudited.textContent = `${leads.length} entidades analizadas`;
+
+    let waGaps = 0;
+    let bookingGaps = 0;
+    leads.forEach(l => {
+      const summary = l.research_summary || '';
+      if (summary.includes('Sin canal WhatsApp') || summary.includes('WhatsApp')) waGaps++;
+      if (summary.includes('Carece de sistema de cita') || summary.includes('agendamiento') || summary.includes('cita online')) bookingGaps++;
+    });
+
+    const waPct = leads.length > 0 ? Math.round((waGaps / leads.length) * 100) : 0;
+    const bookingPct = leads.length > 0 ? Math.round((bookingGaps / leads.length) * 100) : 0;
+
+    const gapPctWa = document.getElementById('gap-pct-wa');
+    const gapBarWa = document.getElementById('gap-bar-wa');
+    const gapPctBooking = document.getElementById('gap-pct-booking');
+    const gapBarBooking = document.getElementById('gap-bar-booking');
+
+    if (gapPctWa) gapPctWa.textContent = `${waPct}% (${waGaps})`;
+    if (gapBarWa) gapBarWa.style.width = `${waPct}%`;
+    if (gapPctBooking) gapPctBooking.textContent = `${bookingPct}% (${bookingGaps})`;
+    if (gapBarBooking) gapBarBooking.style.width = `${bookingPct}%`;
+
+    // 3. Score Spectrum Histogram
+    let high = 0;
+    let mid = 0;
+    let low = 0;
+
+    leads.forEach(l => {
+      const s = l.score || 0;
+      if (s >= 80) high++;
+      else if (s >= 65) mid++;
+      else low++;
+    });
+
+    const maxCount = Math.max(high, mid, low, 1);
+
+    const specCountHigh = document.getElementById('spec-count-high');
+    const specCountMid = document.getElementById('spec-count-mid');
+    const specCountLow = document.getElementById('spec-count-low');
+
+    const specBarHigh = document.getElementById('spec-bar-high');
+    const specBarMid = document.getElementById('spec-bar-mid');
+    const specBarLow = document.getElementById('spec-bar-low');
+
+    if (specCountHigh) specCountHigh.textContent = high;
+    if (specCountMid) specCountMid.textContent = mid;
+    if (specCountLow) specCountLow.textContent = low;
+
+    if (specBarHigh) specBarHigh.style.height = `${Math.round((high / maxCount) * 100)}%`;
+    if (specBarMid) specBarMid.style.height = `${Math.round((mid / maxCount) * 100)}%`;
+    if (specBarLow) specBarLow.style.height = `${Math.round((low / maxCount) * 100)}%`;
   }
 
   /**
@@ -216,6 +305,7 @@
 
       state.leads = Array.from(leadMap.values());
       applyFilters();
+      updateTelemetryCharts();
     } catch (err) {
       console.error('Error fetching leads:', err);
       showToast('Error de comunicación con la API de leads', 'error');
