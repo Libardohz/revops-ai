@@ -26,6 +26,7 @@
     // Header & Tenant
     tenantSelect: document.getElementById('tenant-select'),
     btnOpenAuditModal: document.getElementById('btn-open-audit-modal'),
+    btnSeedDemo: document.getElementById('btn-seed-demo'),
     btnExportCsv: document.getElementById('btn-export-csv'),
     refreshBtn: document.getElementById('refresh-btn'),
     engineStatus: document.getElementById('engine-status'),
@@ -34,7 +35,7 @@
     metricTotal: document.getElementById('stat-total'),
     metricPending: document.getElementById('stat-pending'),
     metricQualified: document.getElementById('stat-qualified'),
-    metricRate: document.getElementById('stat-rate'),
+    metricRate: document.getElementById('stat-qual-rate') || document.getElementById('stat-rate'),
     metricInterested: document.getElementById('stat-interested'),
     metricDiscarded: document.getElementById('stat-discarded'),
 
@@ -42,7 +43,7 @@
     filterSearchInput: document.getElementById('filter-search-input'),
     searchClearBtn: document.getElementById('search-clear-btn'),
     filterChipsGroup: document.getElementById('filter-chips-group'),
-    visibleLeadsCount: document.getElementById('visible-leads-count'),
+    visibleLeadsCount: document.getElementById('visible-leads-counter') || document.getElementById('visible-leads-count'),
 
     // Kanban Columns
     colPending: document.getElementById('col-cards-pending'),
@@ -59,17 +60,19 @@
     slideDrawer: document.getElementById('slide-drawer'),
     drawerClose: document.getElementById('drawer-close'),
     drawerTitle: document.getElementById('drawer-lead-name'),
-    drawerScore: document.getElementById('drawer-lead-score'),
+    drawerScore: document.getElementById('drawer-score-badge') || document.getElementById('drawer-lead-score'),
     drawerUrl: document.getElementById('drawer-lead-url'),
-    drawerTenant: document.getElementById('drawer-lead-tenant'),
-    drawerStatus: document.getElementById('drawer-lead-status'),
-    drawerGaps: document.getElementById('drawer-gaps-list'),
+    drawerTenant: document.getElementById('drawer-tenant') || document.getElementById('drawer-lead-tenant'),
+    drawerStatus: document.getElementById('drawer-status') || document.getElementById('drawer-lead-status'),
+    drawerGaps: document.getElementById('drawer-gaps') || document.getElementById('drawer-gaps-list'),
     drawerResearchText: document.getElementById('drawer-research-text'),
-    drawerCopy: document.getElementById('drawer-copy-textarea'),
+    drawerCopy: document.getElementById('drawer-copy') || document.getElementById('drawer-copy-textarea'),
     copyCharCounter: document.getElementById('copy-char-counter'),
+    btnCopyOutreach: document.getElementById('btn-copy-outreach'),
+    btnWhatsappDirect: document.getElementById('btn-whatsapp-direct'),
     drawerLogsList: document.getElementById('drawer-logs-list'),
-    btnDrawerApprove: document.getElementById('btn-approve-lead'),
-    btnDrawerReject: document.getElementById('btn-reject-lead'),
+    btnDrawerApprove: document.getElementById('btn-drawer-approve') || document.getElementById('btn-approve-lead'),
+    btnDrawerReject: document.getElementById('btn-drawer-reject') || document.getElementById('btn-reject-lead'),
     tabLinks: document.querySelectorAll('.tab-link'),
     tabPanes: document.querySelectorAll('.tab-pane'),
     channelRadios: document.querySelectorAll('input[name="dispatch-channel"]'),
@@ -79,6 +82,7 @@
     modalAuditClose: document.getElementById('modal-audit-close'),
     modalAuditCancel: document.getElementById('modal-audit-cancel'),
     formLiveAudit: document.getElementById('form-live-audit'),
+    auditSector: document.getElementById('audit-sector'),
     auditClinicName: document.getElementById('audit-clinic-name'),
     auditClinicUrl: document.getElementById('audit-clinic-url'),
     auditTenantId: document.getElementById('audit-tenant-id'),
@@ -86,6 +90,7 @@
     stepperFill: document.getElementById('stepper-fill'),
     stepperLabel: document.getElementById('stepper-label'),
     modalAuditSubmit: document.getElementById('modal-audit-submit'),
+    modalPresetBtns: document.querySelectorAll('.modal-preset-btn'),
 
     // Discard Modal
     modalDiscard: document.getElementById('modal-discard'),
@@ -605,9 +610,10 @@
     const name = el.auditClinicName.value.trim();
     const url = el.auditClinicUrl.value.trim();
     const tenant = el.auditTenantId.value;
+    const sector = el.auditSector ? el.auditSector.value : 'clinicas';
 
     if (!name || !url) {
-      showToast('Por favor complete el nombre y URL de la clínica', 'error');
+      showToast('Por favor complete el nombre y URL de la empresa', 'error');
       return;
     }
 
@@ -620,10 +626,10 @@
       if (el.stepperLabel) el.stepperLabel.textContent = label;
     };
 
-    updateStep(15, '1/5. Validando URL y conectando con el servidor remoto...');
+    updateStep(15, `1/5. Validando URL y cargando reglas del sector [${sector.toUpperCase()}]...`);
 
     try {
-      const timer1 = setTimeout(() => updateStep(40, '2/5. Scraper seguro extrayendo DOM y sanitizando PII...'), 800);
+      const timer1 = setTimeout(() => updateStep(40, '2/5. Scraper Zero-Trust extrayendo DOM y sanitizando PII...'), 800);
       const timer2 = setTimeout(() => updateStep(65, '3/5. ResearchAgent analizando servicios y canales...'), 1600);
       const timer3 = setTimeout(() => updateStep(85, '4/5. CommercialAudit y Scoring calculando brechas...'), 2400);
 
@@ -634,6 +640,7 @@
           tenant_id: tenant,
           name: name,
           url: url,
+          sector: sector,
         }),
       });
 
@@ -647,7 +654,7 @@
       }
 
       const data = await res.json();
-      updateStep(100, '5/5. Auditoría completada. Guardando en repositorio...');
+      updateStep(100, '5/5. Auditoría completada. Guardando en PostgreSQL...');
 
       setTimeout(async () => {
         closeAuditModal();
@@ -673,6 +680,26 @@
       updateStep(0, `Fallo en auditoría: ${err.message}`);
       showToast(`Error en auditoría en vivo: ${err.message}`, 'error');
       if (el.modalAuditSubmit) el.modalAuditSubmit.disabled = false;
+    }
+  }
+
+  /**
+   * Seed Demo Data for Current Tenant
+   */
+  async function seedDemoTenant() {
+    if (el.btnSeedDemo) el.btnSeedDemo.disabled = true;
+    try {
+      const res = await fetch(`/api/v1/dashboard/seed?tenant_id=${encodeURIComponent(state.tenantId)}`, {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error('No se pudo poblar el tenant');
+      const data = await res.json();
+      await Promise.all([fetchLeads(), fetchStats()]);
+      showToast(`Cargados ${data.seeded_count} prospectos de demostración en ${state.tenantId}`);
+    } catch (err) {
+      showToast(`Error al cargar demo: ${err.message}`, 'error');
+    } finally {
+      if (el.btnSeedDemo) el.btnSeedDemo.disabled = false;
     }
   }
 
@@ -797,8 +824,56 @@
     if (el.modalAuditCancel) el.modalAuditCancel.addEventListener('click', closeAuditModal);
     if (el.formLiveAudit) el.formLiveAudit.addEventListener('submit', handleLiveAudit);
 
+    if (el.modalPresetBtns) {
+      el.modalPresetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (el.auditClinicName) el.auditClinicName.value = btn.dataset.name || '';
+          if (el.auditClinicUrl) el.auditClinicUrl.value = btn.dataset.url || '';
+          if (el.auditSector && btn.dataset.sector) el.auditSector.value = btn.dataset.sector;
+          showToast(`Caso cargado: ${btn.dataset.name}`);
+        });
+      });
+    }
+
+    // Seed Demo Tenant Data
+    if (el.btnSeedDemo) el.btnSeedDemo.addEventListener('click', seedDemoTenant);
+
     // Export CSV
     if (el.btnExportCsv) el.btnExportCsv.addEventListener('click', exportPipelineCsv);
+
+    // Copy Outreach & Direct WhatsApp Dispatch inside Drawer
+    if (el.btnCopyOutreach) {
+      el.btnCopyOutreach.addEventListener('click', async () => {
+        const text = el.drawerCopy ? el.drawerCopy.value.trim() : '';
+        if (!text) {
+          showToast('No hay propuesta redactada para copiar', 'error');
+          return;
+        }
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast('Propuesta copiada al portapapeles');
+        } catch (_) {
+          if (el.drawerCopy) {
+            el.drawerCopy.select();
+            document.execCommand('copy');
+            showToast('Propuesta copiada al portapapeles');
+          }
+        }
+      });
+    }
+
+    if (el.btnWhatsappDirect) {
+      el.btnWhatsappDirect.addEventListener('click', () => {
+        const text = el.drawerCopy ? el.drawerCopy.value.trim() : '';
+        if (!text) {
+          showToast('No hay propuesta para enviar por WhatsApp', 'error');
+          return;
+        }
+        const encoded = encodeURIComponent(text);
+        window.open(`https://wa.me/?text=${encoded}`, '_blank', 'noopener');
+        showToast('Abriendo WhatsApp con la propuesta lista para enviar');
+      });
+    }
 
     // Slide-Over Drawer Controls
     if (el.drawerClose) el.drawerClose.addEventListener('click', closeDrawer);

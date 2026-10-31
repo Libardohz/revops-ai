@@ -1,13 +1,14 @@
 """Main FastAPI application entrypoint for RevOpsAI Control API."""
 
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load production or local .env before configuring engines
+# Load production or local .env before configuring engines (skip during pytest runs)
 _env_path = Path("RevOpsAI/.env")
 if not _env_path.is_file():
     _env_path = Path(__file__).resolve().parent.parent.parent / ".env"
-if _env_path.is_file():
+if _env_path.is_file() and "pytest" not in sys.modules:
     load_dotenv(_env_path)
 
 from fastapi import FastAPI

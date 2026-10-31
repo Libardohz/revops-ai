@@ -34,6 +34,7 @@ def get_engine(db_url: str | None = None):
         engine_kwargs["pool_recycle"] = 300
         engine_kwargs["pool_size"] = 10
         engine_kwargs["max_overflow"] = 20
+        engine_kwargs["connect_args"] = {"connect_timeout": 5}
 
     return create_engine(db_url, **engine_kwargs)
 

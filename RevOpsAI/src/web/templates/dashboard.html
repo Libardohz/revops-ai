@@ -3,353 +3,432 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RevOps AI - Consola de Control Multi-Agente & Human-in-the-Loop</title>
-  <link rel="stylesheet" href="/static/dashboard.css?v=2.2.2">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f4f4f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='13 2 3 14 12 14 11 22 21 10 12 10 13 2'/></svg>">
+  <title>RevOps AI — Centro de Control Multi-Agente | hzSaaS Enterprise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/tokens.css?v=3.0.0">
+  <link rel="stylesheet" href="/static/dashboard.css?v=3.0.0">
 </head>
 <body>
 
-  <!-- Top Application Command Bar -->
-  <header class="app-header">
+  <!-- Top Navigation & Tenant Switcher -->
+  <header class="topbar">
     <div class="brand-group">
-      <div class="brand-symbol" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-          <polyline points="2 17 12 22 22 17"></polyline>
-          <polyline points="2 12 12 17 22 12"></polyline>
-        </svg>
+      <a href="/" class="brand-logo" title="Volver al portal corporativo hzSaaS">hz</a>
+      <div>
+        <div class="brand-title">RevOps AI</div>
+        <div class="brand-subtitle">CONSOLA DE AUDITORÍA COMERCIAL &amp; GOBERNANZA HITL</div>
       </div>
-      <div class="brand-info">
-        <span class="brand-name">REVOPS AI</span>
-        <span class="brand-env">PROD · v2.2</span>
-      </div>
-      <div class="engine-badge" id="engine-status" title="Estado de conexión con el motor de agentes">
-        <span class="status-dot"></span>
-        <span class="status-text">MOTOR EN LÍNEA</span>
+      <span class="brand-badge">v2.2 PRO · LEY 1581</span>
+      <div class="header-ecosystem-links">
+        <a href="/" class="eco-link">← Portal hzSaaS</a>
+        <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="eco-link">GymSaaS ERP ↗</a>
+        <a href="/docs" target="_blank" rel="noopener" class="eco-link">API Docs ↗</a>
       </div>
     </div>
 
-    <div class="header-actions">
-      <!-- Tenant Selector -->
-      <div class="control-box">
-        <label for="tenant-select" class="control-label">TENANT:</label>
-        <select id="tenant-select" class="select-field">
-          <option value="tenant_clinicas_madrid" selected>Clínicas Madrid (tenant_clinicas_madrid)</option>
-          <option value="tenant_dental_bcn">Dental Barcelona (tenant_dental_bcn)</option>
-          <option value="tenant_default">Default System (tenant_default)</option>
+    <div class="toolbar-group">
+      <button id="btn-open-audit-modal" class="btn-primary-emerald" title="Auditar empresa por URL en vivo">
+        + Auditar Empresa (URL)
+      </button>
+      <button id="btn-seed-demo" class="btn-outline" title="Poblar tenant actual con prospectos multi-sector de demostración">
+        ⚡ Cargar Demo Sector
+      </button>
+      <button id="btn-export-csv" class="btn-outline" title="Exportar pipeline actual a CSV">
+        ↓ Exportar CSV
+      </button>
+      <div class="tenant-selector-wrapper">
+        <span class="tenant-label">TENANT:</span>
+        <select id="tenant-select" class="tenant-select" aria-label="Seleccionar Tenant">
+          <option value="tenant_clinicas_madrid">Salud &amp; Odontología (Principal)</option>
+          <option value="hzsaas_colombia">hzSaaS Colombia (Multi-Sector)</option>
+          <option value="tenant_inmobiliarias_col">Inmobiliarias &amp; Constructoras</option>
+          <option value="tenant_abogados_col">Firmas de Abogados B2B</option>
+          <option value="tenant_turismo_medico_col">Turismo Médico &amp; Cirugía</option>
+          <option value="tenant_dental_bcn">Dental &amp; Ortodoncia</option>
+          <option value="tenant_estetica_sur">Medicina Estética</option>
+          <option value="cliente_demo">Sandbox Demo</option>
         </select>
       </div>
-
-      <!-- Action Buttons -->
-      <button id="btn-open-audit-modal" class="btn btn-primary" title="Auditar en vivo cualquier sitio web de clínica">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="11" cy="11" r="8"></circle>
-          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-        </svg>
-        Auditar Clínica
-      </button>
-
-      <button id="btn-export-csv" class="btn btn-secondary" title="Exportar prospectos visibles a formato CSV">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-          <polyline points="7 10 12 15 17 10"></polyline>
-          <line x1="12" y1="15" x2="12" y2="3"></line>
-        </svg>
-        Exportar CSV
-      </button>
-
-      <button id="refresh-btn" class="btn btn-secondary" title="Actualizar datos del servidor">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21.5 2v6h-6"></path>
-          <path d="M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
-        </svg>
-        Actualizar
+      <button id="refresh-btn" class="btn-icon" title="Sincronizar con PostgreSQL">
+        ↻ Actualizar
       </button>
     </div>
   </header>
 
-  <!-- Live KPI Metrics Strip -->
-  <section class="metrics-strip" aria-label="Métricas de Rendimiento del Pipeline">
-    <div class="metric-cell">
-      <span class="metric-caption">Total Prospectos</span>
-      <span id="stat-total" class="metric-number">0</span>
+  <!-- Multi-Agent Pipeline Telemetry Strip -->
+  <div class="pipeline-telemetry-bar" aria-label="Estado de los 9 agentes del motor">
+    <div class="pt-item">
+      <span class="pt-dot active"></span>
+      <span class="pt-code">01 SCRAPER</span>
+      <span class="pt-meta">Zero-Trust AST</span>
     </div>
-    <div class="metric-cell">
-      <span class="metric-caption">Pendientes Aprobación</span>
-      <span id="stat-pending" class="metric-number text-amber">0</span>
+    <span class="pt-sep">→</span>
+    <div class="pt-item">
+      <span class="pt-dot active"></span>
+      <span class="pt-code">02 RESEARCH</span>
+      <span class="pt-meta">Extracción Servicios</span>
     </div>
-    <div class="metric-cell">
-      <span class="metric-caption">Cualificados</span>
-      <span id="stat-qualified" class="metric-number">0</span>
+    <span class="pt-sep">→</span>
+    <div class="pt-item">
+      <span class="pt-dot active"></span>
+      <span class="pt-code">03 AUDIT</span>
+      <span class="pt-meta">Brechas Fricción</span>
     </div>
-    <div class="metric-cell">
-      <span class="metric-caption">Tasa Cualificación</span>
-      <span id="stat-rate" class="metric-number">0%</span>
+    <span class="pt-sep">→</span>
+    <div class="pt-item">
+      <span class="pt-dot active"></span>
+      <span class="pt-code">04 SCORING</span>
+      <span class="pt-meta">Umbral &gt;= 70 pts</span>
     </div>
-    <div class="metric-cell">
-      <span class="metric-caption">Interesados</span>
-      <span id="stat-interested" class="metric-number text-emerald">0</span>
+    <span class="pt-sep">→</span>
+    <div class="pt-item">
+      <span class="pt-dot active"></span>
+      <span class="pt-code">05 COPYWRITER</span>
+      <span class="pt-meta">Ley 1581 Habeas Data</span>
     </div>
-    <div class="metric-cell">
-      <span class="metric-caption">Descartados / Opt-Out</span>
-      <span id="stat-discarded" class="metric-number text-crimson">0</span>
+    <span class="pt-sep">→</span>
+    <div class="pt-item highlight">
+      <span class="pt-dot amber"></span>
+      <span class="pt-code">06 HITL KANBAN</span>
+      <span class="pt-meta">Aprobación Ejecutiva</span>
+    </div>
+    <span class="pt-sep">→</span>
+    <div class="pt-item">
+      <span class="pt-dot active"></span>
+      <span class="pt-code">07 DISPATCH &amp; CADENCIA</span>
+      <span class="pt-meta">3/7 Días · RFC 8058</span>
+    </div>
+  </div>
+
+  <!-- Executive KPI Ribbon -->
+  <section class="kpi-ribbon" aria-label="Indicadores Clave de Rendimiento">
+    <div class="kpi-cell">
+      <span class="kpi-label">Total Prospectos</span>
+      <span id="stat-total" class="kpi-value">0</span>
+      <span class="kpi-subtext">Auditados en este tenant</span>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-label">Tasa de Cualificación</span>
+      <span id="stat-qual-rate" class="kpi-value text-sky">0%</span>
+      <span class="kpi-subtext">Score ponderado &gt;= 70 pts</span>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-label">Pendientes Revisión (HITL)</span>
+      <span id="stat-pending" class="kpi-value text-amber">0</span>
+      <span class="kpi-subtext">Esperando aprobación humana</span>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-label">Oportunidades Activas</span>
+      <span id="stat-interested" class="kpi-value text-emerald">0</span>
+      <span class="kpi-subtext">Interés comercial confirmado</span>
+    </div>
+    <div class="kpi-cell">
+      <span class="kpi-label">Descartados / Opt-Out</span>
+      <span id="stat-discarded" class="kpi-value text-crimson">0</span>
+      <span class="kpi-subtext">Protección de reputación</span>
     </div>
   </section>
 
-  <!-- Filtering and Search Toolbar -->
-  <section class="toolbar-section">
-    <div class="search-box">
-      <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8"></circle>
-        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-      </svg>
-      <input type="text" id="filter-search-input" class="search-input" placeholder="Filtrar por nombre de clínica, URL o brechas detectadas...">
-      <button id="search-clear-btn" class="search-clear" title="Limpiar filtro" style="display: none;">&times;</button>
+  <!-- Search & Quick Filter Toolbar -->
+  <section class="filter-toolbar" aria-label="Búsqueda y Filtros Rápidos">
+    <div class="search-box-wrapper">
+      <span class="search-icon">⌕</span>
+      <input
+        type="text"
+        id="filter-search-input"
+        class="search-input"
+        placeholder="Buscar por nombre de empresa, dominio web o hallazgos de auditoría..."
+        aria-label="Buscar prospectos"
+      >
+      <button id="search-clear-btn" class="search-clear-btn" style="display: none;" title="Limpiar búsqueda">✕</button>
     </div>
 
-    <div class="filter-chips" id="filter-chips-group">
+    <div class="filter-chips-group" id="filter-chips-group">
+      <span class="filter-label">FILTRAR:</span>
       <button class="chip-btn active" data-filter="all">Todos</button>
-      <button class="chip-btn" data-filter="high-score">Score &ge; 80</button>
-      <button class="chip-btn" data-filter="no-whatsapp">Sin WhatsApp</button>
-      <button class="chip-btn" data-filter="no-booking">Sin Cita Online</button>
+      <button class="chip-btn" data-filter="high-score">🔥 Score &gt;= 80</button>
+      <button class="chip-btn" data-filter="no-whatsapp">📱 Sin WhatsApp</button>
+      <button class="chip-btn" data-filter="no-booking">📅 Sin Agenda Online</button>
     </div>
 
-    <div class="toolbar-counter">
-      <span id="visible-leads-count">0</span> prospectos visibles
+    <div class="filter-results-meta">
+      <span id="visible-leads-counter" class="visible-counter">Mostrando 0 prospectos</span>
     </div>
   </section>
 
-  <!-- Main Kanban Board -->
-  <main class="kanban-board">
-    <!-- Columna 1: Pendientes de Aprobación -->
-    <div class="kanban-col" id="col-pending-group">
-      <div class="col-head">
-        <div class="col-title-wrap">
-          <span class="col-dot dot-amber"></span>
-          <span class="col-heading">Pendientes de Aprobación</span>
-        </div>
-        <span id="count-pending" class="col-badge">0</span>
-      </div>
-      <div id="col-cards-pending" class="col-body"></div>
-    </div>
+  <!-- Main 4-Column Kanban Workspace -->
+  <main class="kanban-container">
 
-    <!-- Columna 2: Enviados -->
-    <div class="kanban-col" id="col-sent-group">
-      <div class="col-head">
-        <div class="col-title-wrap">
-          <span class="col-dot dot-zinc"></span>
-          <span class="col-heading">Enviados / En Secuencia</span>
+    <!-- Column 1: Pending Human Review -->
+    <section class="kanban-column" id="col-pending">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="status-dot dot-pending"></span>
+          <span class="column-title">1. Pendientes de Revisión (HITL)</span>
         </div>
-        <span id="count-sent" class="col-badge">0</span>
+        <span id="count-pending" class="column-count">0</span>
       </div>
-      <div id="col-cards-sent" class="col-body"></div>
-    </div>
+      <div id="col-cards-pending" class="column-cards"></div>
+    </section>
 
-    <!-- Columna 3: Interesados -->
-    <div class="kanban-col" id="col-interested-group">
-      <div class="col-head">
-        <div class="col-title-wrap">
-          <span class="col-dot dot-emerald"></span>
-          <span class="col-heading">Interesados</span>
+    <!-- Column 2: Approved & Dispatched -->
+    <section class="kanban-column" id="col-sent">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="status-dot dot-sent"></span>
+          <span class="column-title">2. En Seguimiento / Enviados</span>
         </div>
-        <span id="count-interested" class="col-badge">0</span>
+        <span id="count-sent" class="column-count">0</span>
       </div>
-      <div id="col-cards-interested" class="col-body"></div>
-    </div>
+      <div id="col-cards-sent" class="column-cards"></div>
+    </section>
 
-    <!-- Columna 4: Descartados / Opt-Out -->
-    <div class="kanban-col" id="col-discarded-group">
-      <div class="col-head">
-        <div class="col-title-wrap">
-          <span class="col-dot dot-crimson"></span>
-          <span class="col-heading">Descartados / Opt-Out</span>
+    <!-- Column 3: Interested / Meeting Ready -->
+    <section class="kanban-column" id="col-interested">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="status-dot dot-interested"></span>
+          <span class="column-title">3. Interesados (Listos Cierre)</span>
         </div>
-        <span id="count-discarded" class="col-badge">0</span>
+        <span id="count-interested" class="column-count">0</span>
       </div>
-      <div id="col-cards-discarded" class="col-body"></div>
-    </div>
+      <div id="col-cards-interested" class="column-cards"></div>
+    </section>
+
+    <!-- Column 4: Discarded / Opt-Out -->
+    <section class="kanban-column" id="col-discarded">
+      <div class="column-header">
+        <div class="column-title-group">
+          <span class="status-dot dot-discarded"></span>
+          <span class="column-title">4. Descartados / Baja Legal</span>
+        </div>
+        <span id="count-discarded" class="column-count">0</span>
+      </div>
+      <div id="col-cards-discarded" class="column-cards"></div>
+    </section>
+
   </main>
 
   <!-- Slide-Over Inspection Drawer -->
-  <div id="drawer-backdrop" class="drawer-overlay" aria-hidden="true"></div>
-  <aside id="slide-drawer" class="drawer-panel" role="dialog" aria-labelledby="drawer-lead-name">
-    <div class="drawer-head">
-      <div class="drawer-title-box">
-        <h2 id="drawer-lead-name" class="drawer-h2">Inspección de Prospecto</h2>
-        <span id="drawer-lead-score" class="score-pill">0/100</span>
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
+  <aside id="slide-drawer" class="slide-drawer" aria-label="Inspección profunda de prospecto">
+
+    <div class="drawer-header">
+      <div>
+        <h2 id="drawer-lead-name" class="drawer-title">Nombre de la Empresa</h2>
+        <a id="drawer-lead-url" href="#" target="_blank" rel="noopener noreferrer" class="drawer-url">https://empresa.com</a>
       </div>
-      <button id="drawer-close" class="icon-button" aria-label="Cerrar panel lateral">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <button id="drawer-close" class="drawer-close" title="Cerrar panel (Esc)">✕</button>
     </div>
 
-    <!-- Multi-Tab Navigation -->
-    <nav class="drawer-tabs" role="tablist">
-      <button class="tab-link active" data-tab="tab-diagnosis" role="tab">01. Microdiagnóstico</button>
-      <button class="tab-link" data-tab="tab-outreach" role="tab">02. Copy & Canales</button>
-      <button class="tab-link" data-tab="tab-audit-logs" role="tab">03. Historial Auditoría</button>
+    <!-- Drawer Navigation Tabs -->
+    <nav class="drawer-tabs">
+      <button class="tab-link active" data-tab="tab-diagnosis">1. Diagnóstico &amp; Scoring</button>
+      <button class="tab-link" data-tab="tab-outreach">2. Propuesta &amp; Despacho</button>
+      <button class="tab-link" data-tab="tab-audit-logs">3. Trazabilidad Inmutable</button>
     </nav>
 
-    <div class="drawer-content">
-      <!-- TAB 1: Microdiagnóstico & Auditoría de Gaps -->
-      <section id="tab-diagnosis" class="tab-pane active" role="tabpanel">
-        <div class="spec-table">
-          <div class="spec-row">
-            <span class="spec-key">Sitio Web</span>
-            <span class="spec-val"><a id="drawer-lead-url" href="#" target="_blank" rel="noopener noreferrer" class="link-external">-</a></span>
+    <div class="drawer-body">
+
+      <!-- Tab 1: Diagnosis & Score Breakdown -->
+      <div id="tab-diagnosis" class="tab-pane active">
+        <div class="drawer-section">
+          <div class="drawer-section-title">
+            <span>EVALUACIÓN PONDERADA DEL PROSPECTO</span>
+            <span id="drawer-score-badge" class="score-badge score-high">85 / 100</span>
           </div>
-          <div class="spec-row">
-            <span class="spec-key">Tenant</span>
-            <span id="drawer-lead-tenant" class="spec-val">-</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-key">Estado de Ciclo</span>
-            <span id="drawer-lead-status" class="spec-val">-</span>
-          </div>
-          <div class="spec-row">
-            <span class="spec-key">Seguridad Legal</span>
-            <span class="spec-val text-emerald">Zero Medical Diagnosis · 100% RGPD</span>
+          <div class="info-box">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+              <span style="color: var(--text-muted); font-size: 0.75rem;">Tenant Aislado:</span>
+              <span id="drawer-tenant" style="font-family: var(--font-mono); font-size: 0.75rem;">tenant_clinicas_madrid</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span style="color: var(--text-muted); font-size: 0.75rem;">Estado Máquina Ciclo:</span>
+              <span id="drawer-status" style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent-amber);">PENDING_APPROVAL</span>
+            </div>
           </div>
         </div>
 
-        <div class="pane-block">
-          <span class="block-title">Brechas Operativas Detectadas</span>
-          <div id="drawer-gaps-list" class="gaps-container"></div>
+        <div class="drawer-section">
+          <div class="drawer-section-title">HALLAZGOS DE INVESTIGACIÓN (RESEARCH AGENT)</div>
+          <div id="drawer-research-text" class="info-box">
+            Sin datos de investigación disponibles.
+          </div>
         </div>
 
-        <div class="pane-block">
-          <span class="block-title">Resumen de Investigación Multi-Agente</span>
-          <p id="drawer-research-text" class="research-summary-text">-</p>
+        <div class="drawer-section">
+          <div class="drawer-section-title">BRECHAS COMERCIALES DETECTADAS (COMMERCIAL AUDIT)</div>
+          <div id="drawer-gaps" class="gap-list"></div>
         </div>
-      </section>
 
-      <!-- TAB 2: Copywriter & Multicanal Outreach -->
-      <section id="tab-outreach" class="tab-pane" role="tabpanel">
-        <div class="channel-selector">
-          <span class="control-label">Canal de Despacho:</span>
-          <div class="channel-options">
-            <label class="radio-chip">
+        <div class="drawer-section">
+          <div class="drawer-section-title">GUARDARRAÍLES DE SEGURIDAD &amp; PRIVACIDAD</div>
+          <div class="security-checklist">
+            <div class="sec-item"><span class="sec-ok">✓</span> Sanitización DOM Anti-Prompt Injection verificada</div>
+            <div class="sec-item"><span class="sec-ok">✓</span> Enmascarado de PII sensible ejecutado</div>
+            <div class="sec-item"><span class="sec-ok">✓</span> Cláusula Ley 1581 Habeas Data anexada</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Copywriter Editor & Channel Selector -->
+      <div id="tab-outreach" class="tab-pane">
+        <div class="drawer-section">
+          <div class="drawer-section-title">CANAL DE DESPACHO PREFERIDO</div>
+          <div class="channel-selector-group">
+            <label class="channel-option">
               <input type="radio" name="dispatch-channel" value="email" checked>
-              <span>Email (RFC 8058)</span>
+              <span class="channel-box">✉ Email Comercial (RFC 8058)</span>
             </label>
-            <label class="radio-chip">
+            <label class="channel-option">
               <input type="radio" name="dispatch-channel" value="whatsapp">
-              <span>WhatsApp Cloud (E.164)</span>
+              <span class="channel-box">💬 WhatsApp Business Directo</span>
             </label>
           </div>
         </div>
 
-        <div class="pane-block">
-          <div class="editor-header">
-            <label class="block-title" for="drawer-copy-textarea">Cuerpo de la Propuesta Consultiva</label>
-            <span id="copy-char-counter" class="char-count">0 caracteres</span>
+        <div class="drawer-section">
+          <div class="drawer-section-title">
+            <span>BORRADOR CONSULTIVO (COPYWRITER AGENT)</span>
+            <span id="copy-char-counter" style="font-family: var(--font-mono); font-size: 0.7rem;">0 caracteres</span>
           </div>
-          <textarea id="drawer-copy-textarea" class="textarea-editor" rows="12" spellcheck="false" placeholder="Texto de la propuesta generado por CopywriterAgent..."></textarea>
-          <div class="editor-notice">
-            El texto anterior puede ser ajustado manualmente antes de autorizar el despacho. Se mantendrá el disclaimer legal al pie.
+          <textarea id="drawer-copy" class="copy-editor" spellcheck="false" placeholder="Sin mensaje redactado para este prospecto..."></textarea>
+
+          <!-- Direct Action Utilities for Outreach Copy -->
+          <div class="copy-utility-bar">
+            <button type="button" id="btn-copy-outreach" class="btn-outline" style="flex: 1;">
+              📋 Copiar Propuesta
+            </button>
+            <button type="button" id="btn-whatsapp-direct" class="btn-whatsapp-action" style="flex: 1.2;">
+              💬 Abrir en WhatsApp Directo ↗
+            </button>
+          </div>
+
+          <span style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+            🔒 Cumplimiento Ley 1581 de 2012 (Colombia) &amp; Baja en 1 clic garantizada por DispatchAgent.
+          </span>
+        </div>
+      </div>
+
+      <!-- Tab 3: Historical Audit Trail -->
+      <div id="tab-audit-logs" class="tab-pane">
+        <div class="drawer-section">
+          <div class="drawer-section-title">REGISTRO INMUTABLE DE EVENTOS (POSTGRESQL AUDIT LOG)</div>
+          <div id="drawer-logs-list" class="audit-timeline">
+            <div class="log-meta">Cargando historial de auditoría...</div>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- TAB 3: Historial y Trazabilidad -->
-      <section id="tab-audit-logs" class="tab-pane" role="tabpanel">
-        <div class="pane-block">
-          <span class="block-title">Registro de Auditoría (RLS Tenant Scoped)</span>
-          <div id="drawer-logs-list" class="logs-container">
-            <div class="log-empty">Cargando registros de auditoría...</div>
-          </div>
-        </div>
-      </section>
     </div>
 
-    <!-- Drawer Sticky Action Footer -->
-    <div class="drawer-foot">
-      <button id="btn-reject-lead" class="btn btn-danger">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-        Descartar
+    <div id="drawer-footer-actions" class="drawer-footer">
+      <button id="btn-drawer-approve" class="btn-approve">
+        ✓ Aprobar y Despachar Propuesta
       </button>
-      <button id="btn-approve-lead" class="btn btn-success">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="20 6 9 17 4 12"></polyline>
-        </svg>
-        Aprobar y Despachar
+      <button id="btn-drawer-reject" class="btn-reject">
+        ✕ Descartar Prospecto
       </button>
     </div>
+
   </aside>
 
-  <!-- Modal: Live Clinic Audit -->
-  <div id="modal-audit" class="modal-overlay" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-h3">Auditoría en Tiempo Real de Clínica</h3>
-        <button id="modal-audit-close" class="icon-button" aria-label="Cerrar modal">&times;</button>
+  <!-- Live Website Audit Modal -->
+  <div id="modal-audit" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-audit-title">
+    <div class="modal-box modal-box-lg">
+      <div class="modal-header-row">
+        <div class="modal-title" id="modal-audit-title">🌐 Auditar Empresa en Vivo (Multi-Sector)</div>
+        <button id="modal-audit-close" class="drawer-close" title="Cerrar">✕</button>
       </div>
-      <p class="modal-desc">
-        Introduce los datos del centro odontológico o médico. El scraper seguro extraerá el contenido web y ejecutará la cadena multi-agente de forma autónoma.
-      </p>
+      <div class="modal-desc">
+        Selecciona el sector vertical o usa un caso de prueba rápida. El motor descargará el sitio web en tiempo real, sanitizará el DOM, detectará brechas de conversión, calculará el Score (0–100) y redactará la propuesta comercial.
+      </div>
 
-      <form id="form-live-audit" class="modal-form" onsubmit="return false;">
-        <div class="form-group">
-          <label for="audit-clinic-name" class="form-label">Nombre de la Clínica</label>
-          <input type="text" id="audit-clinic-name" class="input-text" placeholder="Ej: Clínica Dental Madrid Río" required>
+      <!-- Quick Test Presets inside Modal -->
+      <div class="modal-presets-bar">
+        <span class="modal-preset-label">CARGA RÁPIDA:</span>
+        <button type="button" class="modal-preset-btn" data-name="Clínica Dental Especializada Medellín" data-url="https://example.com" data-sector="clinicas">Odontología</button>
+        <button type="button" class="modal-preset-btn" data-name="Constructora & Proyectos Sabana" data-url="https://example.org" data-sector="inmobiliarias">Constructora</button>
+        <button type="button" class="modal-preset-btn" data-name="Firma Legal Corporativa Bogotá" data-url="https://example.net" data-sector="abogados">Firma Legal</button>
+        <button type="button" class="modal-preset-btn" data-name="Plastic Surgery & Medical Tourism" data-url="https://example.com" data-sector="turismo_medico">Turismo Médico</button>
+      </div>
+
+      <form id="form-live-audit" class="audit-form">
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label for="audit-sector">Sector Vertical (Reglas YAML)</label>
+            <select id="audit-sector" class="form-input">
+              <option value="clinicas">01 · Salud, Clínicas &amp; Odontología (clinicas.yaml)</option>
+              <option value="inmobiliarias">02 · Inmobiliarias &amp; Constructoras (inmobiliarias.yaml)</option>
+              <option value="abogados">03 · Firmas de Abogados B2B (abogados.yaml)</option>
+              <option value="turismo_medico">04 · Turismo Médico &amp; Cirugía (turismo_medico.yaml)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="audit-tenant-id">Tenant de Destino</label>
+            <select id="audit-tenant-id" class="form-input">
+              <option value="tenant_clinicas_madrid">Salud &amp; Odontología (Principal)</option>
+              <option value="hzsaas_colombia">hzSaaS Colombia (Multi-Sector)</option>
+              <option value="tenant_inmobiliarias_col">Inmobiliarias &amp; Constructoras</option>
+              <option value="tenant_abogados_col">Firmas de Abogados B2B</option>
+              <option value="tenant_turismo_medico_col">Turismo Médico &amp; Cirugía</option>
+              <option value="tenant_dental_bcn">Dental &amp; Ortodoncia</option>
+              <option value="tenant_estetica_sur">Medicina Estética</option>
+              <option value="cliente_demo">Sandbox Demo</option>
+            </select>
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="audit-clinic-url" class="form-label">URL del Sitio Web</label>
-          <input type="url" id="audit-clinic-url" class="input-text" placeholder="https://clinicadentalmadridrio.com/" required>
+          <label for="audit-clinic-name">Nombre de la Empresa / Prospecto</label>
+          <input type="text" id="audit-clinic-name" class="form-input" placeholder="Ej. Clínica Odontológica El Poblado / Constructora Andina" required>
         </div>
 
         <div class="form-group">
-          <label for="audit-tenant-id" class="form-label">Tenant Asignado</label>
-          <select id="audit-tenant-id" class="select-field">
-            <option value="tenant_clinicas_madrid" selected>Clínicas Madrid (tenant_clinicas_madrid)</option>
-            <option value="tenant_dental_bcn">Dental Barcelona (tenant_dental_bcn)</option>
-            <option value="tenant_default">Default System (tenant_default)</option>
-          </select>
+          <label for="audit-clinic-url">Sitio Web Oficial (URL completa)</label>
+          <input type="url" id="audit-clinic-url" class="form-input" placeholder="https://..." required>
         </div>
 
-        <!-- Progress Stepper (Visible during live audit) -->
+        <!-- Stepper Progress UI -->
         <div id="audit-stepper" class="audit-stepper" style="display: none;">
-          <div class="stepper-bar"><div id="stepper-fill" class="stepper-fill"></div></div>
-          <span id="stepper-label" class="stepper-label">Iniciando inspección...</span>
+          <div class="stepper-bar">
+            <div id="stepper-fill" class="stepper-fill"></div>
+          </div>
+          <div id="stepper-label" class="stepper-label">Iniciando conexión segura Zero-Trust...</div>
         </div>
 
         <div class="modal-actions">
-          <button type="button" id="modal-audit-cancel" class="btn btn-secondary">Cancelar</button>
-          <button type="submit" id="modal-audit-submit" class="btn btn-primary">Iniciar Auditoría</button>
+          <button type="button" id="modal-audit-cancel" class="btn-cancel">Cancelar</button>
+          <button type="submit" id="modal-audit-submit" class="btn-primary-emerald">⚡ Ejecutar Auditoría Multi-Agente</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Modal: Discard Reason -->
-  <div id="modal-discard" class="modal-overlay" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3 class="modal-h3">Motivo de Exclusión</h3>
-        <button id="modal-discard-close" class="icon-button" aria-label="Cerrar modal">&times;</button>
+  <!-- Rejection Reason Modal -->
+  <div id="modal-discard" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <div class="modal-header-row">
+        <div class="modal-title" id="modal-title">Confirmar Descarte de Prospecto</div>
+        <button id="modal-discard-close" class="drawer-close" title="Cerrar">✕</button>
       </div>
-      <p class="modal-desc">
-        Indique el motivo de descarte para registrar la trazabilidad en la auditoría inmutable de este tenant.
-      </p>
-      <input type="text" id="modal-reason-input" class="input-text" placeholder="Ej: No cumple perfil de cliente ideal (ICP), competidor, etc.">
+      <div class="modal-desc">
+        Indique el motivo del descarte. Esta decisión quedará registrada en el historial de auditoría del tenant y detendrá cualquier cadencia automática.
+      </div>
+      <input type="text" id="modal-reason-input" class="modal-input" placeholder="Ej. Sin servicios de alto ticket, fuera de zona geográfica...">
       <div class="modal-actions">
-        <button id="modal-cancel-btn" class="btn btn-secondary">Cancelar</button>
-        <button id="modal-confirm-btn" class="btn btn-danger">Confirmar Descarte</button>
+        <button id="modal-cancel-btn" class="btn-cancel">Cancelar</button>
+        <button id="modal-confirm-btn" class="btn-confirm-reject">Confirmar Descarte</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Micro-Feedback Container -->
-  <div id="toast-container" class="toast-shelf" aria-live="polite"></div>
+  <!-- Toast Feedback Container -->
+  <div id="toast-container" class="toast-container"></div>
 
-  <!-- Dashboard Logic Module -->
-  <script src="/static/dashboard.js?v=2.2.2"></script>
+  <script src="/static/dashboard.js?v=3.0.0"></script>
 </body>
 </html>

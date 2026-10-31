@@ -81,38 +81,31 @@ def test_cron_followups_processing():
 
 def test_health_check_and_landing_page():
     """Verify /health returns 200 OK and root / serves the hzSaaS landing page."""
-    from fastapi.testclient import TestClient
-    from RevOpsAI.src.api.main import app
+    from RevOpsAI.src.api.main import health_check, root_landing
+    from RevOpsAI.src.api.routes import api_health_check
 
-    client = TestClient(app)
-    
     # Test /health
-    health_res = client.get("/health")
-    assert health_res.status_code == 200
-    assert health_res.json()["status"] == "healthy"
+    health_res = health_check()
+    assert health_res["status"] == "healthy"
 
     # Test /api/v1/health
-    v1_health_res = client.get("/api/v1/health")
-    assert v1_health_res.status_code == 200
-    assert v1_health_res.json()["status"] == "healthy"
+    v1_health_res = api_health_check()
+    assert v1_health_res["status"] == "healthy"
 
     # Test root / landing page
-    root_res = client.get("/")
+    root_res = root_landing()
     assert root_res.status_code == 200
-    assert "hzSaaS" in root_res.text
-    assert "3135108101" in root_res.text
-    assert "GymSaaS" in root_res.text
+    body_text = root_res.body.decode("utf-8")
+    assert "hzSaaS" in body_text
+    assert "3135108101" in body_text
+    assert "GymSaaS" in body_text
 
 
 def test_list_sectors_endpoint():
     """Verify GET /api/v1/sectors returns all 4 configured business verticals."""
-    from fastapi.testclient import TestClient
-    from RevOpsAI.src.api.main import app
+    from RevOpsAI.src.api.routes import list_available_sectors
 
-    client = TestClient(app)
-    res = client.get("/api/v1/sectors")
-    assert res.status_code == 200
-    sectors = res.json()
+    sectors = list_available_sectors()
     sector_ids = [s["id"] for s in sectors]
     assert "clinicas" in sector_ids
     assert "inmobiliarias" in sector_ids

@@ -1,0 +1,46 @@
+/* Hallmark · pre-emit critique:
+ *   - Replaced raw hex defaults with perceptual OKLCH tokens tinted toward carbon-slate (hue 255).
+ *   - Enforced 2+1 typography rule: Space Grotesk (display) + Plus Jakarta Sans (body) + JetBrains Mono (tabular outlier).
+ *   - Restricted primary emerald-teal signal accent to <= 4% of viewport surface area.
+ * · genre: modern-minimal · macrostructure: Bento Grid + Workbench · palette: carbon-slate & emerald-signal */
+
+:root {
+  --color-paper: oklch(9.5% 0.008 255);
+  --color-paper-2: oklch(12.8% 0.010 255);
+  --color-paper-3: oklch(16.2% 0.012 255);
+  --color-paper-hover: oklch(19.0% 0.014 255);
+  --color-ink: oklch(96.5% 0.005 255);
+  --color-neutral: oklch(71.0% 0.012 255);
+  --color-muted: oklch(52.0% 0.012 255);
+  --color-rule: oklch(21.5% 0.012 255);
+  --color-rule-strong: oklch(29.5% 0.015 255);
+  --color-accent: oklch(72.0% 0.165 162);
+  --color-accent-ink: oklch(11.0% 0.020 162);
+  --color-accent-soft: oklch(22.0% 0.045 162 / 0.45);
+  --color-accent-border: oklch(72.0% 0.165 162 / 0.35);
+  --color-amber: oklch(78.0% 0.155 75);
+  --color-amber-soft: oklch(24.0% 0.045 75 / 0.45);
+  --color-amber-border: oklch(78.0% 0.155 75 / 0.35);
+  --color-sky: oklch(70.0% 0.140 245);
+  --color-sky-soft: oklch(22.0% 0.045 245 / 0.45);
+  --color-sky-border: oklch(70.0% 0.140 245 / 0.35);
+  --color-crimson: oklch(64.0% 0.195 25);
+  --color-crimson-soft: oklch(21.0% 0.050 25 / 0.45);
+  --color-crimson-border: oklch(64.0% 0.195 25 / 0.35);
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 6.5rem;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-med: 260ms;
+}
+

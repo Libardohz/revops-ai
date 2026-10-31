@@ -1,0 +1,18 @@
+[
+  {
+    "date": "2026-10-30",
+    "project": "hzSaaS Corporate Portal & RevOps AI Control Center",
+    "genre": "modern-minimal",
+    "macrostructure": "Bento Grid + Split Studio + Workbench",
+    "nav": "N1b",
+    "hero": "H2",
+    "features": ["F1", "F3", "F4"],
+    "footer": "Ft5",
+    "fonts": ["Space Grotesk", "Plus Jakarta Sans", "JetBrains Mono"],
+    "anchor": "oklch(72.0% 0.165 162)",
+    "paper": "oklch(9.5% 0.008 255)",
+    "ink": "oklch(96.5% 0.005 255)",
+    "scheme": "dark"
+  }
+]
+
