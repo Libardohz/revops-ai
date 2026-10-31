@@ -16,3 +16,4 @@ scoring:
     market_reputation: 0.3
     estimated_size: 0.2
   min_qualification_score: 65
+

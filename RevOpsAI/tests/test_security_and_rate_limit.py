@@ -107,3 +107,4 @@ def test_landing_page_monteria_reference():
     html = res.body.decode("utf-8")
     assert "Montería, Colombia" in html
     assert "Medellín, Colombia" not in html
+
