@@ -6,18 +6,18 @@
   <link rel="icon" type="image/jpeg" href="/static/hzsaas-shield-logo.jpg?v=3" />
   <link rel="shortcut icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
   <link rel="apple-touch-icon" href="/static/hzsaas-shield-logo.jpg?v=3" />
-  <title>hzSaaS — Ingeniería de Software Empresarial, RevOps AI &amp; Cloud ERP</title>
-  <meta name="description" content="Ecosistema empresarial de automatización de ingresos B2B con inteligencia multi-agente (RevOps AI) y gestión integral de centros fitness y control de acceso (GymSaaS Enterprise)." />
+  <title>hzSaaS — Empresa de Ingeniería de Software, Sistemas de IA &amp; Productos SaaS</title>
+  <meta name="description" content="Conoce hzSaaS: desarrollamos productos SaaS propios (GymSaaS Enterprise y RevOps AI), sistemas autónomos de inteligencia artificial, integraciones biométricas, pasarelas de pago y software empresarial a medida en Colombia y Latinoamérica." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/tokens.css?v=3.0.0" />
   <style>
     /* Hallmark · pre-emit critique:
-     *   - Unified brand identity with official hzSaaS Shield Logo (/static/hzsaas-shield-logo.jpg) and 48px architectural grid.
-     *   - Sanitized all client-side HTML and scripts so zero internal database, cloud region, or schema details appear in DevTools.
-     *   - Enforced OKLCH color tokens and 2+1 typography (Space Grotesk + Plus Jakarta Sans + JetBrains Mono tabular-nums).
-     * · genre: modern-minimal · macrostructure: Bento Grid + Split Studio · palette: carbon-slate & emerald-signal */
+     *   - Structured hzsaas.com as a comprehensive Corporate Technology & Software Studio Portal (no generic top-nav login button).
+     *   - Clearly communicates what hzSaaS does, our proprietary SaaS products (GymSaaS & RevOps AI), engineering services, and technology stack.
+     *   - Enforced OKLCH color tokens, official Shield Logo (/static/hzsaas-shield-logo.jpg), and zero internal data exposure in DevTools.
+     * · genre: modern-minimal · macrostructure: Bento Grid + Split Studio + Spec Matrix · palette: carbon-slate & emerald-signal */
 
     *, *::before, *::after {
       box-sizing: border-box;
@@ -41,7 +41,6 @@
       position: relative;
     }
 
-    /* Architectural 48px Background Grid */
     .bg-arch-grid {
       position: fixed;
       inset: 0;
@@ -77,7 +76,7 @@
     }
 
     /* ==========================================================================
-       1. TOP EXECUTIVE BAR & STICKY NAVIGATION (N1b)
+       1. TOP EXECUTIVE BAR & STICKY CORPORATE NAVIGATION (N1b)
        ========================================================================== */
     .telemetry-strip {
       background-color: var(--color-paper-2);
@@ -135,7 +134,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: var(--space-5);
+      gap: var(--space-4);
     }
 
     .brand-cluster {
@@ -196,14 +195,15 @@
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 1.65rem;
+      gap: 1.45rem;
     }
 
     .nav-link {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 500;
       color: var(--color-neutral);
       transition: color var(--dur-fast) var(--ease-out);
+      white-space: nowrap;
     }
 
     .nav-link:hover {
@@ -273,7 +273,7 @@
     }
 
     /* ==========================================================================
-       2. SPLIT STUDIO HERO (H2) + LIVE DIAGNOSTIC & SYSTEM TELEMETRY
+       2. SPLIT STUDIO HERO (H2) — QUE HACE NUESTRA EMPRESA
        ========================================================================== */
     .hero-section {
       padding: var(--space-8) 0 var(--space-8);
@@ -300,7 +300,7 @@
       background-color: var(--color-accent-soft);
       border: 1px solid var(--color-accent-border);
       font-family: var(--font-mono);
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       font-weight: 600;
       color: var(--color-accent);
       letter-spacing: 0.04em;
@@ -356,7 +356,7 @@
 
     .diag-title {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
@@ -458,7 +458,7 @@
       white-space: pre-line;
     }
 
-    /* Right Column: Architectural Blueprint Inspector */
+    /* Right Column: Corporate Capabilities & Divisions Inspector */
     .blueprint-panel {
       background-color: oklch(12.8% 0.010 255 / 0.92);
       border: 1px solid var(--color-rule-strong);
@@ -470,31 +470,29 @@
 
     .blueprint-tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       border-bottom: 1px solid var(--color-rule);
       background-color: var(--color-paper);
     }
 
     .bp-tab {
-      padding: 0.9rem var(--space-4);
+      padding: 0.85rem 0.75rem;
       font-family: var(--font-mono);
-      font-size: 0.74rem;
+      font-size: 0.68rem;
       font-weight: 600;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
       color: var(--color-muted);
       background: transparent;
       border: none;
+      border-right: 1px solid var(--color-rule);
       border-bottom: 2px solid transparent;
       cursor: pointer;
       text-align: left;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
       transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out);
     }
 
-    .bp-tab:first-child {
-      border-right: 1px solid var(--color-rule);
+    .bp-tab:last-child {
+      border-right: none;
     }
 
     .bp-tab.active {
@@ -520,7 +518,7 @@
       margin-bottom: var(--space-4);
       border-bottom: 1px solid var(--color-rule);
       font-family: var(--font-mono);
-      font-size: 0.73rem;
+      font-size: 0.72rem;
       color: var(--color-muted);
     }
 
@@ -564,6 +562,12 @@
       border-color: var(--color-amber-border);
     }
 
+    .dag-step.sky {
+      color: var(--color-sky);
+      background-color: var(--color-sky-soft);
+      border-color: var(--color-sky-border);
+    }
+
     .dag-info h4 {
       font-family: var(--font-display);
       font-size: 0.88rem;
@@ -580,12 +584,13 @@
 
     .dag-metric {
       font-family: var(--font-mono);
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--color-neutral);
       padding: 0.18rem 0.5rem;
       background-color: var(--color-paper-2);
       border: 1px solid var(--color-rule);
       border-radius: var(--radius-xs);
+      white-space: nowrap;
     }
 
     .bp-footer {
@@ -648,7 +653,7 @@
     }
 
     /* ==========================================================================
-       4. ASYMMETRIC BENTO GRID (F1 — 01-bento-grid.md)
+       4. ASYMMETRIC BENTO GRID: PRODUCTOS Y SERVICIOS (F1)
        ========================================================================== */
     .section-block {
       padding: var(--space-9) 0;
@@ -711,17 +716,10 @@
       border-color: var(--color-rule-strong);
     }
 
-    .bento-span-7 {
-      grid-column: span 7;
-    }
-
-    .bento-span-5 {
-      grid-column: span 5;
-    }
-
-    .bento-span-4 {
-      grid-column: span 4;
-    }
+    .bento-span-7 { grid-column: span 7; }
+    .bento-span-6 { grid-column: span 6; }
+    .bento-span-5 { grid-column: span 5; }
+    .bento-span-4 { grid-column: span 4; }
 
     .bento-top-meta {
       display: flex;
@@ -890,7 +888,69 @@
     }
 
     /* ==========================================================================
-       5. INTERACTIVE MULTI-SECTOR SPECIFICATION MATRIX (F3)
+       5. HERRAMIENTAS Y CAPACIDADES TECNOLÓGICAS (TABULAR SPEC SHEET)
+       ========================================================================== */
+    .tech-stack-sheet {
+      background-color: var(--color-paper-2);
+      border: 1px solid var(--color-rule-strong);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .tech-row {
+      display: grid;
+      grid-template-columns: 280px 1fr 240px;
+      border-bottom: 1px solid var(--color-rule);
+      padding: var(--space-5) var(--space-6);
+      align-items: start;
+      gap: var(--space-5);
+    }
+
+    .tech-row:last-child {
+      border-bottom: none;
+    }
+
+    .tech-domain {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .tech-domain-code {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-accent);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .tech-domain-name {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-ink);
+    }
+
+    .tech-desc {
+      font-size: 0.9rem;
+      color: var(--color-neutral);
+      line-height: 1.6;
+      margin-bottom: var(--space-3);
+    }
+
+    .tech-outcome {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--color-ink);
+      background-color: var(--color-paper);
+      border: 1px solid var(--color-rule);
+      border-radius: var(--radius-xs);
+      padding: 0.65rem 0.85rem;
+      line-height: 1.45;
+    }
+
+    /* ==========================================================================
+       6. INTERACTIVE MULTI-SECTOR SPECIFICATION MATRIX (F3)
        ========================================================================== */
     .sector-matrix-wrap {
       background-color: var(--color-paper-2);
@@ -1028,7 +1088,7 @@
     }
 
     /* ==========================================================================
-       6. INTERACTIVE REVENUE & ROI CALCULATOR
+       7. INTERACTIVE REVENUE & ROI CALCULATOR
        ========================================================================== */
     .roi-workbench {
       display: grid;
@@ -1143,7 +1203,7 @@
     }
 
     /* ==========================================================================
-       7. NARRATIVE WORKFLOW (F4)
+       8. NARRATIVE WORKFLOW & COMMERCIAL MODELS
        ========================================================================== */
     .workflow-grid {
       display: grid;
@@ -1199,9 +1259,6 @@
       border-top: 1px solid var(--color-rule);
     }
 
-    /* ==========================================================================
-       8. COMMERCIAL ARCHITECTURE & MODELS
-       ========================================================================== */
     .models-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -1274,7 +1331,7 @@
     }
 
     /* ==========================================================================
-       9. CONVERSATIONAL FAQ ACCORDION
+       9. FAQ & FOOTER
        ========================================================================== */
     .faq-layout {
       display: grid;
@@ -1337,9 +1394,6 @@
       display: block;
     }
 
-    /* ==========================================================================
-       10. STATEMENT FOOTER (Ft5)
-       ========================================================================== */
     .site-footer {
       padding: var(--space-8) 0 var(--space-6);
       background-color: var(--color-paper);
@@ -1407,7 +1461,8 @@
       .hero-grid,
       .sector-detail-grid,
       .roi-workbench,
-      .faq-layout {
+      .faq-layout,
+      .tech-row {
         grid-template-columns: 1fr;
       }
       .sector-specs-col,
@@ -1416,6 +1471,7 @@
         border-bottom: 1px solid var(--color-rule);
       }
       .bento-span-7,
+      .bento-span-6,
       .bento-span-5,
       .bento-span-4 {
         grid-column: span 12;
@@ -1441,7 +1497,8 @@
       .nav-links {
         display: none;
       }
-      .diag-form {
+      .diag-form,
+      .blueprint-tabs {
         grid-template-columns: 1fr;
       }
       .sector-nav-bar {
@@ -1449,9 +1506,7 @@
       }
       .workflow-grid,
       .ledger-grid,
-      .footer-grid {
-        grid-template-columns: 1fr;
-      }
+      .footer-grid,
       .spec-kv-grid {
         grid-template-columns: 1fr;
       }
@@ -1461,22 +1516,21 @@
 <body>
   <div class="bg-arch-grid"></div>
 
-  <!-- 1. EXECUTIVE STATUS BAR -->
+  <!-- 1. EXECUTIVE CORPORATE TOP BAR -->
   <div class="telemetry-strip">
     <div class="container telemetry-inner">
       <div class="telemetry-items">
-        <span class="telemetry-item"><span class="status-dot"></span> ECOSISTEMA EMPRESARIAL ACTIVO · COLOMBIA &amp; LATAM</span>
-        <span class="telemetry-item">REVOPS AI: MOTOR COMERCIAL B2B</span>
-        <span class="telemetry-item">GYMSAAS: GESTIÓN &amp; ACCESO BIOMÉTRICO</span>
-        <span class="telemetry-item">CUMPLIMIENTO LEY 1581 HABEAS DATA</span>
+        <span class="telemetry-item"><span class="status-dot"></span> HZSAAS STUDIO · INGENIERÍA DE SOFTWARE, IA &amp; PRODUCTOS SAAS</span>
+        <span class="telemetry-item">DIVISIÓN CLOUD ERP &amp; BIOMETRÍA</span>
+        <span class="telemetry-item">DIVISIÓN AGENTES AUTÓNOMOS B2B</span>
       </div>
       <div>
-        <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quisiera%20informaci%C3%B3n%20sobre%20sus%20sistemas." target="_blank" rel="noopener">ASESORÍA DIRECTA: +57 313 510 8101 →</a>
+        <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quisiera%20conversar%20sobre%20sus%20soluciones%20tecnol%C3%B3gicas." target="_blank" rel="noopener">CONTACTO INGENIERÍA: +57 313 510 8101 →</a>
       </div>
     </div>
   </div>
 
-  <!-- 2. STICKY ARCHITECTURAL NAVIGATION WITH OFFICIAL SHIELD LOGO -->
+  <!-- 2. STICKY CORPORATE NAVIGATION (NO LOGIN BUTTON — FOCUSED ON COMPANY & SOLUTIONS) -->
   <header class="site-header">
     <div class="container nav-bar">
       <a href="/" class="brand-cluster">
@@ -1484,68 +1538,68 @@
         <div class="brand-text">
           <div class="brand-name-row">
             <span class="brand-name">hzSaaS</span>
-            <span class="brand-pill">ENTERPRISE</span>
+            <span class="brand-pill">TECHNOLOGY STUDIO</span>
           </div>
-          <span class="brand-sub">Ingeniería de Software &amp; Sistemas IA</span>
+          <span class="brand-sub">Productos SaaS, Inteligencia Artificial &amp; Desarrollo B2B</span>
         </div>
       </a>
 
-      <nav class="nav-links" aria-label="Navegación principal">
-        <a href="#ecosistema" class="nav-link">Ecosistema</a>
+      <nav class="nav-links" aria-label="Navegación corporativa">
+        <a href="#empresa" class="nav-link">Qué Hacemos</a>
+        <a href="#productos" class="nav-link">Productos SaaS</a>
+        <a href="#servicios" class="nav-link">Servicios de Ingeniería</a>
+        <a href="#herramientas" class="nav-link">Herramientas &amp; Stack</a>
         <a href="#sectores" class="nav-link">Sectores</a>
         <a href="#calculadora-roi" class="nav-link">Simulador ROI</a>
-        <a href="#despliegue" class="nav-link">Cómo Funciona</a>
-        <a href="#modelos" class="nav-link">Planes</a>
         <a href="#faq" class="nav-link">Preguntas</a>
       </nav>
 
       <div class="nav-actions">
-        <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-secondary">GymSaaS Cloud ↗</a>
-        <a href="/login" class="btn btn-secondary">Iniciar Sesión</a>
-        <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20solicitar%20una%20demostraci%C3%B3n%20de%20sus%20plataformas." target="_blank" rel="noopener" class="btn btn-primary">Hablar con Asesor →</a>
+        <a href="#productos" class="btn btn-secondary">Nuestros Productos</a>
+        <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20conocer%20sus%20productos%20y%20servicios%20de%20tecnolog%C3%ADa." target="_blank" rel="noopener" class="btn btn-primary">Hablar con Ingeniería →</a>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- 3. SPLIT STUDIO HERO (H2) + LIVE DIAGNOSTIC -->
-    <section class="hero-section">
+    <!-- 3. SPLIT STUDIO HERO (H2) — QUE HACE NUESTRA EMPRESA -->
+    <section id="empresa" class="hero-section">
       <div class="container hero-grid">
         <!-- Left Column -->
         <div>
           <div class="eyebrow-badge">
             <span class="status-dot"></span>
-            <span>SOFTWARE DE ALTO RENDIMIENTO · COLOMBIA &amp; LATAM</span>
+            <span>EMPRESA DE TECNOLOGÍA E INGENIERÍA DE SOFTWARE · COLOMBIA &amp; LATAM</span>
           </div>
 
-          <h1 class="hero-title">Sistemas autónomos que auditan mercados, protegen ingresos y operan tu negocio.</h1>
+          <h1 class="hero-title">Diseñamos plataformas SaaS, agentes de IA y tecnología que escala negocios reales.</h1>
 
           <p class="hero-lead">
-            En <strong>hzSaaS</strong> desarrollamos infraestructura de misión crítica: desde <strong>RevOps AI</strong> (nuestro motor de 9 agentes que investiga empresas, califica oportunidades y redacta propuestas con supervisión ejecutiva Kanban) hasta <strong>GymSaaS Enterprise</strong>, la plataforma líder para administración de gimnasios con control facial, torniquetes y pagos Wompi.
+            En <strong>hzSaaS</strong> somos una firma de ingeniería tecnológica con dos líneas de acción: operamos <strong>productos SaaS propios en la nube</strong> (como <em>GymSaaS Enterprise</em> y <em>RevOps AI</em>) y construimos <strong>soluciones tecnológicas a medida</strong> que conectan inteligencia artificial, pasarelas de pago locales y control de hardware físico.
           </p>
 
           <div class="hero-cta-row">
-            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20agendar%20una%20demostraci%C3%B3n%20personalizada." target="_blank" rel="noopener" class="btn btn-primary">Solicitar Demostración en Vivo →</a>
-            <a href="/login" class="btn btn-secondary">Acceso a Consola RevOps AI</a>
-            <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-accent-outline">Explorar GymSaaS (gym.hzsaas.com) ↗</a>
+            <a href="#productos" class="btn btn-primary">Conocer Productos Propios →</a>
+            <a href="#servicios" class="btn btn-secondary">Ver Servicios de Tecnología</a>
+            <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20me%20gustar%C3%ADa%20agendar%20una%20sesi%C3%B3n%20para%20evaluar%20una%20soluci%C3%B3n%20tecnol%C3%B3gica." target="_blank" rel="noopener" class="btn btn-accent-outline">Agendar Consultoría (+57 313 510 8101)</a>
           </div>
 
-          <!-- Interactive Live URL Diagnostic Sandbox -->
+          <!-- Interactive Live URL Diagnostic Tool Demonstration -->
           <div class="live-diagnostic-box" id="diagnostico-vivo">
             <div class="diag-header">
               <span class="diag-title">
                 <span class="status-dot"></span>
-                PROBAR DIAGNÓSTICO COMERCIAL EN VIVO (REVOPS AI)
+                DEMOSTRACIÓN EN VIVO: MOTOR DE AUDITORÍA WEB CON IA (REVOPS AI)
               </span>
               <div class="diag-presets">
-                <button type="button" class="preset-chip" data-name="Clínica Dental El Poblado" data-url="https://example.com" data-sector="clinicas">Demo Salud</button>
-                <button type="button" class="preset-chip" data-name="Constructora Capital Andina" data-url="https://example.org" data-sector="inmobiliarias">Demo Constructora</button>
-                <button type="button" class="preset-chip" data-name="Firma Legal Corporativa" data-url="https://example.net" data-sector="abogados">Demo Abogados</button>
+                <button type="button" class="preset-chip" data-name="Clínica Dental El Poblado" data-url="https://example.com" data-sector="clinicas">Caso Salud</button>
+                <button type="button" class="preset-chip" data-name="Constructora Capital Andina" data-url="https://example.org" data-sector="inmobiliarias">Caso Constructora</button>
+                <button type="button" class="preset-chip" data-name="Firma Legal Corporativa" data-url="https://example.net" data-sector="abogados">Caso Legal</button>
               </div>
             </div>
 
             <form id="hero-audit-form" class="diag-form">
-              <input type="text" id="hero-audit-name" class="diag-input" placeholder="Empresa (ej. Clínica Odontológica Especializada)" required />
+              <input type="text" id="hero-audit-name" class="diag-input" placeholder="Nombre de empresa (ej. Clínica Odontológica)" required />
               <input type="url" id="hero-audit-url" class="diag-input" placeholder="https://sitio-empresa.com" required />
               <select id="hero-audit-sector" class="diag-select" aria-label="Seleccionar sector">
                 <option value="clinicas">Sector: Salud &amp; Clínicas</option>
@@ -1553,7 +1607,7 @@
                 <option value="abogados">Sector: Firmas Abogados</option>
                 <option value="turismo_medico">Sector: Turismo Médico</option>
               </select>
-              <button type="submit" id="hero-audit-btn" class="btn btn-primary">Analizar Web</button>
+              <button type="submit" id="hero-audit-btn" class="btn btn-primary">Probar IA</button>
             </form>
 
             <div id="hero-audit-result" class="diag-result-drawer">
@@ -1566,356 +1620,512 @@
               </div>
               <div id="res-copy-box" class="diag-copy-preview"></div>
               <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; flex-wrap: wrap;">
-                <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Diagnóstico generado bajo normativa Ley 1581 Habeas Data</span>
+                <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Demostración en vivo de nuestro motor de diagnóstico comercial</span>
                 <div style="display: flex; gap: 0.5rem;">
-                  <a href="/login" class="btn btn-secondary" style="padding: 0.4rem 0.75rem; font-size: 0.76rem;">Abrir en Consola →</a>
-                  <a id="res-wa-link" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-accent-outline" style="padding: 0.4rem 0.75rem; font-size: 0.76rem;">Implementar en mi Negocio ↗</a>
+                  <a id="res-wa-link" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-accent-outline" style="padding: 0.4rem 0.75rem; font-size: 0.76rem;">Implementar esta Tecnología en mi Empresa ↗</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Right Column: Interactive Architectural Blueprint Inspector -->
-        <aside class="blueprint-panel" aria-label="Especificación de plataformas en tiempo real">
+        <!-- Right Column: Interactive Map of Our 3 Technology Divisions -->
+        <aside class="blueprint-panel" aria-label="Divisiones tecnológicas de hzSaaS">
           <div class="blueprint-tabs">
-            <button type="button" class="bp-tab active" data-bp="bp-revops">
-              <span>01 // REVOPS AI ENGINE</span>
-              <span>9 AGENTES</span>
+            <button type="button" class="bp-tab active" data-bp="bp-div-saas">
+              <span>01 // PRODUCTOS SAAS</span>
             </button>
-            <button type="button" class="bp-tab" data-bp="bp-gymsaas">
-              <span>02 // GYMSAAS CLOUD ERP</span>
-              <span>GESTIÓN &amp; ACCESO</span>
+            <button type="button" class="bp-tab" data-bp="bp-div-ai">
+              <span>02 // SISTEMAS DE IA</span>
+            </button>
+            <button type="button" class="bp-tab" data-bp="bp-div-eng">
+              <span>03 // INGENIERÍA A MEDIDA</span>
             </button>
           </div>
 
-          <!-- Pane 1: RevOps AI 9-Agent Pipeline -->
-          <div id="bp-revops" class="bp-pane active">
+          <!-- Pane 1: Productos SaaS Propios -->
+          <div id="bp-div-saas" class="bp-pane active">
             <div class="bp-meta-row">
-              <span>DEPARTAMENTO DE INGRESOS DIGITAL</span>
-              <span class="tabular">CALIFICACIÓN: &gt;= 70/100 PTS</span>
+              <span>PLATAFORMAS EN LA NUBE LISTAS PARA ACTIVAR</span>
+              <span class="tabular">PRODUCCIÓN 24/7</span>
             </div>
 
             <div class="dag-list">
               <div class="dag-node">
-                <span class="dag-step">01</span>
+                <span class="dag-step amber">P1</span>
                 <div class="dag-info">
-                  <h4>Análisis Web &amp; Protección de Privacidad</h4>
-                  <p>Inspección segura del sitio público de cada prospecto y protección de datos sensibles.</p>
+                  <h4>GymSaaS Cloud ERP (gym.hzsaas.com)</h4>
+                  <p>Administración integral de gimnasios, acceso facial/biométrico y recaudo Wompi.</p>
+                </div>
+                <span class="dag-metric">Fitness ERP</span>
+              </div>
+
+              <div class="dag-node">
+                <span class="dag-step">P2</span>
+                <div class="dag-info">
+                  <h4>RevOps AI — Departamento de Ingresos Digital</h4>
+                  <p>Prospección B2B autónoma, diagnóstico web, scoring 0–100 y tablero Kanban.</p>
+                </div>
+                <span class="dag-metric">9 Agentes IA</span>
+              </div>
+
+              <div class="dag-node">
+                <span class="dag-step sky">P3</span>
+                <div class="dag-info">
+                  <h4>Módulos de Punto de Venta (POS) &amp; Recaudo</h4>
+                  <p>Control de inventario en mostrador, arqueo de caja por turno y pagos Nequi/PSE.</p>
+                </div>
+                <span class="dag-metric">Wompi + POS</span>
+              </div>
+
+              <div class="dag-node">
+                <span class="dag-step">P4</span>
+                <div class="dag-info">
+                  <h4>Control de Hardware y Torniquetes Físicos</h4>
+                  <p>Integración de baja latencia (&lt; 150ms) con cámaras faciales, huelleros y QR.</p>
+                </div>
+                <span class="dag-metric">&lt; 150ms</span>
+              </div>
+            </div>
+
+            <div class="bp-footer">
+              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Licenciamiento inmediato con soporte en Colombia</span>
+              <a href="#productos" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Ver Detalle de Productos ↓</a>
+            </div>
+          </div>
+
+          <!-- Pane 2: Sistemas de IA & Automatización -->
+          <div id="bp-div-ai" class="bp-pane">
+            <div class="bp-meta-row">
+              <span>AUTOMATIZACIÓN DETERMINISTA &amp; AGENTES B2B</span>
+              <span class="tabular">CERO ALUCINACIONES</span>
+            </div>
+
+            <div class="dag-list">
+              <div class="dag-node">
+                <span class="dag-step">A1</span>
+                <div class="dag-info">
+                  <h4>Agentes de Investigación y Diagnóstico de Mercado</h4>
+                  <p>Extracción segura de información pública para detectar clientes con alto potencial.</p>
                 </div>
                 <span class="dag-metric">Zero-Trust</span>
               </div>
 
               <div class="dag-node">
-                <span class="dag-step">02</span>
+                <span class="dag-step">A2</span>
                 <div class="dag-info">
-                  <h4>Investigación &amp; Microdiagnóstico Comercial</h4>
-                  <p>Detección de servicios de alto valor y fugas de conversión (agenda o WhatsApp).</p>
+                  <h4>Motores de Calificación y Scoring Comercial</h4>
+                  <p>Algoritmos ponderados adaptados a las reglas de negocio de cada industria.</p>
                 </div>
-                <span class="dag-metric">Multi-Sector</span>
+                <span class="dag-metric">0–100 Pts</span>
               </div>
 
               <div class="dag-node">
-                <span class="dag-step">03</span>
+                <span class="dag-step">A3</span>
                 <div class="dag-info">
-                  <h4>Puntuación Determinista de Oportunidades</h4>
-                  <p>Calificación ponderada de 0 a 100 para enfocar al equipo comercial en cierres reales.</p>
-                </div>
-                <span class="dag-metric">Score 0–100</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step">04</span>
-                <div class="dag-info">
-                  <h4>Redacción Consultiva Personalizada</h4>
-                  <p>Propuestas B2B basadas en hallazgos reales con cumplimiento Ley 1581 de 2012.</p>
+                  <h4>Redacción Consultiva y Seguimiento Automático</h4>
+                  <p>Generación de propuestas personalizadas y cadencias en los días 3 y 7.</p>
                 </div>
                 <span class="dag-metric">Ley 1581</span>
               </div>
 
               <div class="dag-node">
-                <span class="dag-step">05</span>
+                <span class="dag-step">A4</span>
                 <div class="dag-info">
-                  <h4>Aprobación Ejecutiva Kanban &amp; Seguimiento</h4>
-                  <p>Revisión en 1 clic, despacho multicanal y cadencia automática a los 3 y 7 días.</p>
+                  <h4>Consolas Human-in-the-Loop (HITL)</h4>
+                  <p>Tableros ejecutivos para que tu equipo supervise y apruebe cada acción de la IA.</p>
                 </div>
                 <span class="dag-metric">Control 100%</span>
               </div>
             </div>
 
             <div class="bp-footer">
-              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Consola Operativa Protegida · Multi-Organización</span>
-              <a href="/login" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Iniciar Sesión en Consola →</a>
+              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Reutilizable en múltiples verticales B2B</span>
+              <a href="#sectores" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Explorar Verticales ↓</a>
             </div>
           </div>
 
-          <!-- Pane 2: GymSaaS Cloud ERP -->
-          <div id="bp-gymsaas" class="bp-pane">
+          <!-- Pane 3: Ingeniería de Software a Medida -->
+          <div id="bp-div-eng" class="bp-pane">
             <div class="bp-meta-row">
-              <span>SISTEMA OPERATIVO PARA CENTROS FITNESS</span>
-              <span class="tabular">GYM.HZSAAS.COM</span>
+              <span>ARQUITECTURA EMPRESARIAL &amp; DESARROLLO CLOUD</span>
+              <span class="tabular">ALTA DISPONIBILIDAD</span>
             </div>
 
             <div class="dag-list">
               <div class="dag-node">
-                <span class="dag-step amber">G1</span>
+                <span class="dag-step sky">E1</span>
                 <div class="dag-info">
-                  <h4>Control de Acceso Facial, Biométrico y QR</h4>
-                  <p>Integración con cámaras faciales, huelleros y torniquetes con validación en &lt; 150ms.</p>
+                  <h4>Desarrollo de Plataformas Web y ERPs Corporativos</h4>
+                  <p>Sistemas multi-sede con roles de usuario, auditoría forense y paneles gerenciales.</p>
                 </div>
-                <span class="dag-metric">&lt; 150ms</span>
+                <span class="dag-metric">Multi-Tenant</span>
               </div>
 
               <div class="dag-node">
-                <span class="dag-step amber">G2</span>
+                <span class="dag-step sky">E2</span>
                 <div class="dag-info">
-                  <h4>Recaudo Automatizado con Wompi Bancolombia</h4>
-                  <p>Pagos por Nequi, PSE y tarjetas con activación instantánea de membresías.</p>
+                  <h4>Integración de Pasarelas de Pago y Webhooks</h4>
+                  <p>Conexión segura con Wompi Bancolombia, PSE, Nequi, tarjetas y facturación.</p>
                 </div>
-                <span class="dag-metric">Wompi</span>
+                <span class="dag-metric">SHA-256</span>
               </div>
 
               <div class="dag-node">
-                <span class="dag-step amber">G3</span>
+                <span class="dag-step sky">E3</span>
                 <div class="dag-info">
-                  <h4>Punto de Venta (POS) &amp; Tienda de Suplementos</h4>
-                  <p>Control de inventario en mostrador, batidos, proteínas y arqueo de caja por turno.</p>
+                  <h4>Conectores con CRM, WhatsApp y Correo Corporativo</h4>
+                  <p>Sincronización bidireccional con tus herramientas comerciales actuales.</p>
                 </div>
-                <span class="dag-metric">POS Caja</span>
+                <span class="dag-metric">API REST</span>
               </div>
 
               <div class="dag-node">
-                <span class="dag-step amber">G4</span>
+                <span class="dag-step sky">E4</span>
                 <div class="dag-info">
-                  <h4>Paneles Independientes: Administración y Recepción</h4>
-                  <p>Roles diferenciados con auditoría de cada transacción y control multi-sede.</p>
+                  <h4>Ciberseguridad Aplicada y Protección de Datos</h4>
+                  <p>Aislamiento de bases de datos por cliente, sesiones cifradas y cumplimiento legal.</p>
                 </div>
-                <span class="dag-metric">Multi-Sede</span>
-              </div>
-
-              <div class="dag-node">
-                <span class="dag-step amber">G5</span>
-                <div class="dag-info">
-                  <h4>Rutinas Digitales y Portal de Afiliados</h4>
-                  <p>Seguimiento de asistencia, alertas de vencimiento y retención automatizada.</p>
-                </div>
-                <span class="dag-metric">Cloud SLA</span>
+                <span class="dag-metric">TLS 1.3</span>
               </div>
             </div>
 
             <div class="bp-footer">
-              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Plataforma en Vivo · Subdominio Oficial</span>
-              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Abrir gym.hzsaas.com ↗</a>
+              <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Desarrollo guiado por pruebas (TDD)</span>
+              <a href="#herramientas" class="btn btn-secondary" style="padding: 0.42rem 0.85rem; font-size: 0.78rem;">Ver Nuestro Stack ↓</a>
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <!-- 4. QUANTITATIVE ENGINEERING LEDGER -->
-    <section class="ledger-strip" aria-label="Indicadores de plataforma">
+    <!-- 4. QUANTITATIVE COMPANY LEDGER -->
+    <section class="ledger-strip" aria-label="Capacidades de ingeniería">
       <div class="container ledger-grid">
         <div class="ledger-cell">
-          <div class="ledger-value">9 Agentes</div>
-          <div class="ledger-label">Orquestación RevOps Determinista</div>
-          <div class="ledger-note">DE DIAGNÓSTICO A REUNIÓN COMERCIAL</div>
+          <div class="ledger-value">2 Plataformas</div>
+          <div class="ledger-label">Productos SaaS Propios en Vivo</div>
+          <div class="ledger-note">GYMSAAS CLOUD &amp; REVOPS AI</div>
+        </div>
+        <div class="ledger-cell">
+          <div class="ledger-value">9 Agentes IA</div>
+          <div class="ledger-label">Automatización Comercial B2B</div>
+          <div class="ledger-note">AUDITORÍA, SCORING Y SEGUIMIENTO</div>
         </div>
         <div class="ledger-cell">
           <div class="ledger-value">&lt; 150 ms</div>
-          <div class="ledger-label">Respuesta en Control de Acceso</div>
-          <div class="ledger-note">GYMSAAS TORNIQUETES &amp; BIOMETRÍA</div>
+          <div class="ledger-label">Integración Hardware y Pagos</div>
+          <div class="ledger-note">BIOMETRÍA, TORNIQUETES Y WOMPI</div>
         </div>
         <div class="ledger-cell">
-          <div class="ledger-value">5 Verticales</div>
-          <div class="ledger-label">Soluciones de Alto Impacto</div>
+          <div class="ledger-value">5 Industrias</div>
+          <div class="ledger-label">Verticales Especializados</div>
           <div class="ledger-note">SALUD · INMOBILIARIO · LEGAL · FITNESS</div>
-        </div>
-        <div class="ledger-cell">
-          <div class="ledger-value">100% Control</div>
-          <div class="ledger-label">Supervisión Ejecutiva &amp; Legal</div>
-          <div class="ledger-note">LEY 1581 DE 2012 &amp; BAJA EN 1 CLIC</div>
         </div>
       </div>
     </section>
 
-    <!-- 5. ASYMMETRIC BENTO GRID: EL ECOSISTEMA HZSAAS (F1) -->
-    <section id="ecosistema" class="section-block">
+    <!-- 5. NUESTROS PRODUCTOS SAAS PROPIOS EN PRODUCCIÓN (#productos) -->
+    <section id="productos" class="section-block">
       <div class="container">
         <div class="section-intro">
-          <span class="section-index">01 // ECOSISTEMA DE PLATAFORMAS</span>
-          <h2 class="section-heading">Dos sistemas empresariales en producción diseñados para crecer ingresos y controlar operaciones.</h2>
+          <span class="section-index">01 // PRODUCTOS TECNOLÓGICOS PROPIOS</span>
+          <h2 class="section-heading">Plataformas SaaS desarrolladas y operadas por hzSaaS listas para implementar en tu empresa.</h2>
           <p class="section-desc">
-            Construimos software vertical con identidad propia, seguridad de nivel bancario y retorno de inversión medible desde la primera semana de implementación.
+            Además de desarrollar tecnología a medida, contamos con dos sistemas empresariales propios en producción que resuelven la gestión operativa y la adquisición de clientes de principio a fin.
           </p>
         </div>
 
         <div class="bento-grid">
-          <!-- Cell 1: RevOps AI (Span 7) -->
-          <article class="bento-cell bento-span-7">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">
-                  <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="hzSaaS" class="mini-shield" />
-                  <span>PLATAFORMA 01 // REVOPS AI</span>
-                </span>
-                <span class="status-pill emerald">MOTOR B2B MULTI-SECTOR</span>
-              </div>
-
-              <h3 class="bento-title">RevOps AI — Departamento de Ingresos Digital con Supervisión Ejecutiva Kanban</h3>
-
-              <p class="bento-copy">
-                Automatiza la detección, investigación y contacto de clientes de alto valor. RevOps AI analiza la presencia digital de cada prospecto, identifica qué servicios clave ofrece y qué brechas de atención presenta, asigna una puntuación de 0 a 100 y prepara propuestas consultivas listas para aprobar y enviar por WhatsApp o correo corporativo.
-              </p>
-
-              <div class="spec-kv-grid">
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Calificación Inteligente</span>
-                  <span class="spec-kv-val">Score Ponderado 0–100 por Sector</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Gobernanza Humana</span>
-                  <span class="spec-kv-val">Tablero Kanban de Aprobación</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Seguimiento Automático</span>
-                  <span class="spec-kv-val">Cadencia Días 3 y 7 (Sin Spam)</span>
-                </div>
-                <div class="spec-kv">
-                  <span class="spec-kv-key">Canales de Salida</span>
-                  <span class="spec-kv-val">WhatsApp Directo + Email Corporativo</span>
-                </div>
-              </div>
-
-              <div class="state-machine-strip" aria-label="Ciclo comercial del prospecto">
-                <span class="sm-node">DESCUBIERTO</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node">AUDITADO</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node highlight">REVISIÓN HUMANA</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node">EN SEGUIMIENTO</span>
-                <span class="sm-arrow">→</span>
-                <span class="sm-node highlight">INTERESADO</span>
-              </div>
-            </div>
-
-            <div class="bento-actions">
-              <a href="/login" class="btn btn-primary">Ingresar al Centro de Control →</a>
-              <a href="#diagnostico-vivo" class="btn btn-secondary">Probar Diagnóstico en Vivo</a>
-            </div>
-          </article>
-
-          <!-- Cell 2: GymSaaS Enterprise (Span 5) -->
-          <article class="bento-cell bento-span-5">
+          <!-- Product 1: GymSaaS Enterprise (Span 6) -->
+          <article class="bento-cell bento-span-6">
             <div>
               <div class="bento-top-meta">
                 <span class="bento-id">
                   <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="GymSaaS" class="mini-shield" />
-                  <span>PLATAFORMA 02 // GYM.HZSAAS.COM</span>
+                  <span>PRODUCTO SAAS 01 // GYM.HZSAAS.COM</span>
                 </span>
                 <span class="status-pill amber">CLOUD ERP FITNESS</span>
               </div>
 
-              <h3 class="bento-title">GymSaaS Enterprise — Gestión Integral, Acceso Biométrico y Pagos Wompi</h3>
+              <h3 class="bento-title">GymSaaS Enterprise — Sistema Operativo para Gimnasios y Centros de Entrenamiento</h3>
 
               <p class="bento-copy">
-                El sistema operativo completo para gimnasios y centros de entrenamiento. Se integra con cámaras faciales, lectores biométricos y torniquetes físicos, automatiza el recaudo con Wompi (Nequi, Bancolombia, PSE), controla las ventas de mostrador (POS) y audita cada turno de recepción.
+                Plataforma todo-en-uno en la nube que elimina la fuga de ingresos por mensualidades vencidas y automatiza la operación física y financiera de gimnasios, boxes de CrossFit y cadenas deportivas en Colombia.
               </p>
 
               <div class="spec-kv-grid">
                 <div class="spec-kv">
-                  <span class="spec-kv-key">Control de Acceso</span>
-                  <span class="spec-kv-val">Facial, Huella y QR (&lt; 150ms)</span>
+                  <span class="spec-kv-key">Control de Acceso Físico</span>
+                  <span class="spec-kv-val">Cámaras Faciales, Huella y QR</span>
                 </div>
                 <div class="spec-kv">
-                  <span class="spec-kv-key">Pasarela Integrada</span>
-                  <span class="spec-kv-val">Wompi (Nequi, PSE, Tarjetas)</span>
+                  <span class="spec-kv-key">Recaudo Digital</span>
+                  <span class="spec-kv-val">Wompi (Nequi, Bancolombia, PSE)</span>
                 </div>
                 <div class="spec-kv">
-                  <span class="spec-kv-key">Punto de Venta</span>
-                  <span class="spec-kv-val">POS Suplementos y Arqueo Caja</span>
+                  <span class="spec-kv-key">Ventas de Mostrador</span>
+                  <span class="spec-kv-val">POS Suplementos y Control Caja</span>
                 </div>
                 <div class="spec-kv">
-                  <span class="spec-kv-key">Operación</span>
-                  <span class="spec-kv-val">Multi-Sede &amp; Roles de Personal</span>
+                  <span class="spec-kv-key">Gobernanza Multi-Sede</span>
+                  <span class="spec-kv-val">Paneles Admin, Recepción y Coach</span>
                 </div>
+              </div>
+
+              <div class="state-machine-strip" aria-label="Flujo operativo GymSaaS">
+                <span class="sm-node">REGISTRO SOCIO</span>
+                <span class="sm-arrow">→</span>
+                <span class="sm-node highlight">PAGO WOMPI / POS</span>
+                <span class="sm-arrow">→</span>
+                <span class="sm-node">VALIDACIÓN &lt;150MS</span>
+                <span class="sm-arrow">→</span>
+                <span class="sm-node highlight">APERTURA TORNIQUETE</span>
               </div>
             </div>
 
             <div class="bento-actions">
-              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary">Visitar gym.hzsaas.com ↗</a>
-              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20solicitar%20una%20demostraci%C3%B3n%20de%20GymSaaS%20para%20mi%20gimnasio." target="_blank" rel="noopener" class="btn btn-secondary">Solicitar Licencia</a>
+              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary">Explorar Plataforma en gym.hzsaas.com ↗</a>
+              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20una%20demostraci%C3%B3n%20de%20GymSaaS%20para%20mi%20gimnasio." target="_blank" rel="noopener" class="btn btn-secondary">Solicitar Demo GymSaaS</a>
             </div>
           </article>
 
-          <!-- Cell 3: Zero-Trust Security (Span 4) -->
-          <article class="bento-cell bento-span-4">
+          <!-- Product 2: RevOps AI (Span 6) -->
+          <article class="bento-cell bento-span-6">
             <div>
               <div class="bento-top-meta">
-                <span class="bento-id">SEGURIDAD CORPORATIVA</span>
-                <span class="status-pill sky">PROTECCIÓN ACTIVA</span>
+                <span class="bento-id">
+                  <img src="/static/hzsaas-shield-logo.jpg?v=3" alt="RevOps AI" class="mini-shield" />
+                  <span>PRODUCTO SAAS 02 // REVOPS AI ENGINE</span>
+                </span>
+                <span class="status-pill emerald">9 AGENTES DE IA B2B</span>
               </div>
-              <h3 class="bento-title-sm">Privacidad por Diseño y Sesiones Cifradas</h3>
-              <p class="bento-copy">
-                Todas nuestras consolas operan bajo autenticación firmada en servidor con cookies seguras <code>HttpOnly</code>, aislamiento de datos por empresa y protección contra inyecciones o filtración de información sensible en el navegador.
-              </p>
-            </div>
-            <div class="code-snippet">
-              ✓ Autenticación Criptográfica en Servidor<br />
-              ✓ Protección de Datos Sensibles (PII)<br />
-              ✓ Cero Exposición de Credenciales en Cliente
-            </div>
-          </article>
 
-          <!-- Cell 4: Legal Governance (Span 4) -->
-          <article class="bento-cell bento-span-4">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">NORMATIVA COLOMBIA</span>
-                <span class="status-pill emerald">LEY 1581 DE 2012</span>
-              </div>
-              <h3 class="bento-title-sm">Cumplimiento Habeas Data y Respeto de Marca</h3>
-              <p class="bento-copy">
-                Cada comunicación comercial respeta la normativa colombiana de protección de datos e incluye baja inmediata en un clic. Si un contacto solicita no recibir más información, el sistema lo excluye de manera automática y permanente.
-              </p>
-            </div>
-            <div class="code-snippet">
-              ✓ Cláusula Legal Sectorial Automática<br />
-              ✓ Desuscripción Instantánea RFC 8058<br />
-              ✓ Lista de Exclusión Inmutable
-            </div>
-          </article>
+              <h3 class="bento-title">RevOps AI — Departamento de Ingresos Digital y Prospección Autónoma</h3>
 
-          <!-- Cell 5: Reusability across sectors (Span 4) -->
-          <article class="bento-cell bento-span-4">
-            <div>
-              <div class="bento-top-meta">
-                <span class="bento-id">ESCALABILIDAD</span>
-                <span class="status-pill amber">MULTI-VERTICAL</span>
-              </div>
-              <h3 class="bento-title-sm">Arquitectura Adaptable a Cualquier Sector B2B</h3>
               <p class="bento-copy">
-                Nuestra plantilla maestra separa el núcleo de inteligencia de las reglas de cada industria, permitiendo activar nuevos sectores comerciales (salud, inmobiliario, jurídico, estética o consultoría) en menos de 24 horas.
+                Sistema multi-agente diseñado para clínicas, constructoras, firmas legales y empresas B2B. Investiga prospectos automáticamente, audita sus brechas digitales, calcula un puntaje de encaje de 0 a 100 y redacta propuestas consultivas listas para aprobar en tu consola Kanban.
               </p>
+
+              <div class="spec-kv-grid">
+                <div class="spec-kv">
+                  <span class="spec-kv-key">Diagnóstico Automático</span>
+                  <span class="spec-kv-val">Auditoría de Sitios Web y Brechas</span>
+                </div>
+                <div class="spec-kv">
+                  <span class="spec-kv-key">Calificación Ponderada</span>
+                  <span class="spec-kv-val">Scoring 0–100 por Industria</span>
+                </div>
+                <div class="spec-kv">
+                  <span class="spec-kv-key">Control Ejecutivo</span>
+                  <span class="spec-kv-val">Bandeja Kanban de Aprobación</span>
+                </div>
+                <div class="spec-kv">
+                  <span class="spec-kv-key">Despacho y Cadencia</span>
+                  <span class="spec-kv-val">WhatsApp + Email (Días 3 y 7)</span>
+                </div>
+              </div>
+
+              <div class="state-machine-strip" aria-label="Flujo operativo RevOps AI">
+                <span class="sm-node">DESCUBRIMIENTO</span>
+                <span class="sm-arrow">→</span>
+                <span class="sm-node">AUDITORÍA IA</span>
+                <span class="sm-arrow">→</span>
+                <span class="sm-node highlight">APROBACIÓN KANBAN</span>
+                <span class="sm-arrow">→</span>
+                <span class="sm-node highlight">REUNIÓN AGENDADA</span>
+              </div>
             </div>
-            <div class="code-snippet">
-              ✓ Reglas de Puntuación Personalizables<br />
-              ✓ Tono de Comunicación por Industria<br />
-              ✓ Reportes Ejecutivos Exportables a CSV
+
+            <div class="bento-actions">
+              <a href="/login" class="btn btn-primary">Acceder a Consola RevOps AI →</a>
+              <a href="#diagnostico-vivo" class="btn btn-secondary">Probar Diagnóstico Arriba ↑</a>
             </div>
           </article>
         </div>
       </div>
     </section>
 
-    <!-- 6. INTERACTIVE MULTI-SECTOR SPECIFICATION MATRIX (F3) -->
+    <!-- 6. SERVICIOS DE TECNOLOGÍA E INGENIERÍA QUE OFRECEMOS (#servicios) -->
+    <section id="servicios" class="section-block">
+      <div class="container">
+        <div class="section-intro">
+          <span class="section-index">02 // SERVICIOS DE INGENIERÍA Y TECNOLOGÍA</span>
+          <h2 class="section-heading">¿Qué construimos e implementamos para empresas que buscan digitalizar y escalar su operación?</h2>
+          <p class="section-desc">
+            Ponemos nuestra arquitectura, componentes probados en producción y equipo de ingeniería al servicio de tu empresa para resolver desafíos técnicos y comerciales complejos.
+          </p>
+        </div>
+
+        <div class="bento-grid">
+          <article class="bento-cell bento-span-4">
+            <div>
+              <div class="bento-top-meta">
+                <span class="bento-id">SERVICIO 01</span>
+                <span class="status-pill emerald">SOFTWARE A MEDIDA</span>
+              </div>
+              <h3 class="bento-title-sm">Desarrollo de Plataformas SaaS, Portales Web y Sistemas Cloud ERP</h3>
+              <p class="bento-copy">
+                Diseñamos y construimos plataformas empresariales modernas desde cero o modernizamos sistemas heredados: paneles administrativos multi-sede, control de inventarios, cajas POS, portales de autogestión de clientes y tableros gerenciales en tiempo real.
+              </p>
+            </div>
+            <div class="code-snippet">
+              ✓ Arquitectura Multi-Empresa (Multi-Tenant)<br />
+              ✓ Interfaces de Alta Velocidad y Cero Fricción<br />
+              ✓ Despliegue en la Nube Listo para Escalar
+            </div>
+          </article>
+
+          <article class="bento-cell bento-span-4">
+            <div>
+              <div class="bento-top-meta">
+                <span class="bento-id">SERVICIO 02</span>
+                <span class="status-pill sky">INTELIGENCIA ARTIFICIAL</span>
+              </div>
+              <h3 class="bento-title-sm">Sistemas Multi-Agente de IA y Automatización Comercial B2B</h3>
+              <p class="bento-copy">
+                Implementamos agentes especializados que investigan mercados, pre-califican leads, redactan comunicaciones consultivas, responden consultas operativas y ejecutan seguimientos automáticos bajo supervisión humana y reglas deterministas.
+              </p>
+            </div>
+            <div class="code-snippet">
+              ✓ Agentes con Reglas de Negocio Verificables<br />
+              ✓ Protección contra Alucinaciones y Spam<br />
+              ✓ Integración con WhatsApp y Correo Corporativo
+            </div>
+          </article>
+
+          <article class="bento-cell bento-span-4">
+            <div>
+              <div class="bento-top-meta">
+                <span class="bento-id">SERVICIO 03</span>
+                <span class="status-pill amber">PAGOS &amp; HARDWARE</span>
+              </div>
+              <h3 class="bento-title-sm">Integración de Pasarelas de Pago, Biometría y Dispositivos Físicos</h3>
+              <p class="bento-copy">
+                Conectamos tu software con el mundo físico y bancario en Colombia: pasarelas Wompi Bancolombia (PSE, Nequi, tarjetas de crédito) con conciliación automática por Webhooks, cámaras de reconocimiento facial, lectores de huella y torniquetes QR.
+              </p>
+            </div>
+            <div class="code-snippet">
+              ✓ Conciliación Criptográfica de Pagos SHA-256<br />
+              ✓ Respuesta de Hardware en &lt; 150ms<br />
+              ✓ Sincronización con ERPs y CRMs Existentes
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. CON QUÉ HERRAMIENTAS Y CAPACIDADES TECNOLÓGICAS CONTAMOS (#herramientas) -->
+    <section id="herramientas" class="section-block">
+      <div class="container">
+        <div class="section-intro">
+          <span class="section-index">03 // HERRAMIENTAS, ARQUITECTURA Y CAPACIDADES TÉCNICAS</span>
+          <h2 class="section-heading">Tecnología empresarial de nivel industrial bajo el capó.</h2>
+          <p class="section-desc">
+            Trabajamos con herramientas y estándares de ingeniería modernos que garantizan velocidad, seguridad de datos, facilidad de mantenimiento y disponibilidad continua.
+          </p>
+        </div>
+
+        <div class="tech-stack-sheet">
+          <div class="tech-row">
+            <div class="tech-domain">
+              <span class="tech-domain-code">CAPACIDAD 01 // BACKEND CORE</span>
+              <span class="tech-domain-name">Ingeniería de Servidor y Microservicios</span>
+            </div>
+            <div>
+              <p class="tech-desc">
+                Desarrollamos núcleos transaccionales robustos utilizando arquitecturas limpias y hexagonales que separan la lógica de negocio de la infraestructura, permitiendo procesar miles de operaciones concurrentes sin degradación.
+              </p>
+              <div class="tag-cloud">
+                <span class="spec-tag">Java 21 Enterprise</span>
+                <span class="spec-tag">Spring Boot 4</span>
+                <span class="spec-tag">Python High-Performance APIs</span>
+                <span class="spec-tag">Arquitectura Hexagonal</span>
+                <span class="spec-tag">REST &amp; Webhooks</span>
+              </div>
+            </div>
+            <div class="tech-outcome">
+              <strong>Impacto:</strong> Sistemas estables 24/7 capaces de crecer de 1 a 500 sedes o clientes sin reescribir el código.
+            </div>
+          </div>
+
+          <div class="tech-row">
+            <div class="tech-domain">
+              <span class="tech-domain-code">CAPACIDAD 02 // FRONTEND &amp; UX</span>
+              <span class="tech-domain-name">Consolas Operativas y Diseño de Precisión</span>
+            </div>
+            <div>
+              <p class="tech-desc">
+                Creamos interfaces de usuario rápidas, sobrias y táctiles (tableros Kanban, puntos de venta POS, consolas de recepción y portales ejecutivos) con sistemas de color perceptuales OKLCH y tipografía técnica de alta legibilidad.
+              </p>
+              <div class="tag-cloud">
+                <span class="spec-tag">React 19</span>
+                <span class="spec-tag">TypeScript Estricto</span>
+                <span class="spec-tag">Diseño OKLCH</span>
+                <span class="spec-tag">Consolas Kanban HITL</span>
+                <span class="spec-tag">Responsive Mobile-First</span>
+              </div>
+            </div>
+            <div class="tech-outcome">
+              <strong>Impacto:</strong> Tu personal aprende a usar la plataforma en minutos, sin pantallas confusas ni lentitud.
+            </div>
+          </div>
+
+          <div class="tech-row">
+            <div class="tech-domain">
+              <span class="tech-domain-code">CAPACIDAD 03 // IA DETERMINISTA</span>
+              <span class="tech-domain-name">Orquestación de Agentes y Seguridad Zero-Trust</span>
+            </div>
+            <div>
+              <p class="tech-desc">
+                Nuestros motores de IA combinan análisis estructurado de documentos web, sanitización contra inyecciones de prompt, enmascarado automático de datos personales (PII) y reglas declarativas por sector.
+              </p>
+              <div class="tag-cloud">
+                <span class="spec-tag">Orquestación Multi-Agente</span>
+                <span class="spec-tag">Zero-Trust DOM Scraper</span>
+                <span class="spec-tag">Scoring Ponderado</span>
+                <span class="spec-tag">Protección PII</span>
+                <span class="spec-tag">Human-in-the-Loop</span>
+              </div>
+            </div>
+            <div class="tech-outcome">
+              <strong>Impacto:</strong> Automatización real que protege la reputación de tu marca y cumple la Ley 1581.
+            </div>
+          </div>
+
+          <div class="tech-row">
+            <div class="tech-domain">
+              <span class="tech-domain-code">CAPACIDAD 04 // DATOS &amp; CLOUD</span>
+              <span class="tech-domain-name">Persistencia Multi-Tenant, Pagos y Hardware</span>
+            </div>
+            <div>
+              <p class="tech-desc">
+                Operamos sobre bases de datos relacionales en la nube con aislamiento lógico por organización, contenedores automatizados, certificados SSL/TLS 1.3 y conectores directos con pasarelas de pago y dispositivos biométricos.
+              </p>
+              <div class="tag-cloud">
+                <span class="spec-tag">PostgreSQL Cloud</span>
+                <span class="spec-tag">Contenedores Docker</span>
+                <span class="spec-tag">Pasarela Wompi SHA-256</span>
+                <span class="spec-tag">Biometría &amp; Torniquetes QR</span>
+                <span class="spec-tag">Auditoría Inmutable</span>
+              </div>
+            </div>
+            <div class="tech-outcome">
+              <strong>Impacto:</strong> Cero pérdida de información, trazabilidad completa de cada acción y recaudo seguro.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. INTERACTIVE MULTI-SECTOR SPECIFICATION MATRIX (#sectores) -->
     <section id="sectores" class="section-block">
       <div class="container">
         <div class="section-intro">
-          <span class="section-index">02 // SOLUCIONES POR INDUSTRIA</span>
-          <h2 class="section-heading">Especialización comprobada en los 5 sectores de mayor valor en Colombia.</h2>
+          <span class="section-index">04 // SOLUCIONES POR INDUSTRIA</span>
+          <h2 class="section-heading">Tecnología adaptada a los 5 sectores de mayor crecimiento en Colombia.</h2>
           <p class="section-desc">
-            Selecciona tu sector para conocer cómo nuestras plataformas detectan oportunidades comerciales, automatizan el seguimiento y modernizan tu operación.
+            Selecciona una industria para explorar cómo aplicamos nuestras herramientas de automatización comercial y gestión operativa en cada mercado.
           </p>
         </div>
 
@@ -1968,12 +2178,12 @@
                     </td>
                   </tr>
                   <tr>
-                    <th>Brechas Comerciales Auditadas</th>
+                    <th>Problema que Resolvemos</th>
                     <td id="matrix-gaps">Ausencia de agendamiento online directo, falta de botón WhatsApp para valoración inmediata y fuga de pacientes tras entrega de presupuesto.</td>
                   </tr>
                   <tr>
-                    <th>Criterio de Calificación</th>
-                    <td id="matrix-scoring" class="tabular">Priorización automática de clínicas con especialidades de alto ticket y brechas de atención digital (Score &gt;= 70/100).</td>
+                    <th>Tecnología Aplicada</th>
+                    <td id="matrix-scoring" class="tabular">Motor RevOps AI con calificación automática (Score &gt;= 70/100) y seguimiento en los días 3 y 7.</td>
                   </tr>
                   <tr>
                     <th>Garantía Normativa</th>
@@ -1986,7 +2196,7 @@
             <div class="sector-sample-col">
               <div>
                 <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;">
-                  <span class="tabular" style="font-size: 0.72rem; color: var(--color-accent); font-weight: 600;">EJEMPLO REAL DE DIAGNÓSTICO Y PROPUESTA</span>
+                  <span class="tabular" style="font-size: 0.72rem; color: var(--color-accent); font-weight: 600;">EJEMPLO REAL DE SALIDA TECNOLÓGICA</span>
                   <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">SCORE: 88/100</span>
                 </div>
 
@@ -2003,8 +2213,8 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
               </div>
 
               <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <a id="matrix-cta-primary" href="/login" class="btn btn-primary">Abrir Consola de este Sector →</a>
-                <a id="matrix-cta-wa" href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20implementar%20el%20sistema%20para%20mi%20sector." target="_blank" rel="noopener" class="btn btn-secondary">Consultar por WhatsApp ↗</a>
+                <a id="matrix-cta-primary" href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Salud." target="_blank" rel="noopener" class="btn btn-primary">Solicitar Implementación para este Sector →</a>
+                <a href="#productos" class="btn btn-secondary">Ver Productos</a>
               </div>
             </div>
           </div>
@@ -2012,14 +2222,14 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
       </div>
     </section>
 
-    <!-- 7. INTERACTIVE B2B REVENUE & ROI CALCULATOR -->
+    <!-- 9. INTERACTIVE B2B REVENUE & ROI CALCULATOR -->
     <section id="calculadora-roi" class="section-block">
       <div class="container">
         <div class="section-intro">
-          <span class="section-index">03 // SIMULADOR DE IMPACTO COMERCIAL</span>
-          <h2 class="section-heading">Proyecta el retorno mensual al sistematizar tu prospección y seguimiento.</h2>
+          <span class="section-index">05 // SIMULADOR DE IMPACTO ECONÓMICO</span>
+          <h2 class="section-heading">Calcula el retorno mensual proyectado al automatizar tu operación comercial con hzSaaS.</h2>
           <p class="section-desc">
-            Ajusta el volumen de empresas evaluadas al mes y el ticket promedio de tu servicio para estimar el impacto en reuniones comerciales y cierres mensuales.
+            Ajusta el volumen de empresas evaluadas al mes y el ticket promedio de tu servicio para estimar el impacto en tiempo ahorrado, reuniones agendadas y cierres mensuales.
           </p>
         </div>
 
@@ -2031,7 +2241,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
                 <span id="roi-leads-val" class="control-val">250 empresas / mes</span>
               </div>
               <input type="range" id="roi-leads-slider" class="range-slider" min="50" max="1000" step="25" value="250" />
-              <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">Volumen mensual procesado automáticamente por los agentes de investigación.</span>
+              <span class="tabular" style="font-size: 0.72rem; color: var(--color-muted);">Volumen mensual procesado automáticamente por nuestros agentes de investigación.</span>
             </div>
 
             <div class="control-group">
@@ -2079,80 +2289,80 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
 
             <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
               <span class="tabular" style="font-size: 0.74rem; color: var(--color-muted);">Proyección conservadora basada en métricas reales de conversión B2B.</span>
-              <a id="roi-wa-btn" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-primary">Recibir este Plan por WhatsApp →</a>
+              <a id="roi-wa-btn" href="https://wa.me/573135108101" target="_blank" rel="noopener" class="btn btn-primary">Solicitar este Plan por WhatsApp →</a>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 8. NARRATIVE WORKFLOW: ZERO-ACCESS DEPLOYMENT (F4) -->
+    <!-- 10. METODOLOGÍA DE IMPLEMENTACIÓN (#despliegue) -->
     <section id="despliegue" class="section-block">
       <div class="container">
         <div class="section-intro">
-          <span class="section-index">04 // CÓMO FUNCIONA LA IMPLEMENTACIÓN</span>
-          <h2 class="section-heading">Puesta en marcha en menos de 24 horas sin modificar tus sistemas actuales.</h2>
+          <span class="section-index">06 // METODOLOGÍA DE INGENIERÍA</span>
+          <h2 class="section-heading">Cómo llevamos nuestras soluciones a tu empresa en tiempo récord.</h2>
           <p class="section-desc">
-            Nuestra metodología de despliegue rápido te permite empezar a auditar prospectos o administrar tu centro deportivo desde el primer día, con acompañamiento directo de nuestro equipo en Colombia.
+            Ya sea que actives uno de nuestros productos SaaS o contratemos un desarrollo tecnológico a medida, trabajamos con entregas verificables desde la primera semana.
           </p>
         </div>
 
         <div class="workflow-grid">
           <div class="workflow-step">
             <div>
-              <span class="wf-num">PASO 1.0 // CALIBRACIÓN</span>
-              <h3 class="wf-title">Configuración de tu Industria y Criterios</h3>
+              <span class="wf-num">FASE 1.0 // DIAGNÓSTICO</span>
+              <h3 class="wf-title">Análisis de Operación y Cuellos de Botella</h3>
               <p class="wf-body">
-                Activamos el entorno exclusivo de tu empresa y ajustamos los parámetros de calificación según tus servicios de mayor margen, ciudad y perfil de cliente ideal.
+                Evaluamos tu proceso comercial u operativo actual e identificamos dónde la automatización con IA o nuestras plataformas SaaS generan el mayor retorno inmediato.
               </p>
             </div>
-            <div class="wf-spec">ACTIVACIÓN EN &lt; 24 HORAS</div>
+            <div class="wf-spec">SESIÓN CON INGENIERÍA · DÍA 1</div>
           </div>
 
           <div class="workflow-step">
             <div>
-              <span class="wf-num">PASO 2.0 // AUDITORÍA</span>
-              <h3 class="wf-title">Investigación y Microdiagnóstico Automático</h3>
+              <span class="wf-num">FASE 2.0 // CONFIGURACIÓN</span>
+              <h3 class="wf-title">Activación de Entorno, Reglas y Dispositivos</h3>
               <p class="wf-body">
-                El motor analiza los sitios web de tus prospectos, identifica oportunidades reales de mejora comercial y redacta propuestas personalizadas sin intervención manual.
+                Desplegamos tu instancia aislada en la nube, calibramos los agentes para tu industria o conectamos tus pasarelas Wompi y lectores biométricos.
               </p>
             </div>
-            <div class="wf-spec">DIAGNÓSTICO PRECISO · CERO PLANTILLAS</div>
+            <div class="wf-spec">PUESTA EN MARCHA EN &lt; 24–48H</div>
           </div>
 
           <div class="workflow-step">
             <div>
-              <span class="wf-num">PASO 3.0 // APROBACIÓN</span>
-              <h3 class="wf-title">Control Ejecutivo desde tu Tablero Kanban</h3>
+              <span class="wf-num">FASE 3.0 // OPERACIÓN</span>
+              <h3 class="wf-title">Entrenamiento de tu Equipo y Salida en Vivo</h3>
               <p class="wf-body">
-                Revisas cada oportunidad calificada desde tu consola segura. Con un solo clic apruebas el envío por correo corporativo o disparas el mensaje directo en WhatsApp.
+                Capacitamos a tus operadores o personal de recepción para que dominen la consola desde el primer día con soporte técnico directo en Colombia.
               </p>
             </div>
-            <div class="wf-spec">SUPERVISIÓN HUMANA 100%</div>
+            <div class="wf-spec">ACOMPAÑAMIENTO DIRECTO</div>
           </div>
 
           <div class="workflow-step">
             <div>
-              <span class="wf-num">PASO 4.0 // CIERRE</span>
-              <h3 class="wf-title">Seguimiento Inteligente y Reuniones Agendadas</h3>
+              <span class="wf-num">FASE 4.0 // ESCALADO</span>
+              <h3 class="wf-title">Métricas Continuas y Evolución Tecnológica</h3>
               <p class="wf-body">
-                El sistema ejecuta seguimientos automáticos a los 3 y 7 días si no hay respuesta y clasifica las contestaciones positivas para que tu equipo solo se encargue de cerrar.
+                Monitoreamos el rendimiento, optimizamos tasas de conversión y agregamos nuevos módulos o integraciones a medida que tu empresa crece.
               </p>
             </div>
-            <div class="wf-spec">CADENCIA AUTOMATIZADA</div>
+            <div class="wf-spec">SOPORTE Y MEJORA CONTINUA</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 9. COMMERCIAL ARCHITECTURE & MODELS -->
+    <!-- 11. MODALIDADES DE CONTRATACIÓN (#modelos) -->
     <section id="modelos" class="section-block">
       <div class="container">
         <div class="section-intro">
-          <span class="section-index">05 // PLANES Y MODELOS COMERCIALES</span>
-          <h2 class="section-heading">Esquemas flexibles diseñados para el crecimiento de tu operación.</h2>
+          <span class="section-index">07 // MODALIDADES DE TRABAJO</span>
+          <h2 class="section-heading">Tres formas de incorporar la tecnología de hzSaaS en tu organización.</h2>
           <p class="section-desc">
-            Elige entre delegar la generación de clientes B2B llave en mano, activar GymSaaS en tu centro deportivo o licenciar nuestra infraestructura multi-empresa.
+            Elige la modalidad que mejor se adapte a la etapa actual de tu negocio.
           </p>
         </div>
 
@@ -2160,29 +2370,29 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           <!-- Model 1 -->
           <div class="model-card">
             <div>
-              <div class="model-tier">MODELO 01 // OPERACIÓN GESTIONADA</div>
-              <h3 class="model-name">RevOps As-a-Service</h3>
+              <div class="model-tier">MODALIDAD 01 // AUTOMATIZACIÓN B2B</div>
+              <h3 class="model-name">RevOps AI Gestionado</h3>
               <p class="model-summary">
-                Para clínicas, constructoras y firmas que desean recibir oportunidades auditadas y propuestas listas sin carga operativa ni técnica.
+                Activamos nuestro motor de 9 agentes para auditar tu mercado, calificar oportunidades y entregarte propuestas listas para cerrar nuevos clientes.
               </p>
               <ul class="model-features">
                 <li><span class="check-glyph">+</span><span>Entorno exclusivo calibrado para tu sector y ciudad.</span></li>
                 <li><span class="check-glyph">+</span><span>Diagnóstico automatizado de prospectos y redacción consultiva.</span></li>
-                <li><span class="check-glyph">+</span><span>Acceso completo al Centro de Control Kanban de aprobación.</span></li>
+                <li><span class="check-glyph">+</span><span>Acceso de operador a la Consola Kanban de RevOps AI.</span></li>
                 <li><span class="check-glyph">+</span><span>Despacho directo por WhatsApp Business y correo corporativo.</span></li>
-                <li><span class="check-glyph">+</span><span>Cumplimiento Ley 1581 Habeas Data y exportación de reportes CSV.</span></li>
+                <li><span class="check-glyph">+</span><span>Cumplimiento Ley 1581 Habeas Data y reportes CSV.</span></li>
               </ul>
             </div>
-            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20cotizar%20el%20plan%20RevOps%20As-a-Service%20para%20mi%20empresa." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Solicitar Propuesta Comercial →</a>
+            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20me%20interesa%20implementar%20RevOps%20AI%20en%20mi%20empresa." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Cotizar RevOps AI →</a>
           </div>
 
           <!-- Model 2 -->
           <div class="model-card featured">
             <div>
-              <div class="model-tier">MODELO 02 // PLATAFORMA FITNESS CLOUD</div>
+              <div class="model-tier">MODALIDAD 02 // LICENCIA CLOUD ERP</div>
               <h3 class="model-name">GymSaaS Enterprise</h3>
               <p class="model-summary">
-                Sistema integral en <code>gym.hzsaas.com</code> para gimnasios, boxes y cadenas deportivas que buscan automatizar accesos, cobros y ventas POS.
+                Suscripción mensual o anual a nuestra plataforma en <code>gym.hzsaas.com</code> para gimnasios, centros de entrenamiento y cadenas deportivas.
               </p>
               <ul class="model-features">
                 <li><span class="check-glyph">+</span><span>Integración con cámaras faciales, biometría, QR y torniquetes.</span></li>
@@ -2193,93 +2403,93 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
               </ul>
             </div>
             <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary" style="width: 100%;">Explorar gym.hzsaas.com ↗</a>
-              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20activar%20GymSaaS%20en%20mi%20gimnasio." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Hablar con Especialista GymSaaS</a>
+              <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-primary" style="width: 100%;">Conocer GymSaaS en gym.hzsaas.com ↗</a>
+              <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20activar%20GymSaaS%20en%20mi%20centro%20deportivo." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Hablar con Especialista GymSaaS</a>
             </div>
           </div>
 
           <!-- Model 3 -->
           <div class="model-card">
             <div>
-              <div class="model-tier">MODELO 03 // CORPORATIVO &amp; AGENCIAS</div>
-              <h3 class="model-name">Infraestructura Multi-Empresa</h3>
+              <div class="model-tier">MODALIDAD 03 // INGENIERÍA DEDICADA</div>
+              <h3 class="model-name">Desarrollo &amp; IA a Medida</h3>
               <p class="model-summary">
-                Para grupos empresariales, consultoras y equipos comerciales que requieren operar múltiples unidades de negocio o verticales en simultáneo.
+                Construcción de plataformas SaaS propias, ERPs corporativos, agentes de IA personalizados o integración de pagos y hardware para tu empresa.
               </p>
               <ul class="model-features">
-                <li><span class="check-glyph">+</span><span>Múltiples organizaciones aisladas bajo una misma consola maestra.</span></li>
-                <li><span class="check-glyph">+</span><span>Configuración de nuevos sectores e industrias a medida.</span></li>
-                <li><span class="check-glyph">+</span><span>Sincronización con tu CRM actual (HubSpot, Pipedrive o ERP propio).</span></li>
-                <li><span class="check-glyph">+</span><span>Trazabilidad completa de auditoría por operador.</span></li>
-                <li><span class="check-glyph">+</span><span>Ingeniería dedicada para flujos y conectores personalizados.</span></li>
+                <li><span class="check-glyph">+</span><span>Arquitectura de software diseñada para tu modelo de negocio.</span></li>
+                <li><span class="check-glyph">+</span><span>Integración con tus sistemas actuales, pasarelas o equipos físicos.</span></li>
+                <li><span class="check-glyph">+</span><span>Entregas iterativas con pruebas automatizadas de calidad.</span></li>
+                <li><span class="check-glyph">+</span><span>Infraestructura en la nube segura y escalable.</span></li>
+                <li><span class="check-glyph">+</span><span>Trato directo con los ingenieros arquitectos del proyecto.</span></li>
               </ul>
             </div>
-            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20buscamos%20una%20implementaci%C3%B3n%20Corporativa%20Multi-Empresa." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Agendar Reunión con Ingeniería →</a>
+            <a href="https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20queremos%20cotizar%20un%20desarrollo%20de%20software%20o%20sistema%20de%20IA%20a%20medida." target="_blank" rel="noopener" class="btn btn-secondary" style="width: 100%;">Agendar Reunión de Ingeniería →</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- 10. EXECUTIVE FAQ ACCORDION (06) -->
+    <!-- 12. EXECUTIVE FAQ ACCORDION (#faq) -->
     <section id="faq" class="section-block">
       <div class="container faq-layout">
         <div>
-          <span class="section-index">06 // PREGUNTAS FRECUENTES</span>
-          <h2 class="section-heading">Claridad total antes de empezar.</h2>
+          <span class="section-index">08 // PREGUNTAS FRECUENTES</span>
+          <h2 class="section-heading">Respuestas claras sobre nuestra empresa y tecnología.</h2>
           <p class="section-desc" style="margin-bottom: var(--space-5);">
-            ¿Tienes dudas sobre cómo implementar RevOps AI en tu empresa o cómo conectar GymSaaS con los equipos de tu gimnasio? Escríbenos directamente por WhatsApp.
+            Si deseas evaluar un caso específico para tu empresa en Colombia o Latinoamérica, escríbenos directamente por WhatsApp.
           </p>
-          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20tengo%20una%20consulta%20sobre%20sus%20plataformas." target="_blank" rel="noopener" class="btn btn-accent-outline">Hablar por WhatsApp (+57 313 510 8101) ↗</a>
+          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20tengo%20una%20consulta%20sobre%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-accent-outline">Escribir a Ingeniería (+57 313 510 8101) ↗</a>
         </div>
 
         <div class="faq-list">
           <div class="faq-item open">
             <button type="button" class="faq-trigger">
-              <span>¿Necesito cambiar mi software actual o dar acceso a mis servidores para usar RevOps AI?</span>
+              <span>¿Qué hace exactamente hzSaaS y qué diferencia sus soluciones de una agencia tradicional?</span>
               <span class="faq-icon">+</span>
             </button>
             <div class="faq-answer">
-              No. RevOps AI funciona sin requerir cambios en tu infraestructura actual: audita información pública del mercado, califica cada oportunidad y te entrega las propuestas listas en tu consola web segura para que las apruebes y despaches en un clic.
+              Somos una empresa de ingeniería de software e inteligencia artificial, no una agencia de marketing. Construimos y operamos sistemas tecnológicos reales en producción: desde nuestro ERP en la nube para centros deportivos (<strong>GymSaaS</strong>) y nuestro motor multi-agente de prospección B2B (<strong>RevOps AI</strong>), hasta plataformas e integraciones a medida con calidad industrial.
             </div>
           </div>
 
           <div class="faq-item">
             <button type="button" class="faq-trigger">
-              <span>¿Cómo evitan que las comunicaciones comerciales suenen robóticas o genéricas?</span>
+              <span>¿Necesito modificar mis servidores actuales para implementar RevOps AI?</span>
               <span class="faq-icon">+</span>
             </button>
             <div class="faq-answer">
-              El sistema no envía plantillas masivas: primero descarta empresas con puntaje menor a 70/100; segundo, construye cada mensaje citando únicamente los servicios reales y brechas detectadas en la página web del prospecto; y tercero, cada propuesta pasa por tu aprobación ejecutiva antes de enviarse.
+              No. <strong>RevOps AI</strong> opera en la nube como un departamento de ingresos externo: audita sitios públicos de tu mercado objetivo, califica cada oportunidad y te entrega las propuestas listas en tu consola Kanban para aprobar y despachar sin tocar tu infraestructura interna.
             </div>
           </div>
 
           <div class="faq-item">
             <button type="button" class="faq-trigger">
-              <span>¿Cómo garantizan el cumplimiento de la Ley 1581 de 2012 (Habeas Data en Colombia)?</span>
+              <span>¿Cómo garantizan que los agentes de IA no inventen información ni envíen spam?</span>
               <span class="faq-icon">+</span>
             </button>
             <div class="faq-answer">
-              Protegemos los datos personales desde la captura, operamos exclusivamente sobre canales corporativos B2B e incluimos cláusula normativa y opción de baja inmediata en cada mensaje. Cualquier solicitud de exclusión bloquea futuros contactos de manera automática.
+              Nuestros agentes operan bajo reglas deterministas: primero descartan prospectos con puntaje menor a 70/100; segundo, redactan cada mensaje basándose únicamente en los servicios y brechas reales detectadas en la web de la empresa; y tercero, ninguna comunicación se envía sin pasar por la bandeja de aprobación humana (Human-in-the-Loop).
             </div>
           </div>
 
           <div class="faq-item">
             <button type="button" class="faq-trigger">
-              <span>¿GymSaaS es compatible con los dispositivos de acceso que ya tengo en mi gimnasio?</span>
+              <span>¿GymSaaS se conecta con dispositivos biométricos y medios de pago en Colombia?</span>
               <span class="faq-icon">+</span>
             </button>
             <div class="faq-answer">
-              Sí. <strong>GymSaaS Enterprise</strong> (<a href="https://gym.hzsaas.com" target="_blank" rel="noopener" style="color: var(--color-accent); text-decoration: underline;">gym.hzsaas.com</a>) se integra con cámaras de reconocimiento facial, lectores biométricos de huella, códigos QR y torniquetes físicos, además de automatizar tus cobros con Wompi (Nequi, Bancolombia y PSE).
+              Sí. <strong>GymSaaS Enterprise</strong> (<a href="https://gym.hzsaas.com" target="_blank" rel="noopener" style="color: var(--color-accent); text-decoration: underline;">gym.hzsaas.com</a>) se integra con cámaras faciales, lectores de huella, códigos QR y torniquetes físicos con validación en menos de 150ms, e incluye pasarela Wompi para pagos por Nequi, Bancolombia, PSE y tarjetas.
             </div>
           </div>
 
           <div class="faq-item">
             <button type="button" class="faq-trigger">
-              <span>¿En cuánto tiempo queda activa la plataforma para mi negocio?</span>
+              <span>¿También desarrollan software o agentes de IA personalizados para mi empresa?</span>
               <span class="faq-icon">+</span>
             </button>
             <div class="faq-answer">
-              Tanto la activación de tu entorno en <strong>RevOps AI</strong> como la puesta en marcha de tu sede en <strong>GymSaaS Cloud</strong> se completan en menos de 24 horas con acompañamiento directo de nuestro equipo.
+              Sí. A través de nuestra división de ingeniería a medida diseñamos y desplegamos plataformas SaaS, sistemas internos, integraciones con pasarelas de pago y flujos de IA adaptados exactamente a las reglas operativas de tu negocio.
             </div>
           </div>
         </div>
@@ -2287,21 +2497,20 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
     </section>
   </main>
 
-  <!-- 11. STATEMENT FOOTER (Ft5) WITH OFFICIAL SHIELD LOGO -->
+  <!-- 13. STATEMENT FOOTER (Ft5) WITH OFFICIAL SHIELD LOGO -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-cta-banner">
         <div style="max-width: 60ch;">
-          <span class="section-index">EMPIEZA HOY MISMO</span>
-          <h2 class="section-heading" style="margin-bottom: var(--space-2);">Lleva tu operación comercial al siguiente nivel.</h2>
+          <span class="section-index">CONVERSEMOS SOBRE TU PROYECTO</span>
+          <h2 class="section-heading" style="margin-bottom: var(--space-2);">Construyamos o activemos la tecnología que tu negocio necesita.</h2>
           <p class="section-desc">
-            Solicita una demostración guiada por WhatsApp, explora GymSaaS o accede a tu consola empresarial.
+            Escríbenos directamente por WhatsApp para agendar una demostración en vivo de nuestros productos SaaS o evaluar un desarrollo a medida con nuestro equipo de ingeniería.
           </p>
         </div>
         <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
-          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20agendar%20una%20demostraci%C3%B3n." target="_blank" rel="noopener" class="btn btn-primary">Hablar con Asesor (+57 313 510 8101) →</a>
-          <a href="/login" class="btn btn-secondary">Iniciar Sesión en Consola</a>
-          <a href="https://gym.hzsaas.com" target="_blank" rel="noopener" class="btn btn-accent-outline">Ir a GymSaaS Cloud ↗</a>
+          <a href="https://wa.me/573135108101?text=Hola%20equipo%20hzSaaS%2C%20quiero%20hablar%20con%20ingenier%C3%ADa%20sobre%20sus%20productos%20y%20servicios." target="_blank" rel="noopener" class="btn btn-primary">Contactar por WhatsApp (+57 313 510 8101) →</a>
+          <a href="#productos" class="btn btn-secondary">Ver Productos Propios</a>
         </div>
       </div>
 
@@ -2312,52 +2521,51 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
             <div class="brand-text">
               <div class="brand-name-row">
                 <span class="brand-name">hzSaaS</span>
-                <span class="brand-pill">ENTERPRISE</span>
+                <span class="brand-pill">TECHNOLOGY STUDIO</span>
               </div>
-              <span class="brand-sub">Software Empresarial &amp; Sistemas IA</span>
+              <span class="brand-sub">Ingeniería de Software, IA &amp; Productos Cloud</span>
             </div>
           </div>
           <p style="font-size: 0.85rem; color: var(--color-neutral); max-width: 36ch; margin-bottom: var(--space-3);">
-            Soluciones tecnológicas de alto rendimiento para automatización de ingresos B2B y gestión integral de centros deportivos.
+            Desarrollamos plataformas SaaS propias, sistemas autónomos de inteligencia artificial e infraestructura digital de alto rendimiento.
           </p>
-          <span class="tabular" style="font-size: 0.75rem; color: var(--color-accent);">Colombia &amp; Latinoamérica · Soporte Directo</span>
+          <span class="tabular" style="font-size: 0.75rem; color: var(--color-accent);">Colombia &amp; Latinoamérica · Ingeniería Directa</span>
         </div>
 
         <div>
-          <h4 class="footer-col-title">Plataformas</h4>
+          <h4 class="footer-col-title">Productos SaaS Propios</h4>
           <ul class="footer-links">
-            <li><a href="/login">Acceso Consola RevOps AI</a></li>
             <li><a href="https://gym.hzsaas.com" target="_blank" rel="noopener">GymSaaS Cloud ERP (gym.hzsaas.com)</a></li>
-            <li><a href="#diagnostico-vivo">Diagnóstico Comercial en Vivo</a></li>
+            <li><a href="/login">Consola Operativa RevOps AI</a></li>
+            <li><a href="#diagnostico-vivo">Demostración IA en Vivo</a></li>
             <li><a href="#calculadora-roi">Simulador de Impacto ROI</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="footer-col-title">Sectores</h4>
+          <h4 class="footer-col-title">Servicios &amp; Capacidades</h4>
           <ul class="footer-links">
-            <li><a href="#sectores">Salud, Clínicas &amp; Odontología</a></li>
-            <li><a href="#sectores">Inmobiliarias &amp; Constructoras</a></li>
-            <li><a href="#sectores">Firmas de Abogados B2B</a></li>
-            <li><a href="#sectores">Turismo Médico Internacional</a></li>
-            <li><a href="#sectores">Gimnasios &amp; Centros Fitness</a></li>
+            <li><a href="#servicios">Desarrollo de Plataformas SaaS</a></li>
+            <li><a href="#servicios">Agentes de IA &amp; Automatización B2B</a></li>
+            <li><a href="#servicios">Integración Wompi &amp; Biometría</a></li>
+            <li><a href="#herramientas">Herramientas y Stack Tecnológico</a></li>
           </ul>
         </div>
 
         <div>
-          <h4 class="footer-col-title">Contacto Directo</h4>
+          <h4 class="footer-col-title">Sectores &amp; Contacto</h4>
           <ul class="footer-links">
-            <li><a href="https://wa.me/573135108101" target="_blank" rel="noopener">WhatsApp: +57 313 510 8101</a></li>
-            <li><a href="/login">Portal de Clientes</a></li>
-            <li><a href="#modelos">Planes de Implementación</a></li>
+            <li><a href="#sectores">Salud, Inmobiliario, Legal y Fitness</a></li>
+            <li><a href="#modelos">Modalidades de Contratación</a></li>
             <li><a href="#faq">Preguntas Frecuentes</a></li>
+            <li><a href="https://wa.me/573135108101" target="_blank" rel="noopener">WhatsApp: +57 313 510 8101</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-colophon">
         <span>© 2026 hzSaaS Colombia. Todos los derechos reservados. Cumplimiento Ley 1581 de 2012 (Habeas Data).</span>
-        <span>INFRAESTRUCTURA CLOUD DE ALTA DISPONIBILIDAD · TLS 1.3</span>
+        <span>INGENIERÍA DE SOFTWARE EMPRESARIAL · ALTA DISPONIBILIDAD</span>
       </div>
     </div>
   </footer>
@@ -2367,7 +2575,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
     (function () {
       'use strict';
 
-      // 1. Blueprint Tabs Switcher
+      // 1. Corporate Divisions Tabs Switcher
       const bpTabs = document.querySelectorAll('.bp-tab');
       const bpPanes = document.querySelectorAll('.bp-pane');
       bpTabs.forEach(tab => {
@@ -2385,11 +2593,11 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           ticket: '$3.500.000 – $25.000.000 COP por tratamiento',
           signals: ['Implantes dentales', 'Ortodoncia invisible', 'Diseño de sonrisa', 'Armonización facial', 'Rehabilitación oral', 'Cirugía maxilofacial'],
           gaps: 'Ausencia de agendamiento online directo, falta de botón WhatsApp para valoración inmediata y fuga de pacientes tras entrega de presupuesto.',
-          scoring: 'Priorización automática de clínicas con especialidades de alto ticket y brechas de atención digital (Score >= 70/100).',
+          scoring: 'Motor RevOps AI con calificación automática (Score >= 70/100) y seguimiento en los días 3 y 7.',
           compliance: 'Cumplimiento Ley 1581 de 2012 (Habeas Data Colombia), respeto de ética médica y exclusión automática a solicitud.',
           sample: `Hola equipo de Clínica Dental Especializada,\n\nRevisando su sitio web vimos su enfoque en implantes dentales y rehabilitación oral, pero notamos que los pacientes deben llenar un formulario estático sin confirmación de agenda ni canal directo de valoración por WhatsApp.\n\nEn clínicas de Medellín y Bogotá con ese volumen de tratamientos, implementar calificación y seguimiento automatizado de presupuestos recupera entre 8 y 15 tratamientos de alto ticket al mes sin cambiar su software médico actual.\n\n¿Les hace sentido una llamada de 10 minutos este jueves para mostrarles el diagnóstico puntual de su web?\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia). Responda BAJA para excluir su contacto.`,
-          ctaText: 'Abrir Consola de este Sector →',
-          ctaHref: '/login'
+          ctaText: 'Solicitar Implementación para Salud →',
+          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Salud.'
         },
         inmobiliarias: {
           title: 'Inmobiliarias, Constructoras y Comercializadoras de Proyectos',
@@ -2399,8 +2607,8 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           scoring: 'Priorización de constructoras con proyectos activos y brechas en captura de inversionistas (Score >= 70/100).',
           compliance: 'Cumplimiento Ley 1581 de 2012 (Habeas Data Colombia) y transparencia informativa en proyectos.',
           sample: `Hola Dirección Comercial de Constructora Capital,\n\nAnalizando la página de sus proyectos sobre planos e inversión inmobiliaria, identificamos que los compradores interesados no cuentan con pre-calificación inmediata por WhatsApp ni agendamiento directo a sala de ventas.\n\nCuando un inversionista solicita brochure y tarda más de 15 minutos en recibir respuesta consultiva, la conversión a visita cae más del 60%. Con nuestro motor RevOps AI automatizamos el seguimiento en los días 3 y 7 hasta agendar la cita con su asesor.\n\n¿Podemos compartirles el informe de fricción detectado en su portal en una breve llamada de 10 minutos?\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012. Responda BAJA para dejar de recibir mensajes.`,
-          ctaText: 'Abrir Consola Inmobiliaria →',
-          ctaHref: '/login'
+          ctaText: 'Solicitar Implementación Inmobiliaria →',
+          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20el%20sector%20Inmobiliario.'
         },
         abogados: {
           title: 'Firmas de Abogados Corporativos, Tributarios y Litigios de Alto Valor',
@@ -2410,8 +2618,8 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           scoring: 'Calificación enfocada en firmas con prácticas corporativas B2B y oportunidades de digitalización (Score >= 70/100).',
           compliance: 'Cumplimiento Ley 1581 de 2012 y confidencialidad profesional estricta.',
           sample: `Estimados Socios de Bufete Legal Corporativo,\n\nVimos su trayectoria en planeación tributaria y derecho societario, pero observamos que su sitio web carece de un flujo ágil para agendar consultas diagnósticas de empresas y filtrar casos según cuantía.\n\nAyudamos a firmas legales en Colombia a sistematizar la recepción y seguimiento de prospectos corporativos sin comprometer la confidencialidad ni requerir cambios en su infraestructura.\n\n¿Tienen disponibilidad esta semana para revisar el diagnóstico digital de su firma?\n\n---\nComunicación informativa B2B conforme a la Ley 1581 de 2012. Responda BAJA para excluir su correo.`,
-          ctaText: 'Abrir Consola Sector Legal →',
-          ctaHref: '/login'
+          ctaText: 'Solicitar Implementación Sector Legal →',
+          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20nuestra%20Firma%20Legal.'
         },
         turismo_medico: {
           title: 'Turismo Médico, Cirugía Plástica y Pacientes Internacionales',
@@ -2421,8 +2629,8 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           scoring: 'Calificación de clínicas con infraestructura internacional y potencial de conversión rápida (Score >= 72/100).',
           compliance: 'Cumplimiento normativa de salud en Colombia y Ley 1581 de 2012.',
           sample: `Hola Dirección de Pacientes Internacionales,\n\nObservamos que su clínica atiende pacientes del exterior en cirugía estética y rehabilitación avanzada, pero su web actual no ofrece agendamiento directo de valoración virtual ni canal inmediato bilingüe.\n\nLos pacientes internacionales suelen comparar opciones en simultáneo y eligen la clínica que responde y estructura su plan primero.\n\n¿Les gustaría ver cómo automatizamos la calificación y seguimiento de pacientes del exterior?\n\n---\nComunicación B2B bajo Ley 1581 de 2012. Responda BAJA para no recibir más comunicaciones.`,
-          ctaText: 'Abrir Consola Turismo Médico →',
-          ctaHref: '/login'
+          ctaText: 'Solicitar Implementación Turismo Médico →',
+          ctaHref: 'https://wa.me/573135108101?text=Hola%20hzSaaS%2C%20quiero%20implementar%20su%20tecnolog%C3%ADa%20para%20Turismo%20M%C3%A9dico.'
         },
         gymsaas: {
           title: 'Gimnasios, Centros de Entrenamiento Funcional y Cadenas Fitness (GymSaaS)',
@@ -2432,7 +2640,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           scoring: 'Plataforma Cloud en producción en gym.hzsaas.com con activación inmediata para centros deportivos.',
           compliance: 'Protección de datos de afiliados bajo Ley 1581 de 2012 y seguridad transaccional con Wompi Bancolombia.',
           sample: `PLATAFORMA GYMSAAS ENTERPRISE (https://gym.hzsaas.com):\n\n1. Control de Acceso en Tiempo Real (<150ms): Nos integramos con cámaras faciales, lectores biométricos o torniquetes QR para autorizar solo socios al día.\n2. Recaudo Automatizado Wompi: Tus afiliados pagan con Nequi, Bancolombia, PSE o tarjetas y su membresía se renueva al instante.\n3. Mostrador POS y Auditoría: Controla ventas de proteínas, creatinas y bebidas, y audita cada turno de tu equipo de recepción.`,
-          ctaText: 'Abrir Plataforma GymSaaS (gym.hzsaas.com) ↗',
+          ctaText: 'Explorar Plataforma GymSaaS (gym.hzsaas.com) ↗',
           ctaHref: 'https://gym.hzsaas.com'
         }
       };
@@ -2468,11 +2676,6 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
           elSample.textContent = info.sample;
           elCtaPrimary.textContent = info.ctaText;
           elCtaPrimary.href = info.ctaHref;
-          if (info.ctaHref.startsWith('http')) {
-            elCtaPrimary.setAttribute('target', '_blank');
-          } else {
-            elCtaPrimary.removeAttribute('target');
-          }
         });
       });
 
@@ -2527,7 +2730,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
             resState.textContent = data.qualified ? 'ALTO POTENCIAL COMERCIAL' : 'DIAGNÓSTICO COMPLETADO';
             resScore.textContent = `SCORE: ${data.score || 85}/100`;
             resCopy.textContent = data.proposal || data.summary || 'Diagnóstico finalizado.';
-            const waText = encodeURIComponent(`Hola hzSaaS, realicé el diagnóstico de "${name}" en su web (Score ${data.score || 85}/100) y quiero información para mi empresa.`);
+            const waText = encodeURIComponent(`Hola hzSaaS, probé su motor de IA con "${name}" (Score ${data.score || 85}/100) y quiero conocer cómo implementarlo en mi empresa.`);
             resWaLink.href = `https://wa.me/573135108101?text=${waText}`;
             resultDrawer.classList.add('active');
           } catch (_) {
@@ -2535,12 +2738,12 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
             resState.textContent = 'OPORTUNIDAD COMERCIAL';
             resScore.textContent = 'SCORE: 86/100';
             resCopy.textContent = `Hola equipo de ${name},\n\nAl analizar su presencia digital (${url}), identificamos una oportunidad inmediata para automatizar la calificación de clientes y el seguimiento comercial en los días 3 y 7.\n\n---\nComunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia).`;
-            const waText = encodeURIComponent(`Hola hzSaaS, quiero analizar "${name}" (${url}) con su motor RevOps AI.`);
+            const waText = encodeURIComponent(`Hola hzSaaS, quiero analizar "${name}" (${url}) con su tecnología RevOps AI.`);
             resWaLink.href = `https://wa.me/573135108101?text=${waText}`;
             resultDrawer.classList.add('active');
           } finally {
             auditBtn.disabled = false;
-            auditBtn.textContent = 'Analizar Web';
+            auditBtn.textContent = 'Probar IA';
           }
         });
       }
@@ -2586,7 +2789,7 @@ Comunicación comercial B2B conforme a la Ley 1581 de 2012 (Habeas Data Colombia
         kpiRevenue.textContent = `${formatCOP(projectedRev)} / mes`;
 
         const msg = encodeURIComponent(
-          `Hola equipo hzSaaS, simulé en su calculadora web: ${leads} empresas/mes con ticket de ${formatCOP(ticket)}, proyectando ${meetings} reuniones y ${formatCOP(projectedRev)}/mes. Quiero solicitar una demostración.`
+          `Hola equipo hzSaaS, simulé en su calculadora web: ${leads} empresas/mes con ticket de ${formatCOP(ticket)}, proyectando ${meetings} reuniones y ${formatCOP(projectedRev)}/mes. Quiero agendar una demostración.`
         );
         roiWaBtn.href = `https://wa.me/573135108101?text=${msg}`;
       }

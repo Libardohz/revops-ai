@@ -178,8 +178,17 @@ def serve_login() -> HTMLResponse:
 
 @web_router.get("/dashboard", response_class=HTMLResponse, include_in_schema=False)
 @router.get("/dashboard", response_class=HTMLResponse, include_in_schema=False)
-def serve_dashboard(_: bool = Depends(verify_auth)) -> HTMLResponse:
-    """Serve the Human-in-the-Loop Kanban dashboard frontend."""
+def serve_dashboard(
+    request: Request = None,
+    _: bool = Depends(verify_auth),
+) -> Response:
+    """Serve the Human-in-the-Loop Kanban dashboard frontend, requiring session login on browser requests."""
+    if isinstance(request, Request):
+        auth_enabled = os.getenv("DASHBOARD_AUTH_ENABLED", "false").lower() in ("true", "1", "yes")
+        session_token = request.cookies.get(_SESSION_COOKIE_NAME)
+        if not verify_session_token(session_token) and not auth_enabled:
+            return RedirectResponse(url="/login", status_code=302)
+
     if _template_path.is_file():
         content = _template_path.read_text(encoding="utf-8")
     else:
