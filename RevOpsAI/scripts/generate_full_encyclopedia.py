@@ -531,3 +531,4 @@ if __name__ == "__main__":
     generate_user_manual_pdf(u_pdf)
     generate_technical_manual_pdf(t_pdf)
     print("¡Toda la documentación exhaustiva ha sido generada exitosamente!")
+
