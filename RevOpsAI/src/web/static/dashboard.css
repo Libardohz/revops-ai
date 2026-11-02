@@ -83,6 +83,8 @@ button { cursor: pointer; background: none; border: 0; }
 
 .btn-line { background: transparent; color: var(--text); border-color: var(--border-strong); }
 .btn-line:hover:not(:disabled) { border-color: var(--text-2); background: var(--bg-raise); }
+.btn-clear-demo { color: var(--text-3); font-size: 12.5px; }
+.btn-clear-demo:hover:not(:disabled) { color: var(--danger); border-color: var(--danger); background: rgba(239, 68, 68, 0.06); }
 
 .btn-ghost { color: var(--text-2); }
 .btn-ghost:hover:not(:disabled) { color: var(--text); background: var(--bg-raise); }

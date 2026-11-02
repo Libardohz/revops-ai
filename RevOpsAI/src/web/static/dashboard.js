@@ -27,6 +27,7 @@
     tenantSelect: document.getElementById('tenant-select'),
     btnOpenAuditModal: document.getElementById('btn-open-audit-modal'),
     btnSeedDemo: document.getElementById('btn-seed-demo'),
+    btnClearDemo: document.getElementById('btn-clear-demo'),
     btnExportCsv: document.getElementById('btn-export-csv'),
     refreshBtn: document.getElementById('refresh-btn'),
     btnLogout: document.getElementById('btn-logout'),
@@ -794,6 +795,30 @@
     }
   }
 
+  /**
+   * Clear Demo Data for Current Tenant
+   */
+  async function clearDemoTenant() {
+    if (!confirm('¿Deseas vaciar y desactivar los datos de prueba en esta unidad de negocio? La bandeja quedará limpia.')) {
+      return;
+    }
+    if (el.btnClearDemo) el.btnClearDemo.disabled = true;
+    try {
+      const res = await fetch(`/api/v1/dashboard/clear?tenant_id=${encodeURIComponent(state.tenantId)}`, {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error('No se pudo limpiar el tenant');
+      const data = await res.json();
+      closeDrawer();
+      await Promise.all([fetchLeads(), fetchStats()]);
+      showToast(`Datos de prueba desactivados (${data.deleted_count} prospectos removidos)`);
+    } catch (err) {
+      showToast(`Error al limpiar datos: ${err.message}`, 'error');
+    } finally {
+      if (el.btnClearDemo) el.btnClearDemo.disabled = false;
+    }
+  }
+
   function openAuditModal() {
     if (el.modalAudit) el.modalAudit.classList.add('active');
     if (el.auditStepper) el.auditStepper.style.display = 'none';
@@ -807,7 +832,7 @@
   }
 
   /**
-   * Export Visible Pipeline to CSV
+   * Export Visible Pipeline to Excel-Compliant CSV (UTF-8 BOM + Sanitized Multi-line)
    */
   function exportPipelineCsv() {
     if (state.filteredLeads.length === 0) {
@@ -815,28 +840,57 @@
       return;
     }
 
-    const headers = ['ID', 'Nombre', 'URL', 'Tenant', 'Estado', 'Score', 'Resumen_Investigacion', 'Propuesta_Outreach'];
+    // Sanitizer for CSV cell: strips aggressive newlines into single lines or clean spaces, escapes quotes
+    const sanitizeCell = (val) => {
+      if (val === null || val === undefined) return '""';
+      const clean = String(val)
+        .replace(/\r\n/g, ' ')
+        .replace(/[\r\n]/g, ' ')
+        .replace(/\t/g, ' ')
+        .replace(/"/g, '""')
+        .trim();
+      return `"${clean}"`;
+    };
+
+    const headers = [
+      'ID',
+      'Nombre',
+      'URL',
+      'Tenant',
+      'Estado',
+      'Score',
+      'Resumen_Investigacion',
+      'Propuesta_Outreach'
+    ];
+
     const rows = state.filteredLeads.map(l => [
-      l.id,
-      `"${(l.name || '').replace(/"/g, '""')}"`,
-      `"${(l.url || '').replace(/"/g, '""')}"`,
-      l.tenant_id,
-      l.state,
+      sanitizeCell(l.id),
+      sanitizeCell(l.name),
+      sanitizeCell(l.url),
+      sanitizeCell(l.tenant_id),
+      sanitizeCell(l.state),
       l.score || 0,
-      `"${(l.research_summary || '').replace(/"/g, '""')}"`,
-      `"${(l.draft_message || '').replace(/"/g, '""')}"`,
+      sanitizeCell(l.research_summary),
+      sanitizeCell(l.draft_message),
     ]);
 
-    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-    const encodedUri = encodeURI(csvContent);
+    // Use semicolon delimiter as standard for Excel in Spanish/European locales, or comma with explicit Sep declaration
+    // Including "\uFEFF" (Byte Order Mark) forces Excel to interpret UTF-8 and render tildes/ñ perfectly!
+    const csvHeaderLine = headers.map(h => `"${h}"`).join(';');
+    const csvBodyLines = rows.map(r => r.join(';'));
+    const csvContent = '\uFEFF' + [csvHeaderLine, ...csvBodyLines].join('\r\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const blobUrl = URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
+    link.href = blobUrl;
     link.setAttribute('download', `revops_pipeline_${state.tenantId}_${Date.now()}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl);
 
-    showToast(`Exportados ${state.filteredLeads.length} prospectos a CSV`);
+    showToast(`Exportados ${state.filteredLeads.length} prospectos a CSV (formato Excel limpio)`);
   }
 
   /**
@@ -1021,6 +1075,7 @@
 
     // Seed Demo Tenant Data
     if (el.btnSeedDemo) el.btnSeedDemo.addEventListener('click', seedDemoTenant);
+    if (el.btnClearDemo) el.btnClearDemo.addEventListener('click', clearDemoTenant);
 
     // Export CSV
     if (el.btnExportCsv) el.btnExportCsv.addEventListener('click', exportPipelineCsv);

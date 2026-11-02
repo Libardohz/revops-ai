@@ -131,6 +131,17 @@ class TenantScopedRepository:
         }
 
 
+    def clear_all_prospects(self) -> int:
+        """Purge all prospects and associated in-tenant audit trails for this tenant."""
+        prospects_deleted = (
+            self.session.query(ProspectORM)
+            .filter_by(tenant_id=self.tenant_id)
+            .delete(synchronize_session=False)
+        )
+        self.session.query(AuditLogORM).filter_by(tenant_id=self.tenant_id).delete(synchronize_session=False)
+        self.session.commit()
+        return prospects_deleted
+
     def log_audit(self, lead_id: str, actor: str, action: str, reason: str = "") -> None:
         """Create an audit log entry scoped to this tenant."""
         log_entry = AuditLogORM(

@@ -17,6 +17,20 @@ class ApprovalStore:
         """
         self._leads[lead.id] = lead
 
+    def clear_for_tenant(self, tenant_id: str) -> int:
+        """Remove all tracked prospects for a specific tenant.
+        
+        Args:
+            tenant_id: Identifier of the tenant to purge.
+            
+        Returns:
+            Number of purged prospects.
+        """
+        to_remove = [k for k, v in self._leads.items() if v.tenant_id == tenant_id]
+        for k in to_remove:
+            del self._leads[k]
+        return len(to_remove)
+
     def get_pending(self, tenant_id: str) -> list[Prospect]:
         """Retrieve all prospects in PENDING_APPROVAL state for a specific tenant.
 

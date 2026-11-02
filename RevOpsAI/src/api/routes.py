@@ -700,6 +700,25 @@ def seed_tenant_demo_data(
     }
 
 
+@router.post("/dashboard/clear", response_model=dict[str, Any])
+def clear_tenant_demo_data(
+    tenant_id: str = Query(..., description="Tenant a limpiar"),
+    repo: TenantScopedRepository = Depends(get_repository),
+) -> dict[str, Any]:
+    """Clear all demo and active prospects for this tenant (resets to empty state)."""
+    # Remove from showcase auto-seed set so it stays empty until user requests seed
+    _SHOWCASE_TENANTS.discard(tenant_id)
+    deleted_prospects = repo.clear_all_prospects()
+    purged_store = shared_store.clear_for_tenant(tenant_id)
+    return {
+        "tenant_id": tenant_id,
+        "deleted_count": deleted_prospects,
+        "purged_approval_count": purged_store,
+        "status": "cleared",
+        "stats": repo.get_stats(),
+    }
+
+
 @router.get("/dashboard/stats", response_model=dict[str, Any])
 def get_dashboard_stats(
     tenant_id: str = Query(..., description="ID del tenant a filtrar"),
