@@ -615,6 +615,14 @@
       el.notesSaveStatus.textContent = '';
     }
 
+    // Discard & Approve button visibility in Drawer based on state
+    if (el.btnDrawerReject) {
+      el.btnDrawerReject.style.display = (lead.state === 'DISCARDED') ? 'none' : 'inline-flex';
+    }
+    if (el.btnDrawerApprove) {
+      el.btnDrawerApprove.style.display = (lead.state === 'DISCARDED') ? 'none' : 'inline-flex';
+    }
+
     // Reset to tab 1
     switchTab('tab-diagnosis');
 
@@ -879,6 +887,11 @@
    * Open Discard Modal
    */
   function openDiscardModal(leadId) {
+    const lead = state.leads.find(l => l.id === leadId) || state.selectedLead;
+    if (lead && lead.state === 'DISCARDED') {
+      showToast('Este prospecto ya se encuentra descartado', 'info');
+      return;
+    }
     state.discardTargetLeadId = leadId;
     if (el.modalReasonInput) el.modalReasonInput.value = '';
     if (el.modalDiscard) el.modalDiscard.classList.add('active');
