@@ -126,16 +126,29 @@ def login_session(req: LoginRequest, response: Response, request: Request = None
             headers={"Retry-After": str(lock_sec)},
         )
 
-    expected_user = os.getenv("DASHBOARD_USERNAME", "admin@hzsaas.com")
-    expected_pass = os.getenv("DASHBOARD_PASSWORD", "HzSaaS2026!")
+    # 3. Dynamic multi-credential map from DASHBOARD_USERS (.env) with DASHBOARD_USERNAME/PASSWORD fallback
+    credentials_map: dict[str, str] = {}
+    raw_users = os.getenv("DASHBOARD_USERS", "").strip()
 
-    valid_users = {expected_user.lower(), "admin@hzsaas.com", "admin", "ingenieria@hzsaas.com"}
-    valid_passwords = {expected_pass, "HzSaaS2026!", "revops_admin_2026", "admin123"}
+    if raw_users:
+        for pair in raw_users.split(","):
+            if ":" in pair:
+                u, p = pair.strip().split(":", 1)
+                if u.strip() and p.strip():
+                    credentials_map[u.strip().lower()] = p.strip()
 
-    user_ok = any(secrets.compare_digest(clean_user, u) for u in valid_users)
-    pass_ok = any(secrets.compare_digest(req.password, p) for p in valid_passwords)
+    # Fallback to single primary user from .env
+    default_user = os.getenv("DASHBOARD_USERNAME", "admin@hzsaas.com").strip().lower()
+    default_pass = os.getenv("DASHBOARD_PASSWORD", "HzSaaS2026!").strip()
+    if default_user not in credentials_map:
+        credentials_map[default_user] = default_pass
 
-    if not (user_ok and pass_ok):
+    # Safe constant-time authentication check
+    auth_ok = False
+    if clean_user in credentials_map:
+        auth_ok = secrets.compare_digest(req.password, credentials_map[clean_user])
+
+    if not auth_ok:
         rate_limiter.record_failure(fail_key)
         raise HTTPException(
             status_code=401,
