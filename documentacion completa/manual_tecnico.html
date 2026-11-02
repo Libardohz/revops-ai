@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Manual Técnico e Interno - RevOps AI</title>
+<style>
+  @page { size: letter; margin: 18mm 20mm; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #0f172a;
+    line-height: 1.55;
+    font-size: 10pt;
+    margin: 0;
+    padding: 0;
+  }
+  .header-badge {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #2563eb;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  h1 {
+    font-size: 21pt;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+  }
+  .meta-sub {
+    font-size: 9pt;
+    color: #64748b;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+  }
+  .callout {
+    background: #f1f5f9;
+    border-left: 4px solid #2563eb;
+    padding: 12px 16px;
+    border-radius: 4px;
+    font-size: 9.5pt;
+    margin-bottom: 24px;
+  }
+  .callout strong { color: #0f172a; display: block; margin-bottom: 4px; font-size: 10pt; }
+  h2 {
+    font-size: 13pt;
+    font-weight: 700;
+    margin: 22px 0 10px 0;
+    color: #1e293b;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 4px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0 20px 0;
+    font-size: 8.8pt;
+  }
+  th {
+    background: #0f172a;
+    color: #ffffff;
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: 600;
+  }
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #f8fafc; }
+  pre {
+    background: #09090b;
+    color: #f8fafc;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 8.5pt;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    line-height: 1.4;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 5px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 8pt;
+  }
+  .page-break { page-break-after: always; }
+</style>
+</head>
+<body>
+
+<div class="header-badge">Ingeniería de Software · Especificación de Arquitectura v2.4</div>
+<h1>MANUAL TÉCNICO INTERNO DE REVOPS AI</h1>
+<div class="meta-sub">Clasificación: Confidencial · Audiencia: CTO, Arquitectos de Software, Desarrolladores Fullstack y DevOps</div>
+
+<div class="callout">
+  <strong>Sinopsis de Ingeniería</strong>
+  RevOps AI es un micro-kernel modular de alto rendimiento implementado en Python 3.11+ y FastAPI. Integra un motor AST para extracción digital no supervisada, un pipeline multi-agente con evaluación heurística y LLM (Gemini 2.0), aislamiento forzado por inquilino en la capa de persistencia ORM, y una interfaz de usuario reactiva construida bajo la metodología Anti-AI Hallmark (cero dependencias de terceros, cero cambios de diseño inesperados y máxima densidad visual).
+</div>
+
+<h2>1. MATRIZ DEL STACK TECNOLÓGICO</h2>
+<table>
+  <thead>
+    <tr>
+      <th style="width: 25%;">Capa del Sistema</th>
+      <th style="width: 30%;">Tecnologías Empleadas</th>
+      <th>Misión Técnica y Justificación de Rendimiento</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Backend Core & API</strong></td>
+      <td>FastAPI, Starlette, Pydantic v2, Uvicorn</td>
+      <td>Manejo asíncrono de alto caudal, tipado estricto en tiempo de compilación y validación de payloads HTTP.</td>
+    </tr>
+    <tr>
+      <td><strong>Persistencia & Datos</strong></td>
+      <td>SQLAlchemy 2.0 ORM, SQLite / Supabase PostgreSQL</td>
+      <td>Abstracción relacional con aislamiento forzado por <span class="tag">tenant_id</span> y auto-migración DDL al arranque.</td>
+    </tr>
+    <tr>
+      <td><strong>Scraping & AST</strong></td>
+      <td>Requests, BeautifulSoup4, Regex Parsers</td>
+      <td>Inspección de sitios web en paralelo, con control de timeouts (8s) y filtrado de contenido oculto defensivo.</td>
+    </tr>
+    <tr>
+      <td><strong>Agentes de IA</strong></td>
+      <td>Gemini 2.0 Flash / Pro + Motor Determinista</td>
+      <td>Comprensión del valor comercial y redacción personalizada. Resiliente a fallas mediante fallback offline.</td>
+    </tr>
+    <tr>
+      <td><strong>Seguridad & Auth</strong></td>
+      <td>HMAC-SHA256, Bcrypt, Leaky Bucket Limiter</td>
+      <td>Bloqueo anti-fuerza bruta (5 intentos/5 min), cookies cifradas HttpOnly y sanitización Zero-Trust.</td>
+    </tr>
+    <tr>
+      <td><strong>Frontend Dashboard</strong></td>
+      <td>HTML5, Vanilla JS ES2022, CSS Tokens Anti-AI</td>
+      <td>Cero librerías externas (sin React ni Bootstrap), gráficos de telemetría en tiempo real con CSS nativo.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>2. PIPELINE DE AGENTES Y FLUJO DEL CÓDIGO</h2>
+<pre>
+URL Objetivo ──► IngestionAgent (AST Scraper) ──► ResearchAgent (Gap Analyzer)
+                      │                                  │
+                      ▼                                  ▼
+            ScoringEngine (0-100) ──────────────► CopywriterAgent (B2B Copy)
+                      │                                  │
+                      ▼                                  ▼
+            ApprovalStore (HITL) ◄─────────────── Persistencia ORM (TenantScoped)
+</pre>
+
+<p>
+  <strong>A. IngestionAgent (<span class="tag">src/agents/ingestion.py</span>):</strong> Realiza una petición GET defensiva con cabeceras reales de navegador. Extrae únicamente el contenido semántico visible y desactiva vectores de inyección de prompt presentes en comentarios o nodos ocultos del DOM.
+</p>
+<p>
+  <strong>B. ResearchAgent (<span class="tag">src/agents/research.py</span>):</strong> Analiza la presencia de enlaces de mensajería (WhatsApp), módulos de agenda en línea (Doctoralia, Calendly) y especialidades médicas o de servicios.
+</p>
+<p>
+  <strong>C. ScoringEngine (<span class="tag">src/agents/scoring.py</span>):</strong> Aplica la fórmula algorítmica:
+  <br>
+  <code>Score = 50 (Base) + Puntos_Servicios (máx +20) - Falta_WhatsApp (15) - Falta_Agenda (15)</code>
+  <br>
+  Un score ≥ 70 ingresa directamente a <span class="tag">PENDING_APPROVAL</span>. Leads con menor puntuación van a <span class="tag">DISCARDED</span>.
+</p>
+<p>
+  <strong>D. CopywriterAgent (<span class="tag">src/agents/copywriter.py</span>):</strong> Genera la propuesta personalizada dirigida al decisor enfocándose exclusivamente en solucionar las brechas encontradas, adjuntando la cláusula legal de Habeas Data.
+</p>
+<p>
+  <strong>E. AutonomousProspectingAgent (<span class="tag">src/agents/autonomous_scout.py</span>):</strong> Descubre dominios corporativos en ciudades objetivo (Montería, Medellín, etc.) y ejecuta el pipeline de auditoría de forma concurrente.
+</p>
+
+<div class="page-break"></div>
+
+<h2>3. SEGURIDAD ZERO-TRUST Y AISLAMIENTO MULTI-TENANT</h2>
+<ul>
+  <li><strong>Aislamiento Estricto por Tenant:</strong> Todo acceso a datos pasa por <span class="tag">TenantScopedRepository</span> (<span class="tag">src/db/repository.py</span>). Cada consulta SQL/ORM incluye de forma obligatoria <code>filter_by(tenant_id=self.tenant_id)</code>. Es imposible que los datos de un cliente se crucen con otro.</li>
+  <li><strong>Defensa Anti-Inyección de Prompts:</strong> La entrada web se analiza con expresiones regulares defensivas para neutralizar cadenas que busquen desviar el comportamiento del LLM (ej. <em>"Ignore previous instructions"</em>).</li>
+  <li><strong>Control de Trazabilidad e Inmutabilidad:</strong> La tabla <span class="tag">audit_logs</span> guarda un registro cronológico de cada aprobación, descarte, cambio de notas o edición de contacto con su actor y fecha ISO.</li>
+</ul>
+
+<h2>4. MODELO DE RENTABILIDAD Y UNIT ECONOMICS</h2>
+<p>Desglose de costos reales para el procesamiento de <strong>1,000 prospectos auditados y despachados</strong>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Concepto de Gasto</th>
+      <th>Costo (1,000 Leads)</th>
+      <th>Costo Unitario por Empresa</th>
+      <th>Detalle Operativo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Inferencia IA (Gemini 2.0 Flash)</strong></td>
+      <td>$0.23 USD (~$950 COP)</td>
+      <td>$0.00023 USD (~$0.95 COP)</td>
+      <td>1,500 tokens de entrada + 200 tokens de salida por lead.</td>
+    </tr>
+    <tr>
+      <td><strong>Cómputo & Servidor (VPS)</strong></td>
+      <td>$0.10 USD (~$410 COP)</td>
+      <td>$0.00010 USD (~$0.41 COP)</td>
+      <td>Instancia VPS de $5 USD/mes prorrateada por volumen.</td>
+    </tr>
+    <tr>
+      <td><strong>Scraping & Red</strong></td>
+      <td>$0.00 USD ($0 COP)</td>
+      <td>$0.00 USD ($0 COP)</td>
+      <td>Ejecución directa sin costes de intermediarios API.</td>
+    </tr>
+    <tr>
+      <td><strong>Despacho WhatsApp</strong></td>
+      <td>$0.00 USD ($0 COP)</td>
+      <td>$0.00 USD ($0 COP)</td>
+      <td>Enlace nativo mediante protocolo directo <span class="tag">wa.me</span>.</td>
+    </tr>
+    <tr>
+      <td><strong>TOTAL OPERATIVO</strong></td>
+      <td><strong>$0.33 USD (~$1,360 COP)</strong></td>
+      <td><strong>$0.00033 USD (~$1.36 COP)</strong></td>
+      <td><strong>Margen Bruto de Operación: &gt; 99.8%</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>5. GUÍA DE MANTENIMIENTO Y AJUSTES MANUALES</h2>
+<p><strong>A. Actualización de Prospectos por API REST:</strong></p>
+<pre>
+PATCH /api/v1/prospects/{lead_id}
+Content-Type: application/json
+
+{
+  "tenant_id": "hzsaas_colombia",
+  "contact_name": "Dr. Fernando Morales",
+  "contact_phone": "3015559988",
+  "city": "Montería",
+  "followup_day": 3,
+  "internal_notes": "Interesado en demostración presencial"
+}
+</pre>
+
+<p><strong>B. Base de Datos y Migraciones:</strong></p>
+<p>
+  En <span class="tag">src/db/session.py</span>, el método <code>init_db()</code> verifica las columnas de la tabla <code>prospects</code> y ejecuta de manera automática los comandos <code>ALTER TABLE</code> necesarios para preservar compatibilidad hacia atrás sin perder datos.
+</p>
+
+</body>
+</html>
+
