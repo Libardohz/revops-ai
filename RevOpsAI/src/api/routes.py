@@ -517,12 +517,23 @@ def run_autonomous_prospecting(
                 except Exception:
                     html = f"<html><body><h1>{cand.name}</h1><p>Servicios especializados en {req.sector} para {req.city}.</p></body></html>"
 
+                # Extracción automática de WhatsApp/Teléfono directo desde enlaces href si el candidato no lo traía
+                detected_phone = cand.phone
+                if not detected_phone:
+                    wa_matches = re.findall(r'(?:wa\.me/|api\.whatsapp\.com/send\?(?:[^&]*&)?phone=)(\+?[0-9]{8,15})', html)
+                    if wa_matches:
+                        detected_phone = wa_matches[0]
+                    else:
+                        tel_matches = re.findall(r'href=[\'"]tel:(\+?[0-9]{7,15})[\'"]', html)
+                        if tel_matches:
+                            detected_phone = tel_matches[0]
+
                 lead = Prospect(
                     tenant_id=req.tenant_id,
                     name=cand.name,
                     url=cand.url,
                     city=cand.city or req.city,
-                    contact_phone=cand.phone,
+                    contact_phone=detected_phone,
                 )
                 result = active_orch.process_prospect(lead, html)
 

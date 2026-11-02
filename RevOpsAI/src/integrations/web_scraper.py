@@ -18,6 +18,20 @@ class HTMLTextExtractor(HTMLParser):
     def handle_starttag(self, tag, attrs):
         if tag in ("script", "style", "noscript"):
             self._ignore_tag = True
+            return
+
+        # Capturar atributos enriquecedores como enlaces href y aria-labels (ej: wa.me, whatsapp)
+        for attr, val in attrs:
+            if not val:
+                continue
+            val_lower = val.lower()
+            if attr == "href":
+                if "wa.me" in val_lower or "whatsapp" in val_lower or "api.whatsapp" in val_lower:
+                    self.text_parts.append(f" WhatsApp {val} ")
+                elif "tel:" in val_lower or "mailto:" in val_lower:
+                    self.text_parts.append(f" {val} ")
+            elif "whatsapp" in val_lower:
+                self.text_parts.append(" WhatsApp ")
 
     def handle_endtag(self, tag):
         if tag in ("script", "style", "noscript"):
