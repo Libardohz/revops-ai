@@ -521,6 +521,7 @@ def run_autonomous_prospecting(
                     tenant_id=req.tenant_id,
                     name=cand.name,
                     url=cand.url,
+                    city=cand.city or req.city,
                     contact_phone=cand.phone,
                 )
                 result = active_orch.process_prospect(lead, html)
