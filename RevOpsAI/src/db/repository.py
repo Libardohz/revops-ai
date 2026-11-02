@@ -52,6 +52,9 @@ class TenantScopedRepository:
         orm.draft_message = prospect.draft_message
         orm.contact_name = getattr(prospect, "contact_name", "") or ""
         orm.contact_phone = getattr(prospect, "contact_phone", "") or ""
+        orm.internal_notes = getattr(prospect, "internal_notes", "") or ""
+        orm.city = getattr(prospect, "city", "") or ""
+        orm.followup_day = getattr(prospect, "followup_day", 1) or 1
         orm.is_blacklisted = prospect.is_blacklisted
         self.session.commit()
         return prospect
@@ -76,6 +79,9 @@ class TenantScopedRepository:
             draft_message=orm.draft_message,
             contact_name=orm.contact_name or "",
             contact_phone=orm.contact_phone or "",
+            internal_notes=orm.internal_notes or "",
+            city=orm.city or "",
+            followup_day=orm.followup_day or 1,
             is_blacklisted=orm.is_blacklisted,
         )
 
@@ -102,6 +108,9 @@ class TenantScopedRepository:
                 draft_message=r.draft_message,
                 contact_name=r.contact_name or "",
                 contact_phone=r.contact_phone or "",
+                internal_notes=r.internal_notes or "",
+                city=r.city or "",
+                followup_day=r.followup_day or 1,
                 is_blacklisted=r.is_blacklisted,
             )
             for r in records

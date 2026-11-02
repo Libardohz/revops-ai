@@ -256,6 +256,14 @@
         <button class="chip-btn" data-filter="no-booking" type="button">Sin agenda en línea</button>
       </div>
 
+      <div class="segmented city-segmented" id="city-chips-group" role="group" aria-label="Filtro de Ciudad / Territorio">
+        <span class="filter-group-label">Territorio:</span>
+        <button class="chip-btn active" data-city="all" type="button">Todas</button>
+        <button class="chip-btn" data-city="Montería" type="button">Montería</button>
+        <button class="chip-btn" data-city="Medellín" type="button">Medellín</button>
+        <button class="chip-btn" data-city="Bogotá" type="button">Bogotá</button>
+      </div>
+
       <div class="toolbar-meta">
         <span id="visible-leads-counter" class="mono">0</span>
         <span>visibles</span>
@@ -349,6 +357,7 @@
     <nav class="drawer-tabs" role="tablist">
       <button class="tab-link active" data-tab="tab-diagnosis" type="button" role="tab">Diagnóstico</button>
       <button class="tab-link" data-tab="tab-outreach" type="button" role="tab">Propuesta</button>
+      <button class="tab-link" data-tab="tab-notes" type="button" role="tab">Notas & Cadencia</button>
       <button class="tab-link" data-tab="tab-audit-logs" type="button" role="tab">Trazabilidad</button>
     </nav>
 
@@ -412,6 +421,32 @@
             </button>
           </div>
           <p class="d-note">Cada envío incluye opción de baja inmediata, conforme a la Ley 1581 de 2012.</p>
+        </section>
+      </div>
+
+      <div id="tab-notes" class="tab-pane">
+        <section class="d-section">
+          <h3 class="d-title">Inteligencia y Notas Internas del Prospecto</h3>
+          <p class="d-text">Registre notas de llamadas, disponibilidad de recepcionista, objeciones u observaciones comerciales.</p>
+          <div class="field-grid" style="margin-bottom: 12px;">
+            <div class="field">
+              <label for="drawer-city-input">Ciudad / Territorio</label>
+              <input type="text" id="drawer-city-input" class="form-input" placeholder="Ej: Montería, Medellín, Bogotá">
+            </div>
+            <div class="field">
+              <label for="drawer-followup-select">Cadencia de Seguimiento</label>
+              <select id="drawer-followup-select" class="form-input">
+                <option value="1">Día 1 — Primer contacto</option>
+                <option value="3">Día 3 — Bump de seguimiento</option>
+                <option value="7">Día 7 — Cierre de ciclo / Descarte cordial</option>
+              </select>
+            </div>
+          </div>
+          <textarea id="drawer-internal-notes" class="copy-editor" spellcheck="false" placeholder="Escriba aquí notas internas de recepción, secretaria o acuerdos telefónicos..."></textarea>
+          <div class="contact-save-row" style="margin-top: 10px;">
+            <button type="button" id="btn-save-notes" class="btn btn-primary">Guardar notas y cadencia</button>
+            <span id="notes-save-status" class="mono text-muted text-xs"></span>
+          </div>
         </section>
       </div>
 

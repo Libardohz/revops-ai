@@ -53,6 +53,12 @@ def init_db(engine) -> None:
                     conn.execute(text("ALTER TABLE prospects ADD COLUMN contact_name VARCHAR(255) DEFAULT '';"))
                 if "contact_phone" not in col_names:
                     conn.execute(text("ALTER TABLE prospects ADD COLUMN contact_phone VARCHAR(64) DEFAULT '';"))
+                if "internal_notes" not in col_names:
+                    conn.execute(text("ALTER TABLE prospects ADD COLUMN internal_notes TEXT DEFAULT '';"))
+                if "city" not in col_names:
+                    conn.execute(text("ALTER TABLE prospects ADD COLUMN city VARCHAR(128) DEFAULT '';"))
+                if "followup_day" not in col_names:
+                    conn.execute(text("ALTER TABLE prospects ADD COLUMN followup_day INTEGER DEFAULT 1;"))
                 conn.commit()
     except Exception:
         pass

@@ -14,6 +14,7 @@
     stats: {},
     selectedLead: null,
     activeFilter: 'all',
+    activeCity: 'all',
     searchQuery: '',
     activeTab: 'tab-diagnosis',
     activeChannel: 'email',
@@ -45,6 +46,7 @@
     filterSearchInput: document.getElementById('filter-search-input'),
     searchClearBtn: document.getElementById('search-clear-btn'),
     filterChipsGroup: document.getElementById('filter-chips-group'),
+    cityChipsGroup: document.getElementById('city-chips-group'),
     visibleLeadsCount: document.getElementById('visible-leads-counter') || document.getElementById('visible-leads-count'),
 
     // Kanban Columns
@@ -76,6 +78,11 @@
     drawerContactPhone: document.getElementById('drawer-contact-phone'),
     btnSaveContactInfo: document.getElementById('btn-save-contact-info'),
     contactSaveStatus: document.getElementById('contact-save-status'),
+    drawerCityInput: document.getElementById('drawer-city-input'),
+    drawerFollowupSelect: document.getElementById('drawer-followup-select'),
+    drawerInternalNotes: document.getElementById('drawer-internal-notes'),
+    btnSaveNotes: document.getElementById('btn-save-notes'),
+    notesSaveStatus: document.getElementById('notes-save-status'),
     drawerLogsList: document.getElementById('drawer-logs-list'),
     btnDrawerApprove: document.getElementById('btn-drawer-approve') || document.getElementById('btn-approve-lead'),
     btnDrawerReject: document.getElementById('btn-drawer-reject') || document.getElementById('btn-reject-lead'),
@@ -373,6 +380,13 @@
         if (!(lead.research_summary || '').includes('Carece de sistema de cita')) return false;
       }
 
+      // 3. City / Territory Filter
+      if (state.activeCity && state.activeCity !== 'all') {
+        const leadCity = (lead.city || '').toLowerCase();
+        const targetCity = state.activeCity.toLowerCase();
+        if (!leadCity.includes(targetCity)) return false;
+      }
+
       return true;
     });
 
@@ -446,6 +460,9 @@
 
       // Extract Micro Tags
       let tagPills = '';
+      if (lead.city) {
+        tagPills += `<span class="tag-pill tag-city">${escapeHtml(lead.city)}</span>`;
+      }
       const summary = lead.research_summary || '';
       const matchServices = summary.match(/(\d+)\s+servicios/i);
       if (matchServices) {
@@ -456,6 +473,11 @@
       }
       if (summary.includes('Carece de sistema de cita')) {
         tagPills += `<span class="tag-pill tag-warn">Sin Cita Online</span>`;
+      }
+      if (lead.state === 'SENT' || lead.state === 'APPROVED') {
+        const day = lead.followup_day || 1;
+        const bumpLabel = day >= 7 ? 'Día 7 (Cierre)' : (day >= 3 ? 'Día 3 (Bump)' : 'Día 1');
+        tagPills += `<span class="tag-pill tag-cadence">${bumpLabel}</span>`;
       }
       if (!tagPills) {
         tagPills = `<span class="tag-pill">Lead Scored</span>`;
@@ -577,6 +599,20 @@
     }
     if (el.contactSaveStatus) {
       el.contactSaveStatus.textContent = '';
+    }
+
+    // Render Internal Notes & Cadence
+    if (el.drawerCityInput) {
+      el.drawerCityInput.value = lead.city || '';
+    }
+    if (el.drawerFollowupSelect) {
+      el.drawerFollowupSelect.value = String(lead.followup_day || 1);
+    }
+    if (el.drawerInternalNotes) {
+      el.drawerInternalNotes.value = lead.internal_notes || '';
+    }
+    if (el.notesSaveStatus) {
+      el.notesSaveStatus.textContent = '';
     }
 
     // Reset to tab 1
@@ -721,6 +757,62 @@
       showToast(`Error al guardar: ${err.message}`, 'error');
     } finally {
       if (el.btnSaveContactInfo) el.btnSaveContactInfo.disabled = false;
+    }
+  }
+
+  /**
+   * Save Lead Internal Notes and Follow-up Cadence
+   */
+  async function saveLeadNotes() {
+    if (!state.selectedLead) return;
+    const leadId = state.selectedLead.id;
+    const notes = el.drawerInternalNotes ? el.drawerInternalNotes.value : '';
+    const city = el.drawerCityInput ? el.drawerCityInput.value.trim() : '';
+    const followupDay = el.drawerFollowupSelect ? parseInt(el.drawerFollowupSelect.value, 10) : 1;
+
+    if (el.btnSaveNotes) el.btnSaveNotes.disabled = true;
+    if (el.notesSaveStatus) el.notesSaveStatus.textContent = 'Guardando...';
+
+    try {
+      const res = await fetch(`/api/v1/prospects/${encodeURIComponent(leadId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_id: state.tenantId,
+          internal_notes: notes,
+          city: city,
+          followup_day: followupDay,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Fallo al actualizar notas');
+      }
+
+      const updated = await res.json();
+      state.selectedLead.internal_notes = updated.internal_notes;
+      state.selectedLead.city = updated.city;
+      state.selectedLead.followup_day = updated.followup_day;
+
+      const targetInState = state.leads.find(l => l.id === leadId);
+      if (targetInState) {
+        targetInState.internal_notes = updated.internal_notes;
+        targetInState.city = updated.city;
+        targetInState.followup_day = updated.followup_day;
+      }
+
+      if (el.notesSaveStatus) el.notesSaveStatus.textContent = 'Guardado ✓';
+      showToast('Notas internas y cadencia actualizadas');
+      renderKanban();
+      setTimeout(() => {
+        if (el.notesSaveStatus) el.notesSaveStatus.textContent = '';
+      }, 2500);
+    } catch (err) {
+      if (el.notesSaveStatus) el.notesSaveStatus.textContent = 'Error';
+      showToast(`Error al guardar notas: ${err.message}`, 'error');
+    } finally {
+      if (el.btnSaveNotes) el.btnSaveNotes.disabled = false;
     }
   }
 
@@ -1035,6 +1127,8 @@
       if (el.modalScoutSubmit) el.modalScoutSubmit.disabled = false;
     }
   }
+
+  function openBatchModal() {
     if (el.modalBatchAudit) el.modalBatchAudit.classList.add('active');
     if (el.batchStepper) el.batchStepper.style.display = 'none';
     if (el.modalBatchSubmit) el.modalBatchSubmit.disabled = false;
@@ -1383,6 +1477,17 @@
       });
     }
 
+    if (el.cityChipsGroup) {
+      el.cityChipsGroup.addEventListener('click', (e) => {
+        const btn = e.target.closest('.chip-btn');
+        if (!btn) return;
+        el.cityChipsGroup.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.activeCity = btn.dataset.city;
+        applyFilters();
+      });
+    }
+
     // Live Audit Modal Controls
     if (el.btnOpenAuditModal) el.btnOpenAuditModal.addEventListener('click', openAuditModal);
     if (el.modalAuditClose) el.modalAuditClose.addEventListener('click', closeAuditModal);
@@ -1443,6 +1548,11 @@
     // Save Contact Info inside Drawer
     if (el.btnSaveContactInfo) {
       el.btnSaveContactInfo.addEventListener('click', saveContactInfo);
+    }
+
+    // Save Internal Notes & Cadence inside Drawer
+    if (el.btnSaveNotes) {
+      el.btnSaveNotes.addEventListener('click', saveLeadNotes);
     }
 
     // Direct WhatsApp Dispatch inside Drawer (Smart Phone Targeting)

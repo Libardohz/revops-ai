@@ -389,6 +389,11 @@ button { cursor: pointer; background: none; border: 0; }
 }
 .tag-pill.tag-warn { color: var(--text); border-color: var(--border-strong); }
 .tag-pill.tag-warn::before { content: ""; display: inline-block; width: 5px; height: 5px; margin-right: 0.35rem; vertical-align: 1px; background: var(--accent); transform: skewX(-20deg); }
+.tag-pill.tag-city { color: var(--accent); border-color: var(--border-strong); }
+.tag-pill.tag-cadence { color: var(--accent); background: rgba(34, 197, 94, 0.08); border-color: var(--accent); }
+
+.city-segmented { display: flex; align-items: center; gap: 0.3rem; margin-left: 0.5rem; }
+.filter-group-label { font-family: var(--font-mono); font-size: 11px; color: var(--text-3); text-transform: uppercase; margin-right: 0.3rem; }
 
 .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; padding-top: 0.7rem; border-top: 1px solid var(--border-subtle); }
 .card-actions-single { grid-template-columns: 1fr; }

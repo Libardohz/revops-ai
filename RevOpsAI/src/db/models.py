@@ -21,6 +21,9 @@ class ProspectORM(Base):
     draft_message: Mapped[str] = mapped_column(Text, default="")
     contact_name: Mapped[str] = mapped_column(String(255), default="")
     contact_phone: Mapped[str] = mapped_column(String(64), default="")
+    internal_notes: Mapped[str] = mapped_column(Text, default="")
+    city: Mapped[str] = mapped_column(String(128), default="")
+    followup_day: Mapped[int] = mapped_column(Integer, default=1)
     is_blacklisted: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

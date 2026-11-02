@@ -453,11 +453,14 @@ def get_pending(
 
 
 class ProspectUpdateRequest(BaseModel):
-    """Payload for updating operational contact details and outreach draft."""
+    """Payload for updating operational contact details, internal notes, territory and outreach draft."""
     tenant_id: str
     contact_name: str | None = None
     contact_phone: str | None = None
     draft_message: str | None = None
+    internal_notes: str | None = None
+    city: str | None = None
+    followup_day: int | None = None
 
 
 class BatchAuditRequest(BaseModel):
@@ -564,13 +567,19 @@ def update_prospect_details(
             lead.contact_phone = "".join(c for c in raw_phone if c.isdigit() or c == "+")
         if req.draft_message is not None:
             lead.draft_message = req.draft_message
+        if req.internal_notes is not None:
+            lead.internal_notes = req.internal_notes.strip()
+        if req.city is not None:
+            lead.city = req.city.strip()
+        if req.followup_day is not None:
+            lead.followup_day = max(1, int(req.followup_day))
 
         repo.save_prospect(lead)
         repo.log_audit(
             lead_id=lead.id,
             actor="human_operator",
             action="UPDATE_CONTACT_INFO",
-            reason="Actualización de datos de contacto o propuesta en drawer",
+            reason="Actualización de datos de contacto, notas o propuesta en drawer",
         )
 
         # Update in-memory approval store if tracked

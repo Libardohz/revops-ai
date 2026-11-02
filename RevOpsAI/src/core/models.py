@@ -36,6 +36,9 @@ class Prospect(BaseModel):
     draft_message: str = ""
     contact_name: str = ""
     contact_phone: str = ""
+    internal_notes: str = ""
+    city: str = ""
+    followup_day: int = 1
     is_blacklisted: bool = False
 
     VALID_TRANSITIONS: ClassVar[dict[ProspectState, set[ProspectState]]] = {
