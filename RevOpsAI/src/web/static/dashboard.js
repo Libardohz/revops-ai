@@ -840,57 +840,87 @@
       return;
     }
 
-    // Sanitizer for CSV cell: strips aggressive newlines into single lines or clean spaces, escapes quotes
-    const sanitizeCell = (val) => {
-      if (val === null || val === undefined) return '""';
-      const clean = String(val)
-        .replace(/\r\n/g, ' ')
-        .replace(/[\r\n]/g, ' ')
-        .replace(/\t/g, ' ')
-        .replace(/"/g, '""')
+    // Build genuine Excel HTML table that Excel renders with zero encoding or column splitting issues
+    const escapeExcelXml = (val) => {
+      if (val === null || val === undefined) return '';
+      return String(val)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+        .replace(/\r\n/g, '<br style="mso-data-placement:same-cell;"/>')
+        .replace(/[\r\n]/g, '<br style="mso-data-placement:same-cell;"/>')
         .trim();
-      return `"${clean}"`;
     };
 
     const headers = [
-      'ID',
-      'Nombre',
-      'URL',
-      'Tenant',
-      'Estado',
-      'Score',
-      'Resumen_Investigacion',
-      'Propuesta_Outreach'
+      'ID Prospecto',
+      'Nombre Empresa',
+      'Sitio Web',
+      'Unidad / Tenant',
+      'Estado Pipeline',
+      'Score Calificación',
+      'Resumen de Investigación y Brechas',
+      'Propuesta de Comunicación (Outreach)'
     ];
 
-    const rows = state.filteredLeads.map(l => [
-      sanitizeCell(l.id),
-      sanitizeCell(l.name),
-      sanitizeCell(l.url),
-      sanitizeCell(l.tenant_id),
-      sanitizeCell(l.state),
-      l.score || 0,
-      sanitizeCell(l.research_summary),
-      sanitizeCell(l.draft_message),
-    ]);
+    const thead = `<tr>${headers.map(h => `<th style="background-color:#18181b;color:#f4f4f5;font-weight:bold;border:1px solid #3f3f46;padding:8px;font-family:Calibri,sans-serif;">${escapeExcelXml(h)}</th>`).join('')}</tr>`;
 
-    // Use semicolon delimiter as standard for Excel in Spanish/European locales, or comma with explicit Sep declaration
-    // Including "\uFEFF" (Byte Order Mark) forces Excel to interpret UTF-8 and render tildes/ñ perfectly!
-    const csvHeaderLine = headers.map(h => `"${h}"`).join(';');
-    const csvBodyLines = rows.map(r => r.join(';'));
-    const csvContent = '\uFEFF' + [csvHeaderLine, ...csvBodyLines].join('\r\n');
+    const tbody = state.filteredLeads.map((l, idx) => {
+      const bg = idx % 2 === 0 ? '#ffffff' : '#f9fafb';
+      return `<tr>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-family:Calibri,sans-serif;">${escapeExcelXml(l.id)}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-weight:600;font-family:Calibri,sans-serif;">${escapeExcelXml(l.name)}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-family:Calibri,sans-serif;">${escapeExcelXml(l.url)}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-family:Calibri,sans-serif;">${escapeExcelXml(l.tenant_id)}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-family:Calibri,sans-serif;">${escapeExcelXml(l.state)}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;text-align:center;font-weight:bold;font-family:Calibri,sans-serif;">${l.score || 0}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-family:Calibri,sans-serif;white-space:normal;">${escapeExcelXml(l.research_summary)}</td>
+        <td style="background-color:${bg};border:1px solid #e4e4e7;padding:6px 8px;font-family:Calibri,sans-serif;white-space:normal;">${escapeExcelXml(l.draft_message)}</td>
+      </tr>`;
+    }).join('');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const excelHtml = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <!--[if gte mso 9]>
+  <xml>
+    <x:ExcelWorkbook>
+      <x:ExcelWorksheets>
+        <x:ExcelWorksheet>
+          <x:Name>RevOps Pipeline</x:Name>
+          <x:WorksheetOptions>
+            <x:DisplayGridlines/>
+          </x:WorksheetOptions>
+        </x:ExcelWorksheet>
+      </x:ExcelWorksheets>
+    </x:ExcelWorkbook>
+  </xml>
+  <![endif]-->
+  <style>
+    br { mso-data-placement: same-cell; }
+  </style>
+</head>
+<body>
+  <table>
+    <thead>${thead}</thead>
+    <tbody>${tbody}</tbody>
+  </table>
+</body>
+</html>`;
+
+    const blob = new Blob([excelHtml], { type: 'application/vnd.ms-excel;charset=utf-8;' });
     const blobUrl = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = blobUrl;
-    link.setAttribute('download', `revops_pipeline_${state.tenantId}_${Date.now()}.csv`);
+    link.setAttribute('download', `revops_pipeline_${state.tenantId}_${Date.now()}.xls`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(blobUrl);
 
-    showToast(`Exportados ${state.filteredLeads.length} prospectos a CSV (formato Excel limpio)`);
+    showToast(`Exportados ${state.filteredLeads.length} prospectos en formato nativo para Excel`);
   }
 
   /**
