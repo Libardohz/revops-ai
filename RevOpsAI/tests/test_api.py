@@ -146,3 +146,48 @@ def test_api_disallowed_state_transition_returns_409():
         handle_action(action_req, store=store)
     assert exc_info.value.status_code == 409
     assert "Transición no permitida" in exc_info.value.detail
+
+
+def test_api_contact_update_and_batch_audit_flow():
+    from RevOpsAI.src.api.routes import (
+        update_prospect_details,
+        batch_audit_urls,
+        ProspectUpdateRequest,
+        BatchAuditRequest,
+    )
+    orch = get_orchestrator()
+    store = get_approval_store()
+
+    # 1. Batch audit endpoint
+    batch_req = BatchAuditRequest(
+        tenant_id="tenant_batch_test",
+        sector="clinicas",
+        urls=[
+            "https://odontologiamonteria.co",
+            "https://implantessinu.com",
+        ],
+    )
+    batch_res = batch_audit_urls(batch_req, orch=orch)
+    assert batch_res["processed_count"] == 2
+    lead_id = batch_res["results"][0]["id"]
+
+    # 2. Update contact details (WhatsApp, Decisor, Copy)
+    upd_req = ProspectUpdateRequest(
+        tenant_id="tenant_batch_test",
+        contact_name="Dra. Valentina Vega",
+        contact_phone="+57 300 987 6543",
+        draft_message="Mensaje personalizado para la Dra. Valentina.",
+    )
+    updated = update_prospect_details(lead_id=lead_id, req=upd_req, store=store)
+    assert updated.contact_name == "Dra. Valentina Vega"
+    assert updated.contact_phone == "+573009876543"
+    assert updated.draft_message == "Mensaje personalizado para la Dra. Valentina."
+
+    # 3. Mark interested transition
+    action_interested = ApprovalActionRequest(
+        tenant_id="tenant_batch_test",
+        lead_id=lead_id,
+        action="MARK_INTERESTED",
+    )
+    interested_lead = handle_action(action_interested, store=store)
+    assert interested_lead.state == "INTERESTED"

@@ -75,6 +75,7 @@
       <div class="page-actions">
         <button id="btn-seed-demo" class="btn btn-line" type="button" title="Cargar prospectos de ejemplo en la unidad actual">Cargar datos demo</button>
         <button id="btn-clear-demo" class="btn btn-line btn-clear-demo" type="button" title="Limpiar y desactivar datos de prueba en la unidad actual">Desactivar datos demo</button>
+        <button id="btn-open-batch-modal" class="btn btn-line" type="button" title="Auditar una lista de múltiples sitios web en lote">Auditoría en lote</button>
         <button id="btn-export-csv" class="btn btn-line" type="button" title="Descargar la vista actual en archivo de Excel">Exportar Excel (CSV)</button>
         <button id="btn-open-audit-modal" class="btn btn-primary" type="button">
           <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -369,10 +370,28 @@
 
       <div id="tab-outreach" class="tab-pane">
         <section class="d-section">
+          <h3 class="d-title">Datos del Decisor / Contacto Directo</h3>
+          <div class="contact-editor-grid">
+            <div class="field">
+              <label for="drawer-contact-name">Nombre / Cargo del Decisor</label>
+              <input type="text" id="drawer-contact-name" class="form-input" placeholder="Ej: Dr. Carlos Pérez (Director Médico)">
+            </div>
+            <div class="field">
+              <label for="drawer-contact-phone">WhatsApp de Contacto (Colombia)</label>
+              <input type="tel" id="drawer-contact-phone" class="form-input" placeholder="Ej: 3001234567 o +57 300 123 4567">
+            </div>
+          </div>
+          <div class="contact-save-row">
+            <button type="button" id="btn-save-contact-info" class="btn btn-sm btn-line">Guardar datos de contacto</button>
+            <span id="contact-save-status" class="mono text-muted text-xs"></span>
+          </div>
+        </section>
+
+        <section class="d-section">
           <h3 class="d-title">Canal de despacho</h3>
           <div class="seg-radio" role="radiogroup" aria-label="Canal de despacho">
-            <label><input type="radio" name="dispatch-channel" value="email" checked><span>Correo corporativo</span></label>
-            <label><input type="radio" name="dispatch-channel" value="whatsapp"><span>WhatsApp Business</span></label>
+            <label><input type="radio" name="dispatch-channel" value="whatsapp" checked><span>WhatsApp Business Directo</span></label>
+            <label><input type="radio" name="dispatch-channel" value="email"><span>Correo corporativo</span></label>
           </div>
         </section>
         <section class="d-section">
@@ -383,7 +402,10 @@
           <textarea id="drawer-copy" class="copy-editor" spellcheck="false" placeholder="Este prospecto aún no tiene borrador."></textarea>
           <div class="copy-actions">
             <button type="button" id="btn-copy-outreach" class="btn btn-line">Copiar texto</button>
-            <button type="button" id="btn-whatsapp-direct" class="btn btn-line">Abrir en WhatsApp</button>
+            <button type="button" id="btn-whatsapp-direct" class="btn btn-primary">
+              <svg class="ico" viewBox="0 0 16 16" aria-hidden="true" style="fill:currentColor;stroke:none;"><path d="M13.6 2.4A7.9 7.9 0 0 0 8 0C3.6 0 0 3.6 0 8a7.9 7.9 0 0 0 1.2 4.2L0 16l3.9-1.2A7.9 7.9 0 0 0 8 16c4.4 0 8-3.6 8-8 0-2.1-.8-4.2-2.4-5.6zm-5.6 12.3c-1.3 0-2.5-.3-3.6-1l-.3-.2-2.7.8.8-2.6-.2-.3a6.6 6.6 0 1 1 6 3.3zm3.7-4.9c-.2-.1-1.2-.6-1.4-.7-.2-.1-.3-.1-.5.1-.1.2-.5.7-.6.8-.1.1-.2.2-.4.1s-.9-.3-1.7-1a6.3 6.3 0 0 1-1.2-1.5c-.1-.2 0-.3.1-.4l.3-.3.2-.3c.1-.1.1-.2 0-.3s-.5-1.1-.6-1.5c-.2-.4-.4-.3-.5-.3h-.4c-.1 0-.4.1-.6.3s-.8.8-.8 1.9c0 1.1.8 2.2.9 2.3.1.2 1.6 2.4 3.8 3.4.5.2 1 .4 1.3.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-.9.1-1z"/></svg>
+              Abrir WhatsApp con Decisor
+            </button>
           </div>
           <p class="d-note">Cada envío incluye opción de baja inmediata, conforme a la Ley 1581 de 2012.</p>
         </section>
@@ -469,6 +491,62 @@
         <div class="modal-actions">
           <button type="button" id="modal-audit-cancel" class="btn btn-ghost">Cancelar</button>
           <button type="submit" id="modal-audit-submit" class="btn btn-primary">Ejecutar auditoría</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ BATCH AUDIT MODAL ============ -->
+  <div id="modal-batch-audit" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-batch-title">
+    <div class="modal-box modal-box-lg">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow">Ingesta Masiva</span>
+          <h2 class="modal-title" id="modal-batch-title">Auditar lista de sitios web (Lote B2B)</h2>
+        </div>
+        <button id="modal-batch-close" class="icon-btn" type="button" aria-label="Cerrar">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+      </header>
+      <p class="modal-desc">Pega hasta 20 URLs de empresas locales (una por línea). El motor las procesará, calificará y dejará las oportunidades listas en la columna 01 de tu bandeja.</p>
+
+      <form id="form-batch-audit" class="form">
+        <div class="form-row">
+          <div class="field">
+            <label for="batch-audit-sector">Sector</label>
+            <select id="batch-audit-sector" class="form-input">
+              <option value="clinicas">Salud, clínicas y odontología</option>
+              <option value="inmobiliarias">Inmobiliarias y constructoras</option>
+              <option value="abogados">Firmas de abogados</option>
+              <option value="turismo_medico">Turismo médico</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="batch-audit-tenant">Unidad de destino</label>
+            <select id="batch-audit-tenant" class="form-input">
+              <option value="tenant_clinicas_madrid">Salud y odontología</option>
+              <option value="hzsaas_colombia">hzSaaS Colombia · Multi-sector</option>
+              <option value="tenant_inmobiliarias_col">Inmobiliarias y constructoras</option>
+              <option value="tenant_abogados_col">Firmas de abogados</option>
+              <option value="tenant_turismo_medico_col">Turismo médico</option>
+              <option value="cliente_demo">Entorno de pruebas</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="batch-urls-input">Lista de Sitios Web (1 por línea, máx 20)</label>
+          <textarea id="batch-urls-input" class="copy-editor" rows="6" placeholder="https://clinicasinu.co&#10;https://constructoralasabana.com&#10;https://abogadosmonteria.co" required style="min-height: 120px;"></textarea>
+        </div>
+
+        <div id="batch-stepper" class="stepper" style="display:none;">
+          <div class="stepper-bar"><div id="batch-stepper-fill" class="stepper-fill"></div></div>
+          <div id="batch-stepper-label" class="stepper-label">Procesando lote…</div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="modal-batch-cancel" class="btn btn-ghost">Cancelar</button>
+          <button type="submit" id="modal-batch-submit" class="btn btn-primary">Iniciar auditoría en lote</button>
         </div>
       </form>
     </div>

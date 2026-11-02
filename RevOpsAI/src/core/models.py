@@ -34,6 +34,8 @@ class Prospect(BaseModel):
     score: int = 0
     research_summary: str = ""
     draft_message: str = ""
+    contact_name: str = ""
+    contact_phone: str = ""
     is_blacklisted: bool = False
 
     VALID_TRANSITIONS: ClassVar[dict[ProspectState, set[ProspectState]]] = {
@@ -43,10 +45,10 @@ class Prospect(BaseModel):
         ProspectState.SCORING: {ProspectState.QUALIFIED, ProspectState.DISCARDED},
         ProspectState.QUALIFIED: {ProspectState.DRAFTING},
         ProspectState.DRAFTING: {ProspectState.PENDING_APPROVAL},
-        ProspectState.PENDING_APPROVAL: {ProspectState.APPROVED, ProspectState.DISCARDED},
-        ProspectState.APPROVED: {ProspectState.SENT},
+        ProspectState.PENDING_APPROVAL: {ProspectState.APPROVED, ProspectState.SENT, ProspectState.INTERESTED, ProspectState.DISCARDED},
+        ProspectState.APPROVED: {ProspectState.SENT, ProspectState.INTERESTED, ProspectState.DISCARDED},
         ProspectState.SENT: {ProspectState.OPT_OUT, ProspectState.INTERESTED, ProspectState.DISCARDED},
-        ProspectState.INTERESTED: {ProspectState.OPT_OUT},
+        ProspectState.INTERESTED: {ProspectState.OPT_OUT, ProspectState.DISCARDED},
         ProspectState.DISCARDED: set(),
         ProspectState.OPT_OUT: set(),
     }

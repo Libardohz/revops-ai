@@ -40,8 +40,22 @@ def get_engine(db_url: str | None = None):
 
 
 def init_db(engine) -> None:
-    """Initialize database schema from ORM models."""
+    """Initialize database schema from ORM models, including lightweight schema migration."""
     Base.metadata.create_all(engine)
+    # Auto-migrate SQLite columns if table already existed prior to model expansion
+    try:
+        from sqlalchemy import text
+        with engine.connect() as conn:
+            columns_res = conn.execute(text("PRAGMA table_info(prospects);")).fetchall()
+            col_names = {col[1] for col in columns_res} if columns_res else set()
+            if col_names:
+                if "contact_name" not in col_names:
+                    conn.execute(text("ALTER TABLE prospects ADD COLUMN contact_name VARCHAR(255) DEFAULT '';"))
+                if "contact_phone" not in col_names:
+                    conn.execute(text("ALTER TABLE prospects ADD COLUMN contact_phone VARCHAR(64) DEFAULT '';"))
+                conn.commit()
+    except Exception:
+        pass
 
 
 def get_session_factory(engine) -> sessionmaker[Session]:

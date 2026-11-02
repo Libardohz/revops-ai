@@ -50,6 +50,8 @@ class TenantScopedRepository:
         orm.score = prospect.score
         orm.research_summary = prospect.research_summary
         orm.draft_message = prospect.draft_message
+        orm.contact_name = getattr(prospect, "contact_name", "") or ""
+        orm.contact_phone = getattr(prospect, "contact_phone", "") or ""
         orm.is_blacklisted = prospect.is_blacklisted
         self.session.commit()
         return prospect
@@ -72,6 +74,8 @@ class TenantScopedRepository:
             score=orm.score,
             research_summary=orm.research_summary,
             draft_message=orm.draft_message,
+            contact_name=orm.contact_name or "",
+            contact_phone=orm.contact_phone or "",
             is_blacklisted=orm.is_blacklisted,
         )
 
@@ -96,6 +100,8 @@ class TenantScopedRepository:
                 score=r.score,
                 research_summary=r.research_summary,
                 draft_message=r.draft_message,
+                contact_name=r.contact_name or "",
+                contact_phone=r.contact_phone or "",
                 is_blacklisted=r.is_blacklisted,
             )
             for r in records

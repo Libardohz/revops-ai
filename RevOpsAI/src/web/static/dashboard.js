@@ -72,12 +72,30 @@
     copyCharCounter: document.getElementById('copy-char-counter'),
     btnCopyOutreach: document.getElementById('btn-copy-outreach'),
     btnWhatsappDirect: document.getElementById('btn-whatsapp-direct'),
+    drawerContactName: document.getElementById('drawer-contact-name'),
+    drawerContactPhone: document.getElementById('drawer-contact-phone'),
+    btnSaveContactInfo: document.getElementById('btn-save-contact-info'),
+    contactSaveStatus: document.getElementById('contact-save-status'),
     drawerLogsList: document.getElementById('drawer-logs-list'),
     btnDrawerApprove: document.getElementById('btn-drawer-approve') || document.getElementById('btn-approve-lead'),
     btnDrawerReject: document.getElementById('btn-drawer-reject') || document.getElementById('btn-reject-lead'),
     tabLinks: document.querySelectorAll('.tab-link'),
     tabPanes: document.querySelectorAll('.tab-pane'),
     channelRadios: document.querySelectorAll('input[name="dispatch-channel"]'),
+
+    // Batch Audit Modal
+    btnOpenBatchModal: document.getElementById('btn-open-batch-modal'),
+    modalBatchAudit: document.getElementById('modal-batch-audit'),
+    modalBatchClose: document.getElementById('modal-batch-close'),
+    modalBatchCancel: document.getElementById('modal-batch-cancel'),
+    formBatchAudit: document.getElementById('form-batch-audit'),
+    batchAuditSector: document.getElementById('batch-audit-sector'),
+    batchAuditTenant: document.getElementById('batch-audit-tenant'),
+    batchUrlsInput: document.getElementById('batch-urls-input'),
+    batchStepper: document.getElementById('batch-stepper'),
+    batchStepperFill: document.getElementById('batch-stepper-fill'),
+    batchStepperLabel: document.getElementById('batch-stepper-label'),
+    modalBatchSubmit: document.getElementById('modal-batch-submit'),
 
     // Live Audit Modal
     modalAudit: document.getElementById('modal-audit'),
@@ -428,13 +446,19 @@
         tagPills = `<span class="tag-pill">Lead Scored</span>`;
       }
 
-      // Quick Actions for Pending Column
+      // Quick Actions for Pending Column & Follow-Up Column
       let quickActionsHtml = '';
       if (isPendingCol) {
         quickActionsHtml = `
           <div class="card-actions">
             <button class="btn btn-card btn-danger quick-reject" data-id="${lead.id}">Descartar</button>
             <button class="btn btn-card btn-success quick-approve" data-id="${lead.id}">Aprobar</button>
+          </div>
+        `;
+      } else if (lead.state === 'SENT' || lead.state === 'APPROVED') {
+        quickActionsHtml = `
+          <div class="card-actions card-actions-single">
+            <button class="btn btn-card btn-interested quick-mark-interested" data-id="${lead.id}">Marcar Interesado</button>
           </div>
         `;
       }
@@ -473,6 +497,14 @@
           btnReject.addEventListener('click', (e) => {
             e.stopPropagation();
             openDiscardModal(lead.id);
+          });
+        }
+      } else {
+        const btnInterested = card.querySelector('.quick-mark-interested');
+        if (btnInterested) {
+          btnInterested.addEventListener('click', (e) => {
+            e.stopPropagation();
+            markLeadInterested(lead.id);
           });
         }
       }
@@ -517,10 +549,19 @@
       });
     }
 
-    // Render Copywriter Text
+    // Render Copywriter Text & Contact Info
     if (el.drawerCopy) {
       el.drawerCopy.value = lead.draft_message || '';
       updateCharCounter();
+    }
+    if (el.drawerContactName) {
+      el.drawerContactName.value = lead.contact_name || '';
+    }
+    if (el.drawerContactPhone) {
+      el.drawerContactPhone.value = lead.contact_phone || '';
+    }
+    if (el.contactSaveStatus) {
+      el.contactSaveStatus.textContent = '';
     }
 
     // Reset to tab 1
@@ -610,6 +651,92 @@
     if (!el.drawerCopy || !el.copyCharCounter) return;
     const len = el.drawerCopy.value.length;
     el.copyCharCounter.textContent = `${len.toLocaleString()} caracteres`;
+  }
+
+  /**
+   * Save Contact Details (Name, Phone, Copy)
+   */
+  async function saveContactInfo() {
+    if (!state.selectedLead) return;
+    const leadId = state.selectedLead.id;
+    const contactName = el.drawerContactName ? el.drawerContactName.value.trim() : '';
+    const contactPhone = el.drawerContactPhone ? el.drawerContactPhone.value.trim() : '';
+    const draftMessage = el.drawerCopy ? el.drawerCopy.value : '';
+
+    if (el.btnSaveContactInfo) el.btnSaveContactInfo.disabled = true;
+    if (el.contactSaveStatus) el.contactSaveStatus.textContent = 'Guardando…';
+
+    try {
+      const res = await fetch(`/api/v1/prospects/${encodeURIComponent(leadId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_id: state.tenantId,
+          contact_name: contactName,
+          contact_phone: contactPhone,
+          draft_message: draftMessage,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Fallo al actualizar contacto');
+      }
+
+      const updated = await res.json();
+      state.selectedLead.contact_name = updated.contact_name;
+      state.selectedLead.contact_phone = updated.contact_phone;
+      state.selectedLead.draft_message = updated.draft_message;
+
+      // Update in local state
+      const targetInState = state.leads.find(l => l.id === leadId);
+      if (targetInState) {
+        targetInState.contact_name = updated.contact_name;
+        targetInState.contact_phone = updated.contact_phone;
+        targetInState.draft_message = updated.draft_message;
+      }
+
+      if (el.contactSaveStatus) el.contactSaveStatus.textContent = 'Guardado ✓';
+      showToast('Datos de contacto actualizados correctamente');
+      setTimeout(() => {
+        if (el.contactSaveStatus) el.contactSaveStatus.textContent = '';
+      }, 2500);
+    } catch (err) {
+      if (el.contactSaveStatus) el.contactSaveStatus.textContent = 'Error';
+      showToast(`Error al guardar: ${err.message}`, 'error');
+    } finally {
+      if (el.btnSaveContactInfo) el.btnSaveContactInfo.disabled = false;
+    }
+  }
+
+  /**
+   * Mark Lead as Interested Action (One-click state progression)
+   */
+  async function markLeadInterested(leadId) {
+    try {
+      const res = await fetch('/api/v1/approval/action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_id: state.tenantId,
+          lead_id: leadId,
+          action: 'MARK_INTERESTED',
+          reason: 'Oportunidad confirmada por operador comercial',
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Fallo en la transición');
+      }
+
+      showToast('Prospecto marcado como INTERESADO ✓');
+      closeDrawer();
+      await fetchLeads();
+      await fetchStats();
+    } catch (err) {
+      showToast(`Error: ${err.message}`, 'error');
+    }
   }
 
   /**
@@ -819,7 +946,89 @@
     }
   }
 
-  function openAuditModal() {
+  function openBatchModal() {
+    if (el.modalBatchAudit) el.modalBatchAudit.classList.add('active');
+    if (el.batchStepper) el.batchStepper.style.display = 'none';
+    if (el.modalBatchSubmit) el.modalBatchSubmit.disabled = false;
+    if (el.batchAuditTenant) el.batchAuditTenant.value = state.tenantId;
+    if (el.batchUrlsInput) {
+      el.batchUrlsInput.value = '';
+      el.batchUrlsInput.focus();
+    }
+  }
+
+  function closeBatchModal() {
+    if (el.modalBatchAudit) el.modalBatchAudit.classList.remove('active');
+  }
+
+  /**
+   * Handle Batch Audit Submission
+   */
+  async function handleBatchAudit(e) {
+    e.preventDefault();
+    const rawUrls = el.batchUrlsInput ? el.batchUrlsInput.value : '';
+    const sector = el.batchAuditSector ? el.batchAuditSector.value : 'clinicas';
+    const tenant = el.batchAuditTenant ? el.batchAuditTenant.value : state.tenantId;
+
+    const urls = rawUrls
+      .split('\n')
+      .map(u => u.trim())
+      .filter(u => u.length > 0);
+
+    if (urls.length === 0) {
+      showToast('Ingresa al menos una URL para auditar', 'error');
+      return;
+    }
+    if (urls.length > 20) {
+      showToast('Máximo 20 URLs por lote de auditoría', 'error');
+      return;
+    }
+
+    if (el.batchStepper) el.batchStepper.style.display = 'grid';
+    if (el.modalBatchSubmit) el.modalBatchSubmit.disabled = true;
+
+    if (el.batchStepperFill) el.batchStepperFill.style.width = '35%';
+    if (el.batchStepperLabel) el.batchStepperLabel.textContent = `Procesando lote de ${urls.length} URLs en sector [${sector}]...`;
+
+    try {
+      const res = await fetch('/api/v1/prospects/batch-audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_id: tenant,
+          sector: sector,
+          urls: urls,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Fallo en la auditoría en lote');
+      }
+
+      const data = await res.json();
+      if (el.batchStepperFill) el.batchStepperFill.style.width = '100%';
+      if (el.batchStepperLabel) el.batchStepperLabel.textContent = `Lote finalizado: ${data.processed_count} prospectos generados.`;
+
+      setTimeout(async () => {
+        closeBatchModal();
+        showToast(`Lote completado: ${data.processed_count} prospectos procesados con éxito`);
+
+        if (state.tenantId !== tenant) {
+          state.tenantId = tenant;
+          if (el.tenantSelect) el.tenantSelect.value = tenant;
+          localStorage.setItem('revops_tenant', tenant);
+        }
+
+        await fetchLeads();
+        await fetchStats();
+      }, 700);
+    } catch (err) {
+      if (el.batchStepperLabel) el.batchStepperLabel.textContent = `Error: ${err.message}`;
+      showToast(`Error en lote: ${err.message}`, 'error');
+      if (el.modalBatchSubmit) el.modalBatchSubmit.disabled = false;
+    }
+  }
     if (el.modalAudit) el.modalAudit.classList.add('active');
     if (el.auditStepper) el.auditStepper.style.display = 'none';
     if (el.modalAuditSubmit) el.modalAuditSubmit.disabled = false;
@@ -1131,6 +1340,18 @@
       });
     }
 
+    // Batch Audit Modal Controls
+    if (el.btnOpenBatchModal) el.btnOpenBatchModal.addEventListener('click', openBatchModal);
+    if (el.modalBatchClose) el.modalBatchClose.addEventListener('click', closeBatchModal);
+    if (el.modalBatchCancel) el.modalBatchCancel.addEventListener('click', closeBatchModal);
+    if (el.formBatchAudit) el.formBatchAudit.addEventListener('submit', handleBatchAudit);
+
+    // Save Contact Info inside Drawer
+    if (el.btnSaveContactInfo) {
+      el.btnSaveContactInfo.addEventListener('click', saveContactInfo);
+    }
+
+    // Direct WhatsApp Dispatch inside Drawer (Smart Phone Targeting)
     if (el.btnWhatsappDirect) {
       el.btnWhatsappDirect.addEventListener('click', () => {
         const text = el.drawerCopy ? el.drawerCopy.value.trim() : '';
@@ -1138,9 +1359,17 @@
           showToast('No hay propuesta para enviar por WhatsApp', 'error');
           return;
         }
+
+        let phone = el.drawerContactPhone ? el.drawerContactPhone.value.trim().replace(/\D/g, '') : '';
+        // If 10 digits starting with 3 (Colombia mobile format: 300xxxxxxx), prepend country code 57
+        if (phone.length === 10 && phone.startsWith('3')) {
+          phone = `57${phone}`;
+        }
+
         const encoded = encodeURIComponent(text);
-        window.open(`https://wa.me/?text=${encoded}`, '_blank', 'noopener');
-        showToast('Abriendo WhatsApp con la propuesta lista para enviar');
+        const url = phone ? `https://wa.me/${phone}?text=${encoded}` : `https://wa.me/?text=${encoded}`;
+        window.open(url, '_blank', 'noopener');
+        showToast(phone ? `Abriendo WhatsApp directo con +${phone}` : 'Abriendo WhatsApp con propuesta lista');
       });
     }
 

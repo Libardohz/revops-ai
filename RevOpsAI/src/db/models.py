@@ -19,6 +19,8 @@ class ProspectORM(Base):
     score: Mapped[int] = mapped_column(Integer, default=0)
     research_summary: Mapped[str] = mapped_column(Text, default="")
     draft_message: Mapped[str] = mapped_column(Text, default="")
+    contact_name: Mapped[str] = mapped_column(String(255), default="")
+    contact_phone: Mapped[str] = mapped_column(String(64), default="")
     is_blacklisted: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

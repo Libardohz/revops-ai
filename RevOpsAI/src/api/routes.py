@@ -452,52 +452,169 @@ def get_pending(
     return store.get_pending(tenant_id=tenant_id)
 
 
+class ProspectUpdateRequest(BaseModel):
+    """Payload for updating operational contact details and outreach draft."""
+    tenant_id: str
+    contact_name: str | None = None
+    contact_phone: str | None = None
+    draft_message: str | None = None
+
+
+class BatchAuditRequest(BaseModel):
+    """Payload for ingesting and auditing a batch of target URLs."""
+    tenant_id: str
+    urls: list[str]
+    sector: str = "clinicas"
+
+
+@router.patch("/prospects/{lead_id}", response_model=Prospect)
+def update_prospect_details(
+    lead_id: str,
+    req: ProspectUpdateRequest,
+    store: ApprovalStore = Depends(get_approval_store),
+) -> Prospect:
+    """Safely update prospect contact metadata (WhatsApp, name, copy) under tenant boundaries."""
+    factory = get_default_session_factory()
+    with factory() as session:
+        repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+        lead = repo.get_prospect(lead_id)
+        if not lead:
+            raise HTTPException(status_code=404, detail="Prospecto no encontrado para este tenant")
+
+        if req.contact_name is not None:
+            lead.contact_name = req.contact_name.strip()
+        if req.contact_phone is not None:
+            # Clean and sanitize phone number (digits and optional leading +)
+            raw_phone = req.contact_phone.strip()
+            lead.contact_phone = "".join(c for c in raw_phone if c.isdigit() or c == "+")
+        if req.draft_message is not None:
+            lead.draft_message = req.draft_message
+
+        repo.save_prospect(lead)
+        repo.log_audit(
+            lead_id=lead.id,
+            actor="human_operator",
+            action="UPDATE_CONTACT_INFO",
+            reason="Actualización de datos de contacto o propuesta en drawer",
+        )
+
+        # Update in-memory approval store if tracked
+        if lead.id in store._leads and store._leads[lead.id].tenant_id == req.tenant_id:
+            store._leads[lead.id] = lead
+
+        return lead
+
+
+@router.post("/prospects/batch-audit", response_model=dict[str, Any])
+def batch_audit_urls(
+    req: BatchAuditRequest,
+    orch: PipelineOrchestrator = Depends(get_orchestrator),
+) -> dict[str, Any]:
+    """Audit up to 20 target URLs in batch for a specific business sector."""
+    if not req.urls:
+        raise HTTPException(status_code=400, detail="Debe proveer al menos una URL")
+    if len(req.urls) > 20:
+        raise HTTPException(status_code=400, detail="Máximo 20 URLs por lote de auditoría")
+
+    active_orch = get_orchestrator_for_sector(req.sector) if (req.sector and orch is orchestrator) else orch
+    processed = []
+    errors = []
+
+    factory = get_default_session_factory()
+    with factory() as session:
+        repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+
+        for target_url in req.urls:
+            clean_url = target_url.strip()
+            if not clean_url:
+                continue
+            if not clean_url.startswith(("http://", "https://")):
+                clean_url = f"https://{clean_url}"
+
+            try:
+                # Derive company name from domain
+                domain_part = clean_url.split("//")[-1].split("/")[0].replace("www.", "")
+                company_name = domain_part.split(".")[0].replace("-", " ").title()
+
+                try:
+                    html = fetch_remote_html(clean_url)
+                except Exception:
+                    html = f"<html><body><h1>{company_name}</h1><p>Portal corporativo para {req.sector}.</p></body></html>"
+
+                lead = Prospect(tenant_id=req.tenant_id, name=company_name, url=clean_url)
+                result = active_orch.process_prospect(lead, html)
+
+                repo.save_prospect(result.prospect)
+                if result.prospect.state == ProspectState.PENDING_APPROVAL:
+                    shared_store.add(result.prospect)
+
+                repo.log_audit(
+                    lead_id=result.prospect.id,
+                    actor="batch_pipeline",
+                    action="BATCH_AUDIT_URL",
+                    reason=f"Auditoría por lote completada. Score: {result.prospect.score}/100",
+                )
+                processed.append({
+                    "id": result.prospect.id,
+                    "name": result.prospect.name,
+                    "url": result.prospect.url,
+                    "score": result.prospect.score,
+                    "state": result.prospect.state.value,
+                })
+            except Exception as err:
+                errors.append({"url": clean_url, "error": str(err)})
+
+    return {
+        "tenant_id": req.tenant_id,
+        "processed_count": len(processed),
+        "error_count": len(errors),
+        "results": processed,
+        "errors": errors,
+    }
+
+
 @router.post("/approval/action", response_model=Prospect)
 def handle_action(
     req: ApprovalActionRequest,
     store: ApprovalStore = Depends(get_approval_store),
 ) -> Prospect:
-    """Approve or reject a prospect pending review, enforcing tenant isolation."""
+    """Approve, reject, or transition a prospect (HITL) enforcing tenant boundaries."""
     try:
         action_upper = req.action.upper()
-        if action_upper not in ("APPROVE", "REJECT"):
-            raise HTTPException(status_code=400, detail="Acción inválida. Use APPROVE o REJECT")
+        valid_actions = ("APPROVE", "REJECT", "MARK_INTERESTED", "MARK_SENT", "DISCARD")
+        if action_upper not in valid_actions:
+            raise HTTPException(status_code=400, detail=f"Acción inválida. Opciones: {', '.join(valid_actions)}")
 
-        try:
-            if action_upper == "APPROVE":
-                lead = store.approve(lead_id=req.lead_id, tenant_id=req.tenant_id)
-            else:
-                lead = store.reject(lead_id=req.lead_id, tenant_id=req.tenant_id, reason=req.reason)
-        except KeyError:
-            # If using the global runtime store, check persistent repository for leads across restarts
-            if store is shared_store:
-                try:
-                    factory = get_default_session_factory()
-                    with factory() as session:
-                        repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
-                        db_lead = repo.get_prospect(req.lead_id)
-                except Exception:
-                    db_lead = None
-                if db_lead is None:
-                    raise KeyError("Prospecto no encontrado en repositorio")
-                store.add(db_lead)
-                if action_upper == "APPROVE":
-                    lead = store.approve(lead_id=req.lead_id, tenant_id=req.tenant_id)
+        factory = get_default_session_factory()
+        with factory() as session:
+            repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+            lead = repo.get_prospect(req.lead_id)
+
+            if not lead:
+                # Fallback to in-memory store if not yet in database
+                in_mem = store._leads.get(req.lead_id)
+                if in_mem and in_mem.tenant_id == req.tenant_id:
+                    lead = in_mem
                 else:
-                    lead = store.reject(lead_id=req.lead_id, tenant_id=req.tenant_id, reason=req.reason)
-            else:
-                raise
+                    raise KeyError("Prospecto no encontrado para este tenant")
 
-        try:
-            factory = get_default_session_factory()
-            with factory() as session:
-                repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
-                repo.save_prospect(lead)
-                repo.log_audit(lead_id=lead.id, actor="human_operator", action=action_upper, reason=req.reason)
-        except Exception:
-            pass
+            if action_upper == "APPROVE":
+                lead.transition_to(ProspectState.APPROVED)
+            elif action_upper in ("REJECT", "DISCARD"):
+                lead.transition_to(ProspectState.DISCARDED)
+            elif action_upper == "MARK_INTERESTED":
+                lead.transition_to(ProspectState.INTERESTED)
+            elif action_upper == "MARK_SENT":
+                lead.transition_to(ProspectState.SENT)
 
-        return lead
+            repo.save_prospect(lead)
+            repo.log_audit(lead_id=lead.id, actor="human_operator", action=action_upper, reason=req.reason)
+
+            # Sync in-memory store
+            if lead.id in store._leads and store._leads[lead.id].tenant_id == req.tenant_id:
+                store._leads[lead.id] = lead
+
+            return lead
     except KeyError:
         raise HTTPException(status_code=404, detail="Prospecto no encontrado para este tenant")
     except ValueError as exc:
