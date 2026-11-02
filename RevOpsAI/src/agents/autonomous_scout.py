@@ -104,8 +104,47 @@ class AutonomousProspectingAgent:
 
         candidates: list[DiscoveredCandidate] = []
         serp_key = os.getenv("SERPER_API_KEY")
+        google_api_key = os.getenv("GOOGLE_SEARCH_API_KEY")
+        google_cx = os.getenv("GOOGLE_SEARCH_CX")
 
-        if serp_key:
+        # 1. Google Custom Search JSON API oficial
+        if google_api_key and google_cx:
+            try:
+                query = f"{normalized_sector} {city} colombia pagina web oficial"
+                params = urllib.parse.urlencode({
+                    "key": google_api_key,
+                    "cx": google_cx,
+                    "q": query,
+                    "num": min(10, limit * 2)
+                })
+                req_url = f"https://www.googleapis.com/customsearch/v1?{params}"
+                req = urllib.request.Request(req_url, headers={"User-Agent": "RevOpsBot/2.4"})
+
+                with urllib.request.urlopen(req, timeout=6) as response:
+                    res_json = json.loads(response.read().decode("utf-8"))
+                    items = res_json.get("items", [])
+                    for item in items:
+                        item_url = item.get("link", "")
+                        domain = item_url.split("//")[-1].split("/")[0]
+                        if self._is_clean_corporate_domain(domain):
+                            cand_name = item.get("title", "").split("-")[0].split("|")[0].strip()
+                            candidates.append(
+                                DiscoveredCandidate(
+                                    name=cand_name,
+                                    url=item_url,
+                                    city=city.title(),
+                                    sector=sector,
+                                    phone="",
+                                    source="google_official_api",
+                                )
+                            )
+                            if len(candidates) >= limit:
+                                break
+            except Exception:
+                pass
+
+        # 2. Serper.dev fallback si está configurado
+        if len(candidates) < limit and serp_key:
             try:
                 query = f"{normalized_sector} en {city} colombia pagina web oficial"
                 url = "https://google.serper.dev/search"
