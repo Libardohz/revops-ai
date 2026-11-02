@@ -30,7 +30,9 @@ class AutonomousProspectingAgent:
         "facebook.com", "instagram.com", "linkedin.com", "twitter.com", "x.com",
         "youtube.com", "tiktok.com", "paginasamarillas.com.co", "wikipedia.org",
         "doctoralia.co", "mercadolibre.com.co", "fincaraiz.com.co", "metrocuadrado.com",
-        "ciencuadras.com", "tripadvisor.co", "google.com", "maps.google.com"
+        "ciencuadras.com", "tripadvisor.co", "google.com", "maps.google.com",
+        "rocketreach.co", "zoominfo.com", "crunchbase.com", "apollo.io", "datanyze.com",
+        "computrabajo.com.co", "elempleo.com", "paxer.com", "hoteles.com", "indeed.com"
     }
 
     # Curated directory database of real business targets for rapid Colombian regional discovery
@@ -103,12 +105,52 @@ class AutonomousProspectingAgent:
         normalized_sector = sector.lower()
 
         candidates: list[DiscoveredCandidate] = []
+        tavily_key = os.getenv("TAVILY_API_KEY")
         serp_key = os.getenv("SERPER_API_KEY")
         google_api_key = os.getenv("GOOGLE_SEARCH_API_KEY")
         google_cx = os.getenv("GOOGLE_SEARCH_CX")
 
-        # 1. Google Custom Search JSON API oficial
-        if google_api_key and google_cx:
+        # 1. Tavily AI Search Engine (Especializado para Agentes Autónomos)
+        if tavily_key:
+            try:
+                query = f"empresas y negocios de {normalized_sector} en {city} Colombia sitio web oficial"
+                url = "https://api.tavily.com/search"
+                headers = {"Content-Type": "application/json"}
+                payload = {
+                    "api_key": tavily_key,
+                    "query": query,
+                    "search_depth": "basic",
+                    "include_answer": False,
+                    "max_results": min(10, limit * 2),
+                }
+                data = json.dumps(payload).encode("utf-8")
+                req = urllib.request.Request(url, data=data, headers=headers, method="POST")
+
+                with urllib.request.urlopen(req, timeout=6) as response:
+                    res_json = json.loads(response.read().decode("utf-8"))
+                    results = res_json.get("results", [])
+                    for item in results:
+                        item_url = item.get("url", "")
+                        domain = item_url.split("//")[-1].split("/")[0]
+                        if self._is_clean_corporate_domain(domain):
+                            cand_name = item.get("title", "").split("-")[0].split("|")[0].strip()
+                            candidates.append(
+                                DiscoveredCandidate(
+                                    name=cand_name or domain,
+                                    url=item_url,
+                                    city=city.title(),
+                                    sector=sector,
+                                    phone="",
+                                    source="tavily_ai_search",
+                                )
+                            )
+                            if len(candidates) >= limit:
+                                break
+            except Exception:
+                pass
+
+        # 2. Google Custom Search JSON API oficial
+        if len(candidates) < limit and google_api_key and google_cx:
             try:
                 query = f"{normalized_sector} {city} colombia pagina web oficial"
                 params = urllib.parse.urlencode({
