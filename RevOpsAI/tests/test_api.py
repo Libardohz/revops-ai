@@ -191,3 +191,25 @@ def test_api_contact_update_and_batch_audit_flow():
     )
     interested_lead = handle_action(action_interested, store=store)
     assert interested_lead.state == "INTERESTED"
+
+
+def test_api_autonomous_prospecting_scout_flow():
+    from RevOpsAI.src.api.routes import (
+        run_autonomous_prospecting,
+        AutoDiscoverRequest,
+    )
+    orch = get_orchestrator()
+
+    scout_req = AutoDiscoverRequest(
+        tenant_id="tenant_scout_test",
+        city="Montería",
+        sector="clinicas",
+        limit=3,
+    )
+    res = run_autonomous_prospecting(scout_req, orch=orch)
+    assert res["tenant_id"] == "tenant_scout_test"
+    assert res["discovered_count"] >= 1
+    assert res["audited_count"] >= 1
+    assert len(res["results"]) >= 1
+    assert res["results"][0]["score"] > 0
+    assert "Montería" in res["city"]

@@ -75,6 +75,10 @@
       <div class="page-actions">
         <button id="btn-seed-demo" class="btn btn-line" type="button" title="Cargar prospectos de ejemplo en la unidad actual">Cargar datos demo</button>
         <button id="btn-clear-demo" class="btn btn-line btn-clear-demo" type="button" title="Limpiar y desactivar datos de prueba en la unidad actual">Desactivar datos demo</button>
+        <button id="btn-open-auto-modal" class="btn btn-line btn-scout-highlight" type="button" title="Lanzar bot para buscar empresas de Montería y Colombia autónomamente">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true" style="stroke:var(--accent);"><circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2" fill="currentColor"/><path d="M8 2v3M8 11v3M2 8h3M11 8h3" stroke="currentColor" stroke-width="1.2"/></svg>
+          Prospección Autónoma (Bot)
+        </button>
         <button id="btn-open-batch-modal" class="btn btn-line" type="button" title="Auditar una lista de múltiples sitios web en lote">Auditoría en lote</button>
         <button id="btn-export-csv" class="btn btn-line" type="button" title="Descargar la vista actual en archivo de Excel">Exportar Excel (CSV)</button>
         <button id="btn-open-audit-modal" class="btn btn-primary" type="button">
@@ -547,6 +551,77 @@
         <div class="modal-actions">
           <button type="button" id="modal-batch-cancel" class="btn btn-ghost">Cancelar</button>
           <button type="submit" id="modal-batch-submit" class="btn btn-primary">Iniciar auditoría en lote</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============ AUTONOMOUS SCOUT MODAL ============ -->
+  <div id="modal-auto-scout" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-scout-title">
+    <div class="modal-box modal-box-lg">
+      <header class="modal-head">
+        <div>
+          <span class="eyebrow">Motor Autónomo · Web Scout</span>
+          <h2 class="modal-title" id="modal-scout-title">Prospección Autónoma de Empresas</h2>
+        </div>
+        <button id="modal-scout-close" class="icon-btn" type="button" aria-label="Cerrar">
+          <svg class="ico" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5"/></svg>
+        </button>
+      </header>
+      <p class="modal-desc">El bot rastrea la web pública en busca de clínicas, inmobiliarias o despachos en la ciudad seleccionada, analiza sus sitios oficiales, calcula brechas de conversión y deja los prospectos listos en tu columna de revisión.</p>
+
+      <form id="form-auto-scout" class="form">
+        <div class="form-row">
+          <div class="field">
+            <label for="scout-city">Ciudad / Territorio Objetivo</label>
+            <select id="scout-city" class="form-input">
+              <option value="Montería" selected>Montería, Córdoba</option>
+              <option value="Medellín">Medellín, Antioquia</option>
+              <option value="Bogotá">Bogotá D.C.</option>
+              <option value="Barranquilla">Barranquilla, Atlántico</option>
+              <option value="Colombia">Nacional (Multi-ciudad)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="scout-sector">Sector Económico</label>
+            <select id="scout-sector" class="form-input">
+              <option value="clinicas" selected>Salud, clínicas y odontología</option>
+              <option value="inmobiliarias">Inmobiliarias y constructoras</option>
+              <option value="abogados">Firmas de abogados</option>
+              <option value="turismo_medico">Turismo médico</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="scout-limit">Cantidad de empresas a descubrir</label>
+            <select id="scout-limit" class="form-input">
+              <option value="3">3 empresas (Exploración rápida)</option>
+              <option value="5" selected>5 empresas (Lote estándar)</option>
+              <option value="10">10 empresas (Lote intensivo)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="scout-tenant">Unidad de Negocio de Destino</label>
+            <select id="scout-tenant" class="form-input">
+              <option value="tenant_clinicas_madrid">Salud y odontología</option>
+              <option value="hzsaas_colombia">hzSaaS Colombia · Multi-sector</option>
+              <option value="tenant_inmobiliarias_col">Inmobiliarias y constructoras</option>
+              <option value="tenant_abogados_col">Firmas de abogados</option>
+              <option value="tenant_turismo_medico_col">Turismo médico</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="scout-stepper" class="stepper" style="display:none;">
+          <div class="stepper-bar"><div id="scout-stepper-fill" class="stepper-fill"></div></div>
+          <div id="scout-stepper-label" class="stepper-label">Rastreando empresas en Montería…</div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" id="modal-scout-cancel" class="btn btn-ghost">Cancelar</button>
+          <button type="submit" id="modal-scout-submit" class="btn btn-primary">Lanzar rastreo autónomo</button>
         </div>
       </form>
     </div>

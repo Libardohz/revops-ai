@@ -83,6 +83,21 @@
     tabPanes: document.querySelectorAll('.tab-pane'),
     channelRadios: document.querySelectorAll('input[name="dispatch-channel"]'),
 
+    // Autonomous Scout Bot Modal Cache
+    btnOpenAutoModal: document.getElementById('btn-open-auto-modal'),
+    modalAutoScout: document.getElementById('modal-auto-scout'),
+    modalScoutClose: document.getElementById('modal-scout-close'),
+    modalScoutCancel: document.getElementById('modal-scout-cancel'),
+    formAutoScout: document.getElementById('form-auto-scout'),
+    scoutCity: document.getElementById('scout-city'),
+    scoutSector: document.getElementById('scout-sector'),
+    scoutLimit: document.getElementById('scout-limit'),
+    scoutTenant: document.getElementById('scout-tenant'),
+    scoutStepper: document.getElementById('scout-stepper'),
+    scoutStepperFill: document.getElementById('scout-stepper-fill'),
+    scoutStepperLabel: document.getElementById('scout-stepper-label'),
+    modalScoutSubmit: document.getElementById('modal-scout-submit'),
+
     // Batch Audit Modal
     btnOpenBatchModal: document.getElementById('btn-open-batch-modal'),
     modalBatchAudit: document.getElementById('modal-batch-audit'),
@@ -946,7 +961,80 @@
     }
   }
 
-  function openBatchModal() {
+  function openAutoScoutModal() {
+    if (el.modalAutoScout) el.modalAutoScout.classList.add('active');
+    if (el.scoutStepper) el.scoutStepper.style.display = 'none';
+    if (el.modalScoutSubmit) el.modalScoutSubmit.disabled = false;
+    if (el.scoutTenant) el.scoutTenant.value = state.tenantId;
+  }
+
+  function closeAutoScoutModal() {
+    if (el.modalAutoScout) el.modalAutoScout.classList.remove('active');
+  }
+
+  /**
+   * Handle Autonomous Scout Bot Execution
+   */
+  async function handleAutoScout(e) {
+    e.preventDefault();
+    const city = el.scoutCity ? el.scoutCity.value : 'Montería';
+    const sector = el.scoutSector ? el.scoutSector.value : 'clinicas';
+    const limit = el.scoutLimit ? parseInt(el.scoutLimit.value, 10) : 5;
+    const tenant = el.scoutTenant ? el.scoutTenant.value : state.tenantId;
+
+    if (el.scoutStepper) el.scoutStepper.style.display = 'grid';
+    if (el.modalScoutSubmit) el.modalScoutSubmit.disabled = true;
+
+    if (el.scoutStepperFill) el.scoutStepperFill.style.width = '30%';
+    if (el.scoutStepperLabel) el.scoutStepperLabel.textContent = `1/3. Rastreando empresas en ${city} para [${sector.toUpperCase()}]...`;
+
+    try {
+      const stepTimer1 = setTimeout(() => {
+        if (el.scoutStepperFill) el.scoutStepperFill.style.width = '65%';
+        if (el.scoutStepperLabel) el.scoutStepperLabel.textContent = `2/3. Extrayendo sitios web y evaluando brechas digitales...`;
+      }, 1200);
+
+      const res = await fetch('/api/v1/prospecting/auto-discover', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenant_id: tenant,
+          city: city,
+          sector: sector,
+          limit: limit,
+        }),
+      });
+
+      clearTimeout(stepTimer1);
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || 'Fallo en la prospección autónoma');
+      }
+
+      const data = await res.json();
+      if (el.scoutStepperFill) el.scoutStepperFill.style.width = '100%';
+      if (el.scoutStepperLabel) el.scoutStepperLabel.textContent = `3/3. Descubrimiento completado: ${data.audited_count} prospectos generados en ${city}.`;
+
+      setTimeout(async () => {
+        closeAutoScoutModal();
+        showToast(`Bot autónomo: ${data.audited_count} empresas auditadas en ${city}`);
+
+        if (state.tenantId !== tenant) {
+          state.tenantId = tenant;
+          if (el.tenantSelect) el.tenantSelect.value = tenant;
+          localStorage.setItem('revops_tenant', tenant);
+        }
+
+        await fetchLeads();
+        await fetchStats();
+      }, 800);
+    } catch (err) {
+      if (el.scoutStepperLabel) el.scoutStepperLabel.textContent = `Error: ${err.message}`;
+      showToast(`Error en bot: ${err.message}`, 'error');
+      if (el.modalScoutSubmit) el.modalScoutSubmit.disabled = false;
+    }
+  }
     if (el.modalBatchAudit) el.modalBatchAudit.classList.add('active');
     if (el.batchStepper) el.batchStepper.style.display = 'none';
     if (el.modalBatchSubmit) el.modalBatchSubmit.disabled = false;
@@ -1339,6 +1427,12 @@
         }
       });
     }
+
+    // Autonomous Scout Bot Controls
+    if (el.btnOpenAutoModal) el.btnOpenAutoModal.addEventListener('click', openAutoScoutModal);
+    if (el.modalScoutClose) el.modalScoutClose.addEventListener('click', closeAutoScoutModal);
+    if (el.modalScoutCancel) el.modalScoutCancel.addEventListener('click', closeAutoScoutModal);
+    if (el.formAutoScout) el.formAutoScout.addEventListener('submit', handleAutoScout);
 
     // Batch Audit Modal Controls
     if (el.btnOpenBatchModal) el.btnOpenBatchModal.addEventListener('click', openBatchModal);

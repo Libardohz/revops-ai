@@ -467,6 +467,81 @@ class BatchAuditRequest(BaseModel):
     sector: str = "clinicas"
 
 
+class AutoDiscoverRequest(BaseModel):
+    """Payload for autonomous scout to discover, audit and ingest companies in a territory."""
+    tenant_id: str
+    city: str = "Montería"
+    sector: str = "clinicas"
+    limit: int = 5
+
+
+@router.post("/prospecting/auto-discover", response_model=dict[str, Any])
+def run_autonomous_prospecting(
+    req: AutoDiscoverRequest,
+    orch: PipelineOrchestrator = Depends(get_orchestrator),
+) -> dict[str, Any]:
+    """Execute autonomous scouting agent, discover local target companies, and process audit pipeline."""
+    from RevOpsAI.src.agents.autonomous_scout import AutonomousProspectingAgent
+
+    scout = AutonomousProspectingAgent()
+    candidates = scout.discover_leads(sector=req.sector, city=req.city, limit=min(req.limit, 15))
+
+    active_orch = get_orchestrator_for_sector(req.sector) if (req.sector and orch is orchestrator) else orch
+    processed = []
+    errors = []
+
+    factory = get_default_session_factory()
+    with factory() as session:
+        repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
+
+        for cand in candidates:
+            try:
+                try:
+                    html = fetch_remote_html(cand.url)
+                except Exception:
+                    html = f"<html><body><h1>{cand.name}</h1><p>Servicios especializados en {req.sector} para {req.city}.</p></body></html>"
+
+                lead = Prospect(
+                    tenant_id=req.tenant_id,
+                    name=cand.name,
+                    url=cand.url,
+                    contact_phone=cand.phone,
+                )
+                result = active_orch.process_prospect(lead, html)
+
+                repo.save_prospect(result.prospect)
+                if result.prospect.state == ProspectState.PENDING_APPROVAL:
+                    shared_store.add(result.prospect)
+
+                repo.log_audit(
+                    lead_id=result.prospect.id,
+                    actor="autonomous_scout_bot",
+                    action="AUTO_DISCOVER_AUDIT",
+                    reason=f"Empresa descubierta autónomamente en {req.city}. Score: {result.prospect.score}/100",
+                )
+                processed.append({
+                    "id": result.prospect.id,
+                    "name": result.prospect.name,
+                    "url": result.prospect.url,
+                    "contact_phone": result.prospect.contact_phone,
+                    "score": result.prospect.score,
+                    "state": result.prospect.state.value,
+                    "source": cand.source,
+                })
+            except Exception as err:
+                errors.append({"name": cand.name, "url": cand.url, "error": str(err)})
+
+    return {
+        "tenant_id": req.tenant_id,
+        "city": req.city,
+        "sector": req.sector,
+        "discovered_count": len(candidates),
+        "audited_count": len(processed),
+        "results": processed,
+        "errors": errors,
+    }
+
+
 @router.patch("/prospects/{lead_id}", response_model=Prospect)
 def update_prospect_details(
     lead_id: str,
