@@ -746,16 +746,9 @@ def get_repository(
         yield TenantScopedRepository(session=session, tenant_id=tenant_id)
 
 
-_SHOWCASE_TENANTS = {
-    "tenant_clinicas_madrid",
-    "hzsaas_colombia",
-    "tenant_inmobiliarias_col",
-    "tenant_abogados_col",
-    "tenant_turismo_medico_col",
-    "tenant_dental_bcn",
-    "tenant_estetica_sur",
-    "cliente_demo",
-}
+# Showcase tenants can only be seeded on explicit user request via POST /api/v1/dashboard/seed
+# Never auto-seed magically in production
+_SHOWCASE_TENANTS: set[str] = set()
 
 
 def _build_demo_prospects_for_tenant(tenant_id: str) -> list[Prospect]:
