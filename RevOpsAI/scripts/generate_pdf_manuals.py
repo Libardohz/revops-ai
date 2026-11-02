@@ -459,3 +459,4 @@ def build_tech_manual_pdf(filename):
 if __name__ == "__main__":
     build_user_manual_pdf(r"c:\Users\JESUS\Desktop\Antigravity\docs\Manual_de_Usuario_RevOps_AI.pdf")
     build_tech_manual_pdf(r"c:\Users\JESUS\Desktop\Antigravity\docs\Manual_Tecnico_Interno_RevOps_AI.pdf")
+

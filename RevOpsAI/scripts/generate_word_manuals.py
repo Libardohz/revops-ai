@@ -393,3 +393,4 @@ def create_technical_manual():
 if __name__ == "__main__":
     create_user_manual()
     create_technical_manual()
+
