@@ -1211,6 +1211,8 @@
       if (el.modalBatchSubmit) el.modalBatchSubmit.disabled = false;
     }
   }
+
+  function openAuditModal() {
     if (el.modalAudit) el.modalAudit.classList.add('active');
     if (el.auditStepper) el.auditStepper.style.display = 'none';
     if (el.modalAuditSubmit) el.modalAuditSubmit.disabled = false;
@@ -1426,22 +1428,31 @@
 
     // Refresh Button
     if (el.refreshBtn) {
-      el.refreshBtn.addEventListener('click', async () => {
+      el.refreshBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
         el.refreshBtn.disabled = true;
-        await Promise.all([fetchLeads(), fetchStats()]);
-        el.refreshBtn.disabled = false;
-        showToast('Datos actualizados');
+        try {
+          await Promise.all([fetchLeads(), fetchStats()]);
+          showToast('Datos actualizados');
+        } catch (err) {
+          showToast('Error al refrescar datos', 'error');
+        } finally {
+          el.refreshBtn.disabled = false;
+        }
       });
     }
 
     // Logout Button
     if (el.btnLogout) {
-      el.btnLogout.addEventListener('click', async () => {
+      el.btnLogout.addEventListener('click', async (e) => {
+        e.preventDefault();
         try {
           await fetch('/api/v1/auth/logout', { method: 'POST' });
         } catch (_) {
           // ignore network error
         }
+        // Remove cookie on client side as well for instant UX feedback
+        document.cookie = 'hzsaas_session=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         window.location.href = '/login';
       });
     }
