@@ -3,6 +3,7 @@
 import hashlib
 import hmac
 import os
+import re
 import secrets
 from pathlib import Path
 from typing import Any, Generator
@@ -502,7 +503,7 @@ def run_autonomous_prospecting(
     scout = AutonomousProspectingAgent()
     candidates = scout.discover_leads(sector=req.sector, city=req.city, limit=min(req.limit, 15))
 
-    active_orch = get_orchestrator_for_sector(req.sector) if (req.sector and orch is orchestrator) else orch
+    active_orch = get_orchestrator_for_sector(req.sector)
     processed = []
     errors = []
 
