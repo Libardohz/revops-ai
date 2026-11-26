@@ -59,6 +59,33 @@ class TenantScopedRepository:
         self.session.commit()
         return prospect
 
+    def get_prospect_by_url(self, url: str) -> Prospect | None:
+        """Find an existing prospect by URL or clean domain within active tenant boundary."""
+        clean = url.lower().replace("https://", "").replace("http://", "").replace("www.", "").rstrip("/")
+        domain = clean.split("/")[0]
+        records = self.session.query(ProspectORM).filter_by(tenant_id=self.tenant_id).all()
+        for r in records:
+            r_clean = r.url.lower().replace("https://", "").replace("http://", "").replace("www.", "").rstrip("/")
+            r_domain = r_clean.split("/")[0]
+            if r_domain == domain or r_clean == clean:
+                return Prospect(
+                    id=r.id,
+                    tenant_id=r.tenant_id,
+                    name=r.name,
+                    url=r.url,
+                    state=ProspectState(r.state),
+                    score=r.score,
+                    research_summary=r.research_summary,
+                    draft_message=r.draft_message,
+                    contact_name=r.contact_name or "",
+                    contact_phone=r.contact_phone or "",
+                    internal_notes=r.internal_notes or "",
+                    city=r.city or "",
+                    followup_day=r.followup_day or 1,
+                    is_blacklisted=r.is_blacklisted,
+                )
+        return None
+
     def get_prospect(self, lead_id: str) -> Prospect | None:
         """Retrieve a prospect by ID strictly within the active tenant boundary."""
         orm = (

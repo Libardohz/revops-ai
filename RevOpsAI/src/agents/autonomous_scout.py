@@ -33,7 +33,16 @@ class AutonomousProspectingAgent:
         "ciencuadras.com", "tripadvisor.co", "google.com", "maps.google.com",
         "rocketreach.co", "zoominfo.com", "crunchbase.com", "apollo.io", "datanyze.com",
         "computrabajo.com.co", "elempleo.com", "paxer.com", "hoteles.com", "indeed.com",
-        "datos.gov.co", "topdoctors.com.co", "saludjobs.com"
+        "datos.gov.co", "topdoctors.com.co", "saludjobs.com", "gov.co", "minsalud.gov.co",
+        "supersalud.gov.co", "secretariasenado.gov.co", "dane.gov.co", "icbf.gov.co",
+        "medicosdoc.com", "directoriomedico.com.co", "guiamedicadecolombia.com"
+    }
+
+    # Palabras clave excluyentes para no prospectar entidades estatales/públicas
+    PUBLIC_SECTOR_KEYWORDS = {
+        "hospital", "e.s.e", "ese ", "alcaldia", "gobernacion", "secretaria de salud",
+        "red publica", "subred", "ministerio", "defensoria", "personeria", "policia",
+        "militar", "seguro social", "sisben", "eps publica", "fundacion publica"
     }
 
     # Curated directory database of VERIFIED live Colombian targets (Fallbacks)
@@ -79,12 +88,22 @@ class AutonomousProspectingAgent:
         }
     }
 
-    def _is_clean_corporate_domain(self, domain: str) -> bool:
-        """Check if domain is a genuine target company website, not a public social directory."""
+    def _is_clean_corporate_domain(self, domain: str, name_or_title: str = "") -> bool:
+        """Check if domain is a genuine target company website, not a public social directory or state entity."""
         clean = domain.lower().replace("www.", "").strip()
+        if clean.endswith(".gov.co") or clean.endswith(".gov") or ".gov." in clean:
+            return False
+
         for banned in self.BANNED_DOMAINS:
             if banned in clean:
                 return False
+
+        # Excluir entidades públicas por título o dominio
+        target_str = f"{clean} {name_or_title}".lower()
+        for pub in self.PUBLIC_SECTOR_KEYWORDS:
+            if pub in target_str:
+                return False
+
         return "." in clean
 
     def discover_leads(
@@ -111,7 +130,8 @@ class AutonomousProspectingAgent:
         # 1. Tavily AI Search Engine (Especializado para Agentes Autónomos)
         if tavily_key:
             try:
-                query = f"site:.co OR site:.com.co {normalized_sector} {city} Colombia sitio web oficial"
+                # Query enfocada en el sector privado corporativo de alto valor, excluyendo entidades gubernamentales y hospitales públicos
+                query = f"site:.co OR site:.com.co clinica dental estetica privada {city} Colombia -hospital -ese -publica -alcaldia -gov"
                 url = "https://api.tavily.com/search"
                 headers = {"Content-Type": "application/json"}
                 payload = {
@@ -119,7 +139,7 @@ class AutonomousProspectingAgent:
                     "query": query,
                     "search_depth": "basic",
                     "include_answer": False,
-                    "max_results": min(15, limit * 3),
+                    "max_results": min(20, limit * 4),
                 }
                 data = json.dumps(payload).encode("utf-8")
                 req = urllib.request.Request(url, data=data, headers=headers, method="POST")
@@ -130,8 +150,8 @@ class AutonomousProspectingAgent:
                     for item in results:
                         item_url = item.get("url", "")
                         domain = item_url.split("//")[-1].split("/")[0]
-                        if self._is_clean_corporate_domain(domain):
-                            cand_name = item.get("title", "").split("-")[0].split("|")[0].split("·")[0].strip()
+                        cand_name = item.get("title", "").split("-")[0].split("|")[0].split("·")[0].strip()
+                        if self._is_clean_corporate_domain(domain, cand_name):
                             candidates.append(
                                 DiscoveredCandidate(
                                     name=cand_name or domain,

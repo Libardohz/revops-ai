@@ -197,8 +197,16 @@ def test_api_autonomous_prospecting_scout_flow():
     from RevOpsAI.src.api.routes import (
         run_autonomous_prospecting,
         AutoDiscoverRequest,
+        get_default_session_factory,
+        TenantScopedRepository,
     )
     orch = get_orchestrator()
+
+    # Limpiar tenant de prueba para asegurar ejecución determinista
+    factory = get_default_session_factory()
+    with factory() as session:
+        repo = TenantScopedRepository(session=session, tenant_id="tenant_scout_test")
+        repo.clear_all_prospects()
 
     scout_req = AutoDiscoverRequest(
         tenant_id="tenant_scout_test",

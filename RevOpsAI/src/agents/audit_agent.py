@@ -66,8 +66,10 @@ class CommercialAuditAgent:
             opportunities.append("Habilitación de canal de mensajería directa para presupuestos")
 
         if len(summary.detected_services) >= 2:
+            high_ticket = [s for s in summary.detected_services if s in ("implantes", "diseno de sonrisa", "cirugia", "ortodoncia", "alineadores", "armonizacion")]
+            target_services = high_ticket[:2] if high_ticket else summary.detected_services[:2]
             opportunities.append(
-                f"Campaña de reactivación enfocada en {', '.join(summary.detected_services[:2])}"
+                f"Campaña de reactivación enfocada en {', '.join(target_services)}"
             )
 
         # Strict compliance enforcement: verify no forbidden topic appears in gaps or opportunities

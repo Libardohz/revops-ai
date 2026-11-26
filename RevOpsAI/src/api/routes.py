@@ -512,6 +512,20 @@ def run_autonomous_prospecting(
         repo = TenantScopedRepository(session=session, tenant_id=req.tenant_id)
 
         for cand in candidates:
+            # 1. Deduplicación inteligente: si la empresa o dominio ya existe en el tenant, reutilizar sin reprocesar redundante
+            existing_lead = repo.get_prospect_by_url(cand.url)
+            if existing_lead:
+                processed.append({
+                    "id": existing_lead.id,
+                    "name": existing_lead.name,
+                    "url": existing_lead.url,
+                    "contact_phone": existing_lead.contact_phone,
+                    "score": existing_lead.score,
+                    "state": existing_lead.state.value,
+                    "source": "existing_tenant_lead",
+                })
+                continue
+
             try:
                 try:
                     html = fetch_remote_html(cand.url)
